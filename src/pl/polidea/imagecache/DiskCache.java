@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -28,23 +26,25 @@ public class DiskCache {
     private static final int COMPRESS_QUALITY = 100;
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
-    private final int size;
 
-    public DiskCache(final Context context) {
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-
-        final int memClass = activityManager.getMemoryClass();
-        size = 1024 * 1024 * memClass / 4;
-        Log.i(TAG, "Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
+    /**
+     * Creates disk cache in specified directory and size
+     * 
+     * @param path
+     *            path of the cache directory
+     * @param size
+     *            cache size in bytes
+     */
+    public DiskCache(final String path, final long size) {
         try {
-            mDiskCache = openDiskLruCache(new File(context.getCacheDir(), "thumbnails"), APP_VERSION, VALUE_COUNT, size);
+            mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
         } catch (final IOException e) {
             Log.e(TAG, "Opening disk cache error");
         }
     }
 
     private DiskLruCache openDiskLruCache(final File directory, final int appVersion, final int valueCount,
-            final int size) throws IOException {
+            final long size) throws IOException {
         return DiskLruCache.open(directory, appVersion, valueCount, size);
     }
 
@@ -155,7 +155,8 @@ public class DiskCache {
     public void clearCache() {
         Log.d(TAG, "disk cache CLEARED");
         try {
-            final File directory = getCacheFolder();
+            final File directory = getCacheDirectory();
+            final long size = getCacheMaxSize();
             mDiskCache.delete();
             mDiskCache = openDiskLruCache(directory, APP_VERSION, VALUE_COUNT, size);
         } catch (final IOException e) {
@@ -163,7 +164,11 @@ public class DiskCache {
         }
     }
 
-    public File getCacheFolder() {
+    private long getCacheMaxSize() {
+        return mDiskCache.maxSize();
+    }
+
+    private File getCacheDirectory() {
         return mDiskCache.getDirectory();
     }
 

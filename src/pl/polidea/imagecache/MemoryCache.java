@@ -2,12 +2,8 @@ package pl.polidea.imagecache;
 
 import java.util.Map;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 public class MemoryCache {
 
@@ -15,19 +11,8 @@ public class MemoryCache {
 
     private final BitmapLRUCache cache;
 
-    public MemoryCache(final Context context) {
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        final int memClass = activityManager.getMemoryClass();
-        final int size = 1024 * 1024 * memClass / 8;
-        Log.i(TAG, "Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
-        final Display display = windowManager.getDefaultDisplay();
-        final int height = display.getHeight();
-        final int width = display.getWidth();
-        final int fullScreenSize = height * width * 4;
-        final int alternativeSize = (int) (fullScreenSize * 3.5);
-        Log.i(TAG, "LRUCache alternative size: " + alternativeSize / 1000 + " kB");
-        cache = new BitmapLRUCache(alternativeSize);
+    public MemoryCache(final int size) {
+        cache = new BitmapLRUCache(size);
     }
 
     public final int createCount() {

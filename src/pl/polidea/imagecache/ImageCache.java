@@ -3,11 +3,15 @@
  */
 package pl.polidea.imagecache;
 
+import java.io.File;
 import java.io.IOException;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 /**
  * @author Wojciech Piwonski
@@ -26,12 +30,68 @@ public class ImageCache implements BitmapCache {
     private boolean areWorkersWork = false;
 
     public ImageCache(final Context context) {
-        memCache = new MemoryCache(context);
-        diskCache = new DiskCache(context);
+        this(context, getDefaultDiskCachePath(context), getDefaultDiskCacheSize(context));
+    }
+
+    public ImageCache(final Context context, final String path) {
+        this(context, path, getDefaultDiskCacheSize(context));
+    }
+
+    public ImageCache(final Context context, final long diskCacheSize) {
+        this(context, getDefaultDiskCachePath(context), diskCacheSize);
+    }
+
+    public ImageCache(final Context context, final int memoryCacheSize) {
+        this(context, memoryCacheSize, getDefaultDiskCacheSize(context));
+    }
+
+    public ImageCache(final Context context, final String path, final long diskCacheSize) {
+        this(getDefaultMemoryCacheSize(context), path, diskCacheSize);
+    }
+
+    public ImageCache(final Context context, final int memoryCacheSize, final long diskCacheSize) {
+        this(memoryCacheSize, getDefaultDiskCachePath(context), diskCacheSize);
+    }
+
+    public ImageCache(final Context context, final int memoryCacheSize, final String path) {
+        this(memoryCacheSize, path, getDefaultDiskCacheSize(context));
+    }
+
+    public ImageCache(final int memoryCacheSize, final String path, final long diskCacheSize) {
+        memCache = new MemoryCache(memoryCacheSize);
+        diskCache = new DiskCache(path, diskCacheSize);
         workers = new Thread[WORKERS_NUMBER];
         for (int i = 0; i < WORKERS_NUMBER; ++i) {
             workers[i] = new Thread(new TaskExecutor());
         }
+    }
+
+    private static String getDefaultDiskCachePath(final Context context) {
+        return context.getCacheDir().getPath() + File.separator + "thumbnails";
+    }
+
+    private static int getDefaultMemoryCacheSize(final Context context) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        final int memClass = activityManager.getMemoryClass();
+        final int size = 1024 * 1024 * memClass / 8;
+        Log.i(TAG, "Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
+        final Display display = windowManager.getDefaultDisplay();
+        final int height = display.getHeight();
+        final int width = display.getWidth();
+        final int fullScreenSize = height * width * 4;
+        final int alternativeSize = (int) (fullScreenSize * 3.5);
+        Log.i(TAG, "LRUCache alternative size: " + alternativeSize / 1000 + " kB");
+        return alternativeSize;
+    }
+
+    private static long getDefaultDiskCacheSize(final Context context) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        final int memClass = activityManager.getMemoryClass();
+        final long size = 1024 * 1024 * memClass / 4;
+        Log.i(TAG, "Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
+        return size;
     }
 
     @Override
