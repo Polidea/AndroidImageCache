@@ -180,14 +180,36 @@ public class ImageCache implements BitmapCache {
         diskCache.clearCache();
     }
 
-    private class CacheTask {
-        public String key;
-        public OnCacheResultListener onCacheResultListener;
+    public int getWorkersNumber() {
+        return workers.length;
+    }
 
-        public CacheTask(final String key, final OnCacheResultListener onCacheResultListener) {
-            this.key = key;
-            this.onCacheResultListener = onCacheResultListener;
-        }
+    public int getMemoryCacheSize() {
+        return memCache.size();
+    }
+
+    public int getMemoryCacheMaxSize() {
+        return memCache.maxSize();
+    }
+
+    public long getDiskCacheSize() {
+        return diskCache.getSize();
+    }
+
+    public long getDiskCacheMaxSize() {
+        return diskCache.getMaxSize();
+    }
+
+    public String getDiskCachePath() {
+        return diskCache.getDirectory().getPath();
+    }
+
+    public CompressFormat getCompressFormat() {
+        return diskCache.getCompressFormat();
+    }
+
+    public int getCompressQuality() {
+        return diskCache.getCompressQuality();
     }
 
     private class TaskExecutor implements Runnable {
@@ -210,7 +232,16 @@ public class ImageCache implements BitmapCache {
             }
 
         }
+    }
 
+    private class CacheTask {
+        public String key;
+        public OnCacheResultListener onCacheResultListener;
+
+        public CacheTask(final String key, final OnCacheResultListener onCacheResultListener) {
+            this.key = key;
+            this.onCacheResultListener = onCacheResultListener;
+        }
     }
 
 }

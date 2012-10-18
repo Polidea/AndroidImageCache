@@ -154,21 +154,33 @@ public class DiskCache {
     public void clearCache() {
         Log.d(TAG, "disk cache CLEARED");
         try {
-            final File directory = getCacheDirectory();
-            final long size = getCacheMaxSize();
+            final File directory = getDirectory();
+            final long maxSize = getMaxSize();
             mDiskCache.delete();
-            mDiskCache = openDiskLruCache(directory, APP_VERSION, VALUE_COUNT, size);
+            mDiskCache = openDiskLruCache(directory, APP_VERSION, VALUE_COUNT, maxSize);
         } catch (final IOException e) {
             Log.e(TAG, "Clearing disk cache error.");
         }
     }
 
-    private long getCacheMaxSize() {
+    public long getSize() {
+        return mDiskCache.size();
+    }
+
+    public long getMaxSize() {
         return mDiskCache.maxSize();
     }
 
-    private File getCacheDirectory() {
+    public File getDirectory() {
         return mDiskCache.getDirectory();
+    }
+
+    public CompressFormat getCompressFormat() {
+        return compressFormat;
+    }
+
+    public int getCompressQuality() {
+        return compressQuality;
     }
 
 }
