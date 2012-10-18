@@ -14,9 +14,6 @@ import android.util.Log;
 
 import com.jakewharton.DiskLruCache;
 
-/**
- * The Class QwiltDiskLruCache.
- */
 public class DiskCache {
 
     private static final String TAG = DiskCache.class.getSimpleName();
