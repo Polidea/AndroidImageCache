@@ -71,6 +71,7 @@ public class ImageCache implements BitmapCache {
     }
 
     private void checkAllValuesFilled(final CacheConfig config) {
+        checkConfigNotNull(config);
         if (config.getWorkersNumber() == null || config.getMemoryCacheSize() == null
                 || config.getDiskCachePath() == null || config.getDiskCacheSize() == null
                 || config.getCompressFormat() == null || config.getCompressQuality() == null) {
@@ -86,9 +87,7 @@ public class ImageCache implements BitmapCache {
      *            cache configuration
      */
     private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
-        if (config == null) {
-            throw new IllegalArgumentException("Config cannot be null");
-        }
+        checkConfigNotNull(config);
         if (config.getWorkersNumber() == null) {
             config.setWorkersNumber(DEFAULT_WORKERS_NUMBER);
         }
@@ -108,6 +107,12 @@ public class ImageCache implements BitmapCache {
             config.setCompressQuality(DEFAULT_COMPRESS_QUALITY);
         }
         return config;
+    }
+
+    private static void checkConfigNotNull(final CacheConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Config cannot be null");
+        }
     }
 
     private static String getDefaultDiskCachePath(final Context context) {
