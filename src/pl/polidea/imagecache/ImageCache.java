@@ -11,8 +11,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 /**
  * @author Wojciech Piwonski
@@ -118,17 +116,10 @@ public class ImageCache implements BitmapCache {
 
     private static int getDefaultMemoryCacheSize(final Context context) {
         final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         final int memClass = activityManager.getMemoryClass();
         final int size = 1024 * 1024 * memClass / 8;
         Log.i(TAG, "Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
-        final Display display = windowManager.getDefaultDisplay();
-        final int height = display.getHeight();
-        final int width = display.getWidth();
-        final int fullScreenSize = height * width * 4;
-        final int alternativeSize = (int) (fullScreenSize * 3.5);
-        Log.i(TAG, "LRUCache alternative size: " + alternativeSize / 1000 + " kB");
-        return alternativeSize;
+        return size;
     }
 
     private static long getDefaultDiskCacheSize(final Context context) {
