@@ -9,6 +9,7 @@ import java.io.IOException;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -21,53 +22,98 @@ public class ImageCache implements BitmapCache {
 
     private static final String TAG = ImageCache.class.getSimpleName();
 
-    private static final int WORKERS_NUMBER = 1;
+    private static final int DEFAULT_WORKERS_NUMBER = 1;
+    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
+    private static final int DEFAULT_COMPRESS_QUALITY = 100;
 
-    MemoryCache memCache;
-    DiskCache diskCache;
+    final MemoryCache memCache;
+    final DiskCache diskCache;
     private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque<CacheTask>();
     private final Thread[] workers;
     private boolean areWorkersWork = false;
 
+    /**
+     * Creates image cache with default parameters.
+     * 
+     * @param context
+     */
     public ImageCache(final Context context) {
-        this(context, getDefaultDiskCachePath(context), getDefaultDiskCacheSize(context));
+        this(fillEmptyValuesWithDefault(context, new CacheConfig()));
     }
 
-    public ImageCache(final Context context, final String path) {
-        this(context, path, getDefaultDiskCacheSize(context));
+    /**
+     * Creates image cache with default parameters stored in config parameter.
+     * Empty config's fields will be replaced by default values.
+     * 
+     * @param context
+     */
+    public ImageCache(final Context context, final CacheConfig config) {
+        this(fillEmptyValuesWithDefault(context, config));
     }
 
-    public ImageCache(final Context context, final long diskCacheSize) {
-        this(context, getDefaultDiskCachePath(context), diskCacheSize);
-    }
-
-    public ImageCache(final Context context, final int memoryCacheSize) {
-        this(context, memoryCacheSize, getDefaultDiskCacheSize(context));
-    }
-
-    public ImageCache(final Context context, final String path, final long diskCacheSize) {
-        this(getDefaultMemoryCacheSize(context), path, diskCacheSize);
-    }
-
-    public ImageCache(final Context context, final int memoryCacheSize, final long diskCacheSize) {
-        this(memoryCacheSize, getDefaultDiskCachePath(context), diskCacheSize);
-    }
-
-    public ImageCache(final Context context, final int memoryCacheSize, final String path) {
-        this(memoryCacheSize, path, getDefaultDiskCacheSize(context));
-    }
-
-    public ImageCache(final int memoryCacheSize, final String path, final long diskCacheSize) {
-        memCache = new MemoryCache(memoryCacheSize);
-        diskCache = new DiskCache(path, diskCacheSize);
-        workers = new Thread[WORKERS_NUMBER];
-        for (int i = 0; i < WORKERS_NUMBER; ++i) {
+    /**
+     * Creates image cache with parameters stored in config parameter. <br>
+     * WARNING! All fields of the config have to be provided! If you want define
+     * only some parameters, use constructor
+     * {@link ImageCache#ImageCache(Context, CacheConfig)}
+     * 
+     * @param config
+     *            cache configuration
+     */
+    public ImageCache(final CacheConfig config) {
+        checkAllValuesFilled(config);
+        memCache = new MemoryCache(config.getMemoryCacheSize());
+        diskCache = new DiskCache(config.getDiskCachePath(), config.getDiskCacheSize(), config.getCompressFormat(),
+                config.getCompressQuality());
+        final int workersNumber = config.getWorkersNumber();
+        workers = new Thread[workersNumber];
+        for (int i = 0; i < workersNumber; ++i) {
             workers[i] = new Thread(new TaskExecutor());
         }
     }
 
+    private void checkAllValuesFilled(final CacheConfig config) {
+        if (config.getWorkersNumber() == null || config.getMemoryCacheSize() == null
+                || config.getDiskCachePath() == null || config.getDiskCacheSize() == null
+                || config.getCompressFormat() == null || config.getCompressQuality() == null) {
+            throw new IllegalArgumentException("All config's fields have to be filled");
+        }
+    }
+
+    /**
+     * Fills empty configuration's values with default.
+     * 
+     * @param context
+     * @param config
+     *            cache configuration
+     */
+    private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Config cannot be null");
+        }
+        if (config.getWorkersNumber() == null) {
+            config.setWorkersNumber(DEFAULT_WORKERS_NUMBER);
+        }
+        if (config.getMemoryCacheSize() == null) {
+            config.setMemoryCacheSize(getDefaultMemoryCacheSize(context));
+        }
+        if (config.getDiskCachePath() == null) {
+            config.setDiskCachePath(getDefaultDiskCachePath(context));
+        }
+        if (config.getDiskCacheSize() == null) {
+            config.setDiskCacheSize(getDefaultDiskCacheSize(context));
+        }
+        if (config.getCompressFormat() == null) {
+            config.setCompressFormat(DEFAULT_COMPRESS_FORMAT);
+        }
+        if (config.getCompressQuality() == null) {
+            config.setCompressQuality(DEFAULT_COMPRESS_QUALITY);
+        }
+        return config;
+    }
+
     private static String getDefaultDiskCachePath(final Context context) {
-        return context.getCacheDir().getPath() + File.separator + "thumbnails";
+        return context.getCacheDir().getPath() + File.separator + "bitmaps";
     }
 
     private static int getDefaultMemoryCacheSize(final Context context) {

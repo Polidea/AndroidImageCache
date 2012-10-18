@@ -20,12 +20,12 @@ import com.jakewharton.DiskLruCache;
 public class DiskCache {
 
     private static final String TAG = DiskCache.class.getSimpleName();
-
-    private DiskLruCache mDiskCache;
-    private final CompressFormat mCompressFormat = CompressFormat.JPEG;
-    private static final int COMPRESS_QUALITY = 100;
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
+
+    private CompressFormat compressFormat;
+    private int compressQuality;
+    private DiskLruCache mDiskCache;
 
     /**
      * Creates disk cache in specified directory and size
@@ -35,9 +35,11 @@ public class DiskCache {
      * @param size
      *            cache size in bytes
      */
-    public DiskCache(final String path, final long size) {
+    public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality) {
         try {
             mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
+            this.compressFormat = compressFormat;
+            this.compressQuality = compressQuality;
         } catch (final IOException e) {
             Log.e(TAG, "Opening disk cache error");
         }
@@ -52,7 +54,7 @@ public class DiskCache {
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(editor.newOutputStream(0), 1024);
-            return bitmap.isRecycled() ? true : bitmap.compress(mCompressFormat, COMPRESS_QUALITY, out);
+            return bitmap.isRecycled() ? true : bitmap.compress(compressFormat, compressQuality, out);
         } finally {
             if (out != null) {
                 out.close();
