@@ -5,3 +5,5 @@ syntax: regexp
 ^gen$
 syntax: regexp
 ^test/robolectric/bin$
+syntax: regexp
+^tmp$

@@ -16,7 +16,7 @@ import android.util.Log;
  * @author Wojciech Piwonski
  * 
  */
-public class ImageCache implements BitmapCache {
+public class ImageCache implements IBitmapCache {
 
     private static final String TAG = ImageCache.class.getSimpleName();
 
@@ -161,7 +161,7 @@ public class ImageCache implements BitmapCache {
     public boolean remove(final String key) {
         boolean removed = memCache.remove(key) != null;
         try {
-            removed = removed || diskCache.remove(key);
+            removed = diskCache.remove(key) || removed;
         } catch (final IOException e) {
             Log.e(TAG, "Removing bitmap error");
         }

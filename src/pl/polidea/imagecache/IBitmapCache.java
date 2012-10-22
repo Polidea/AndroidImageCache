@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
  * @author Wojciech Piwonski
  * 
  */
-public interface BitmapCache {
+public interface IBitmapCache {
 
     void get(String key, OnCacheResultListener onCacheResultListener);
 
