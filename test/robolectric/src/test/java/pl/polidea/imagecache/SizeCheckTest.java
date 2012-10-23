@@ -25,7 +25,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void emptyCacheSizeTest() {
+    public void emptyCacheTest() {
         // when
         imageCache = new ImageCache(context);
 
@@ -34,16 +34,71 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void oneBitmapCacheSizeTest() {
+    public void oneBitmapTest() {
         // given
         imageCache = new ImageCache(context);
-        final Bitmap bitmap1 = getBitmap(512);
+        final int sizeInKb = 512;
+        final Bitmap bitmap1 = getBitmap(sizeInKb);
         final String key1 = "key1";
 
         // when
         imageCache.put(key1, bitmap1);
 
         // then
-        assertEquals(512 * KB, imageCache.getMemoryCacheSize());
+        assertEquals(sizeInKb * KB, imageCache.getMemoryCacheSize());
     }
+
+    @Test
+    public void twoBitmapsTest() {
+        // given
+        imageCache = new ImageCache(context);
+        final Bitmap bitmap1 = getBitmap(512);
+        final String key1 = "key1";
+        final Bitmap bitmap2 = getBitmap(1024);
+        final String key2 = "key2";
+
+        // when
+        imageCache.put(key1, bitmap1);
+        imageCache.put(key2, bitmap2);
+
+        // then
+        assertEquals(1536 * KB, imageCache.getMemoryCacheSize());
+    }
+
+    @Test
+    public void removeBitmapTest() {
+        // given
+        imageCache = new ImageCache(context);
+        final Bitmap bitmap1 = getBitmap(512);
+        final String key1 = "key1";
+        final Bitmap bitmap2 = getBitmap(1024);
+        final String key2 = "key2";
+        imageCache.put(key1, bitmap1);
+        imageCache.put(key2, bitmap2);
+
+        // when
+        imageCache.remove(key1);
+
+        // then
+        assertEquals(1024 * KB, imageCache.getMemoryCacheSize());
+    }
+
+    @Test
+    public void clearCacheTest() {
+        // given
+        imageCache = new ImageCache(context);
+        final Bitmap bitmap1 = getBitmap(512);
+        final String key1 = "key1";
+        final Bitmap bitmap2 = getBitmap(1024);
+        final String key2 = "key2";
+        imageCache.put(key1, bitmap1);
+        imageCache.put(key2, bitmap2);
+
+        // when
+        imageCache.clear();
+
+        // then
+        assertEquals(0, imageCache.getMemoryCacheSize());
+    }
+
 }

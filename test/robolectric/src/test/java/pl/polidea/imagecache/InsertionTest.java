@@ -3,7 +3,6 @@
  */
 package pl.polidea.imagecache;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -104,6 +103,7 @@ public class InsertionTest extends ImageCacheTest {
 
     @Test
     public void clearCacheTest() throws InterruptedException {
+        // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
         final String key1 = "key1";
@@ -123,26 +123,31 @@ public class InsertionTest extends ImageCacheTest {
     @Test
     public void getNotExistingBitmapFailTest() throws InterruptedException {
         // given
-        imageCache = new ImageCache(context);
         final String key1 = "key1";
         final String key2 = "key2";
 
         // when
-        final boolean isKey1 = isInCache(key1);
-        final boolean isKey2 = isInCache(key2);
-
-        // then
-        assertFalse(isKey1);
-        assertFalse(isKey2);
-    }
-
-    @Test
-    public void emptyCacheSizeTest() {
-        // when
         imageCache = new ImageCache(context);
 
         // then
-        assertEquals(0, imageCache.getMemoryCacheSize());
+        assertFalse(isInCache(key1));
+        assertFalse(isInCache(key2));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void bitmapExceedingCacheSizeTest() throws InterruptedException {
+        // given
+        final CacheConfig config = new CacheConfig();
+        config.setMemoryCacheSize(2 * MB);
+        imageCache = new ImageCache(context, config);
+        final Bitmap bitmap = getBitmap(3 * 1024);
+        final String key = "key";
+
+        // when
+        imageCache.put(key, bitmap);
+
+        // then
+        // see the annotation
     }
 
 }

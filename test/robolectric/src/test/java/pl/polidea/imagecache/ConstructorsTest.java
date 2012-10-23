@@ -165,7 +165,7 @@ public class ConstructorsTest extends ImageCacheTest {
     public void diskSizeDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
-        final long diskCacheSize = (long) 10 * 1024 * 1024;
+        final long diskCacheSize = (long) 6 * 1024 * 1024;
         config.setDiskCacheSize(diskCacheSize);
 
         // when
@@ -182,6 +182,7 @@ public class ConstructorsTest extends ImageCacheTest {
         assertEquals(DEFAULT_COMPRESS_QUALITY, imageCache.getCompressQuality());
     }
 
+    @Test
     public void compressFormatDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
@@ -202,6 +203,7 @@ public class ConstructorsTest extends ImageCacheTest {
         assertEquals(DEFAULT_COMPRESS_QUALITY, imageCache.getCompressQuality());
     }
 
+    @Test
     public void compressQualityDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();

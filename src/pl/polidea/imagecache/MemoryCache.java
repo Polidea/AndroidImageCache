@@ -52,10 +52,14 @@ public class MemoryCache {
         if (key == null || value == null) {
             return;
         }
+        final int size = value.getRowBytes() * value.getHeight();
+        if (size > maxSize()) {
+            throw new IllegalArgumentException("Bitmap cannot be bigger than cache size");
+        }
         cache.put(key, value);
-        Log.i(TAG, "Inserting " + key + " into LRU Cache Bitmap with size: " + value.getRowBytes() * value.getHeight()
-                + "B " + " witdth:" + value.getWidth() + "\theight: " + value.getHeight() + " Cache size: " + size()
-                / 1000 + " KB");
+        Log.i(TAG,
+                "Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " witdth:" + value.getWidth()
+                        + "\theight: " + value.getHeight() + " Cache size: " + size() / 1000 + " KB");
     }
 
     public final int putCount() {

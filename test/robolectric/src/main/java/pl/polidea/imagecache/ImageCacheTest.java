@@ -25,6 +25,7 @@ public abstract class ImageCacheTest {
     protected static final int KB = 1024;
     protected static final int MB = 1024 * KB;
 
+    private static final int BYTES_PER_PIXEL = 4;
     protected static final int DEFAULT_WORKERS_NUMBER = 1;
     protected static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
     protected static final int DEFAULT_COMPRESS_QUALITY = 100;
@@ -105,8 +106,8 @@ public abstract class ImageCacheTest {
      * @return
      */
     protected Bitmap getBitmap(final int size) {
-        final int height = KB / 4;
-        final int width = size * KB / height;
+        final int height = 256;
+        final int width = size * KB / height / BYTES_PER_PIXEL;
         return getBitmap(width, height);
     }
 
@@ -114,7 +115,7 @@ public abstract class ImageCacheTest {
         final Bitmap b = Mockito.mock(Bitmap.class);
         Mockito.when(b.getHeight()).thenReturn(height);
         Mockito.when(b.getWidth()).thenReturn(width);
-        Mockito.when(b.getRowBytes()).thenReturn(width * 4);
+        Mockito.when(b.getRowBytes()).thenReturn(width * BYTES_PER_PIXEL);
         Mockito.when(b.compress(Mockito.any(CompressFormat.class), Mockito.anyInt(), Mockito.any(OutputStream.class)))
                 .thenReturn(true);
         return b;
