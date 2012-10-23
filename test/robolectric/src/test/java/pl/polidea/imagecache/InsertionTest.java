@@ -132,6 +132,22 @@ public class InsertionTest {
         assertFalse(isInCache(key2));
     }
 
+    @Test
+    public void getNotExistingBitmapFailTest() throws InterruptedException {
+        // given
+        imageCache = new ImageCache(context);
+        final String key1 = "key1";
+        final String key2 = "key2";
+
+        // when
+        final boolean isKey1 = isInCache(key1);
+        final boolean isKey2 = isInCache(key2);
+
+        // then
+        assertFalse(isKey1);
+        assertFalse(isKey2);
+    }
+
     private boolean isInCache(final String bitmapKey) throws InterruptedException {
         final Result result = new Result();
         final CountDownLatch latch = new CountDownLatch(1);
@@ -150,12 +166,6 @@ public class InsertionTest {
             }
         });
         latch.await();
-        return result.value;
-    }
-
-    private boolean isInCache(final String bitmapKey, final OnCacheResultListener listener) throws InterruptedException {
-        final Result result = new Result();
-        imageCache.get(bitmapKey, listener);
         return result.value;
     }
 
