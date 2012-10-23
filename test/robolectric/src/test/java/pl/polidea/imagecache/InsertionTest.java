@@ -3,20 +3,14 @@
  */
 package pl.polidea.imagecache;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.OutputStream;
-import java.util.concurrent.CountDownLatch;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 
 import com.xtremelabs.robolectric.Robolectric;
 
@@ -24,13 +18,7 @@ import com.xtremelabs.robolectric.Robolectric;
  * @author Wojciech Piwonski
  * 
  */
-@RunWith(ImageCacheTestRunner.class)
-public class InsertionTest {
-
-    private static final int KB = 1024;
-
-    private Context context;
-    private ImageCache imageCache;
+public class InsertionTest extends ImageCacheTest {
 
     @Before
     public void setup() {
@@ -148,49 +136,13 @@ public class InsertionTest {
         assertFalse(isKey2);
     }
 
-    private boolean isInCache(final String bitmapKey) throws InterruptedException {
-        final Result result = new Result();
-        final CountDownLatch latch = new CountDownLatch(1);
-        imageCache.get(bitmapKey, new OnCacheResultListener() {
+    @Test
+    public void emptyCacheSizeTest() {
+        // when
+        imageCache = new ImageCache(context);
 
-            @Override
-            public void onCacheMiss(final String key) {
-                result.value = false;
-                latch.countDown();
-            }
-
-            @Override
-            public void onCacheHit(final String key, final Bitmap bitmap) {
-                result.value = true;
-                latch.countDown();
-            }
-        });
-        latch.await();
-        return result.value;
+        // then
+        assertEquals(0, imageCache.getMemoryCacheSize());
     }
 
-    private class Result {
-        public boolean value = false;
-    }
-
-    /**
-     * @param size
-     *            size in KB
-     * @return
-     */
-    private Bitmap getBitmap(final int size) {
-        final int height = KB / 4;
-        final int width = size * KB / height;
-        return getBitmap(width, height);
-    }
-
-    private Bitmap getBitmap(final int width, final int height) {
-        final Bitmap b = Mockito.mock(Bitmap.class);
-        Mockito.when(b.getHeight()).thenReturn(height);
-        Mockito.when(b.getWidth()).thenReturn(width);
-        Mockito.when(b.getRowBytes()).thenReturn(width * 4);
-        Mockito.when(b.compress(Mockito.any(CompressFormat.class), Mockito.anyInt(), Mockito.any(OutputStream.class)))
-                .thenReturn(true);
-        return b;
-    }
 }
