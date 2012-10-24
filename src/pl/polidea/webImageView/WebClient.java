@@ -12,6 +12,11 @@ import java.net.URL;
 public class WebClient {
 
     public void requestForImage(final URL url, final OnWebClientResultListener clientResultListener) {
+
+        if (clientResultListener == null) {
+            throw new IllegalArgumentException("clientResultListener cannot be null");
+        }
+
         clientResultListener.onWebMiss(url);
     }
 }

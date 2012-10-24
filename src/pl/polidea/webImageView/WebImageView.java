@@ -28,11 +28,13 @@ public class WebImageView extends ImageView {
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         imageCache = getCache(context);
+        webClient = getWebClient();
     }
 
     public WebImageView(final Context context) {
         super(context);
         imageCache = getCache(context);
+        webClient = getWebClient();
     }
 
     private ImageCache getCache(final Context context) {
@@ -43,6 +45,12 @@ public class WebImageView extends ImageView {
         return webClient == null ? new WebClient() : webClient;
     }
 
+    /**
+     * Sets the content of this WebImageView to the specified URL.
+     * 
+     * @param url
+     *            The Uri of an image
+     */
     public void setImageURL(final URL url) {
         if (url == null) {
             return;
