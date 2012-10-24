@@ -142,6 +142,7 @@ public class ImageCache implements IBitmapCache {
 
     @Override
     public void get(final String key, final OnCacheResultListener onCacheResultListener) {
+        final String hashedKey = Utils.sha1(key);
         if (!areWorkersWork) {
             areWorkersWork = true;
             for (final Thread thread : workers) {
@@ -152,20 +153,21 @@ public class ImageCache implements IBitmapCache {
         if (onCacheResultListener == null) {
             throw new IllegalArgumentException("onCacheResult cannot be null");
         }
-        final Bitmap bitmap = memCache.get(key);
+        final Bitmap bitmap = memCache.get(hashedKey);
         if (bitmap != null) {
-            onCacheResultListener.onCacheHit(key, bitmap);
+            onCacheResultListener.onCacheHit(hashedKey, bitmap);
         } else {
-            deque.addFirst(new CacheTask(key, onCacheResultListener));
+            deque.addFirst(new CacheTask(hashedKey, onCacheResultListener));
         }
 
     }
 
     @Override
     public boolean remove(final String key) {
-        boolean removed = memCache.remove(key) != null;
+        final String hashedKey = Utils.sha1(key);
+        boolean removed = memCache.remove(hashedKey) != null;
         try {
-            removed = diskCache.remove(key) || removed;
+            removed = diskCache.remove(hashedKey) || removed;
         } catch (final IOException e) {
             Log.e(TAG, "Removing bitmap error");
         }
@@ -174,8 +176,9 @@ public class ImageCache implements IBitmapCache {
 
     @Override
     public void put(final String key, final Bitmap bitmap) {
-        memCache.put(key, bitmap);
-        diskCache.put(key, bitmap);
+        final String hashedKey = Utils.sha1(key);
+        memCache.put(hashedKey, bitmap);
+        diskCache.put(hashedKey, bitmap);
     }
 
     @Override
@@ -247,5 +250,4 @@ public class ImageCache implements IBitmapCache {
             this.onCacheResultListener = onCacheResultListener;
         }
     }
-
 }
