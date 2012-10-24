@@ -6,6 +6,7 @@ package pl.polidea.imagecache;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullConfigFailTest() {
+    public void nullConfigFailTest() throws IOException {
         // when
         final CacheConfig config = null;
         imageCache = new ImageCache(config);
@@ -37,7 +38,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullConfigContextFailTest() {
+    public void nullConfigContextFailTest() throws IOException {
         // when
         final CacheConfig config = null;
         imageCache = new ImageCache(context, config);
@@ -47,7 +48,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void emptyConfigFailTest() {
+    public void emptyConfigFailTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
 
@@ -59,7 +60,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void defaultValuesTest() {
+    public void defaultValuesTest() throws IOException {
         // when
         imageCache = new ImageCache(context);
 
@@ -74,11 +75,11 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void fullConfigTest() {
+    public void fullConfigTest() throws IOException {
         // given
         final int workersNumber = 1;
         final int memoryCacheSize = 6 * 1024 * 1024;
-        final String diskCachePath = File.separator + "cache";
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final long diskCacheSize = 10 * 1024 * 1024;
         final CompressFormat compressFormat = CompressFormat.JPEG;
         final int compressQuality = 80;
@@ -98,7 +99,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void workersNumberDefaultLoadingTest() {
+    public void workersNumberDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
         final int workersNumber = 2;
@@ -120,7 +121,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void memorySizeDefaultLoadingTest() {
+    public void memorySizeDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
         final int memoryCacheSize = 6 * 1024 * 1024;
@@ -141,10 +142,10 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void pathDefaultLoadingTest() {
+    public void pathDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
-        final String diskCachePath = File.separator + "cache";
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         config.setDiskCachePath(diskCachePath);
 
         // when
@@ -162,7 +163,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void diskSizeDefaultLoadingTest() {
+    public void diskSizeDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
         final long diskCacheSize = (long) 6 * 1024 * 1024;
@@ -183,7 +184,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void compressFormatDefaultLoadingTest() {
+    public void compressFormatDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
         final CompressFormat compressFormat = CompressFormat.PNG;
@@ -204,7 +205,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void compressQualityDefaultLoadingTest() {
+    public void compressQualityDefaultLoadingTest() throws IOException {
         // given
         final CacheConfig config = new CacheConfig();
         final int compressQuality = 75;
@@ -225,22 +226,10 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void workersNumberFailTest() {
+    public void workersNumberFailTest() throws IOException {
         // given
-        final CacheConfig config = prepareConfig(null, 6 * 1024 * 1024, File.separator + "cache",
-                (long) (10 * 1024 * 1024), CompressFormat.JPEG, 80);
-
-        // when
-        imageCache = new ImageCache(config);
-
-        // then
-        // see annotation param
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void memorySizeFailTest() {
-        // given
-        final CacheConfig config = prepareConfig(1, null, File.separator + "cache", (long) (10 * 1024 * 1024),
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
+        final CacheConfig config = prepareConfig(null, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024),
                 CompressFormat.JPEG, 80);
 
         // when
@@ -251,7 +240,21 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void pathFailTest() {
+    public void memorySizeFailTest() throws IOException {
+        // given
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
+        final CacheConfig config = prepareConfig(1, null, diskCachePath, (long) (10 * 1024 * 1024),
+                CompressFormat.JPEG, 80);
+
+        // when
+        imageCache = new ImageCache(config);
+
+        // then
+        // see annotation param
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void pathFailTest() throws IOException {
         // given
         final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, null, (long) (10 * 1024 * 1024),
                 CompressFormat.JPEG, 80);
@@ -264,10 +267,10 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void diskSizeFileTest() {
+    public void diskSizeFileTest() throws IOException {
         // given
-        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, File.separator + "cache", null,
-                CompressFormat.JPEG, 80);
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
+        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, null, CompressFormat.JPEG, 80);
 
         // when
         imageCache = new ImageCache(config);
@@ -277,10 +280,10 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void compressFormatFailTest() {
+    public void compressFormatFailTest() throws IOException {
         // given
-        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, File.separator + "cache",
-                (long) (10 * 1024 * 1024), null, 80);
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
+        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024), null, 80);
 
         // when
         imageCache = new ImageCache(config);
@@ -290,10 +293,11 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void compressQualityFailTest() {
+    public void compressQualityFailTest() throws IOException {
         // given
-        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, File.separator + "cache",
-                (long) (10 * 1024 * 1024), CompressFormat.JPEG, null);
+        final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
+        final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024),
+                CompressFormat.JPEG, null);
 
         // when
         imageCache = new ImageCache(config);

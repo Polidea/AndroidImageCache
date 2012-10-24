@@ -20,8 +20,8 @@ public class DiskCache {
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
 
-    private CompressFormat compressFormat;
-    private int compressQuality;
+    private final CompressFormat compressFormat;
+    private final int compressQuality;
     private DiskLruCache mDiskCache;
 
     /**
@@ -31,15 +31,14 @@ public class DiskCache {
      *            path of the cache directory
      * @param size
      *            cache size in bytes
+     * @throws IOException
+     *             if creating disk cache error occured
      */
-    public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality) {
-        try {
-            mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
-            this.compressFormat = compressFormat;
-            this.compressQuality = compressQuality;
-        } catch (final IOException e) {
-            Log.e(TAG, "Opening disk cache error");
-        }
+    public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality)
+            throws IOException {
+        mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
+        this.compressFormat = compressFormat;
+        this.compressQuality = compressQuality;
     }
 
     private DiskLruCache openDiskLruCache(final File directory, final int appVersion, final int valueCount,

@@ -34,8 +34,9 @@ public class ImageCache implements IBitmapCache {
      * Creates image cache with default parameters.
      * 
      * @param context
+     * @throws IOException
      */
-    public ImageCache(final Context context) {
+    public ImageCache(final Context context) throws IOException {
         this(fillEmptyValuesWithDefault(context, new CacheConfig()));
     }
 
@@ -44,8 +45,9 @@ public class ImageCache implements IBitmapCache {
      * Empty config's fields will be replaced by default values.
      * 
      * @param context
+     * @throws IOException
      */
-    public ImageCache(final Context context, final CacheConfig config) {
+    public ImageCache(final Context context, final CacheConfig config) throws IOException {
         this(fillEmptyValuesWithDefault(context, config));
     }
 
@@ -57,8 +59,10 @@ public class ImageCache implements IBitmapCache {
      * 
      * @param config
      *            cache configuration
+     * @throws IOException
+     *             if disk cache creation failed
      */
-    public ImageCache(final CacheConfig config) {
+    public ImageCache(final CacheConfig config) throws IOException {
         checkAllValuesFilled(config);
         memCache = new MemoryCache(config.getMemoryCacheSize());
         diskCache = new DiskCache(config.getDiskCachePath(), config.getDiskCacheSize(), config.getCompressFormat(),
