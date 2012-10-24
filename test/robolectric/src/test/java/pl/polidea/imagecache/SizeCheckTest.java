@@ -101,4 +101,23 @@ public class SizeCheckTest extends ImageCacheTest {
         assertEquals(0, imageCache.getMemoryCacheSize());
     }
 
+    @Test
+    public void overrideOldBitmapTest() {
+        // given
+        final CacheConfig config = new CacheConfig();
+        config.setMemoryCacheSize(1 * MB);
+        imageCache = new ImageCache(context, config);
+        final Bitmap bitmap1 = getBitmap(512);
+        final String key1 = "key1";
+        final Bitmap bitmap2 = getBitmap(768);
+        final String key2 = "key2";
+
+        // when
+        imageCache.put(key1, bitmap1);
+        imageCache.put(key2, bitmap2);
+
+        // then
+        assertEquals(768 * KB, imageCache.getMemoryCacheSize());
+    }
+
 }

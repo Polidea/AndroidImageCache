@@ -54,11 +54,12 @@ public class MemoryCache {
         }
         final int size = value.getRowBytes() * value.getHeight();
         if (size > maxSize()) {
-            throw new IllegalArgumentException("Bitmap cannot be bigger than cache size");
+            throw new RuntimeException("Tried to put bitmap of size: " + size / 1024
+                    + " KB, while maximum memory cache size is: " + maxSize() / 1024 + " KB.");
         }
         cache.put(key, value);
         Log.i(TAG,
-                "Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " witdth:" + value.getWidth()
+                "Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " width:" + value.getWidth()
                         + "\theight: " + value.getHeight() + " Cache size: " + size() / 1000 + " KB");
     }
 

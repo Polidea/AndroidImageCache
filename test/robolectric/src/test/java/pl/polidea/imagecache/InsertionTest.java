@@ -134,7 +134,7 @@ public class InsertionTest extends ImageCacheTest {
         assertFalse(isInCache(key2));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RuntimeException.class)
     public void bitmapExceedingCacheSizeTest() throws InterruptedException {
         // given
         final CacheConfig config = new CacheConfig();
