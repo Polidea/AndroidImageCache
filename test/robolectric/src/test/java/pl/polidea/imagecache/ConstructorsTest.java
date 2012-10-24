@@ -306,4 +306,18 @@ public class ConstructorsTest extends ImageCacheTest {
         // see annotation param
     }
 
+    @Test(expected = IOException.class)
+    public void wrongDiskPathFailTest() throws IOException {
+        // given
+        final CacheConfig config = new CacheConfig();
+        config.setDiskCachePath("wrongPath?**|:");
+
+        // when
+        imageCache = new ImageCache(context, config);
+
+        // then
+        // see annotation param
+
+    }
+
 }
