@@ -1,9 +1,7 @@
 /**
  *
  */
-package pl.polidea.webImageView;
-
-import java.net.URL;
+package pl.polidea.webimageview;
 
 /**
  * @author Marek Multarzynski
@@ -11,12 +9,12 @@ import java.net.URL;
  */
 public class WebClient {
 
-    public void requestForImage(final URL url, final OnWebClientResultListener clientResultListener) {
+    public void requestForImage(final String path, final OnWebClientResultListener clientResultListener) {
 
         if (clientResultListener == null) {
             throw new IllegalArgumentException("clientResultListener cannot be null");
         }
 
-        clientResultListener.onWebMiss(url);
+        clientResultListener.onWebMiss(path);
     }
 }

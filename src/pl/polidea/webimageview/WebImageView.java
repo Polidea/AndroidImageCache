@@ -1,4 +1,4 @@
-package pl.polidea.webImageView;
+package pl.polidea.webimageview;
 
 import java.net.URL;
 
@@ -46,34 +46,30 @@ public class WebImageView extends ImageView {
     }
 
     /**
-     * Sets the content of this WebImageView to the specified URL.
+     * Sets the content of this WebImageView to the specified path.
      * 
-     * @param url
-     *            The Uri of an image
+     * @param path
+     *            The path of an image
      */
-    public void setImageURL(final URL url) {
-        if (url == null) {
+    public void setImageURL(final String path) {
+        if (path == null) {
             return;
         }
-        final String pathIeKey = url.getPath();
-        if (pathIeKey == null) {
-            return;
-        }
-        imageCache.get(pathIeKey, new OnCacheResultListener() {
+        imageCache.get(path, new OnCacheResultListener() {
 
             @Override
             public void onCacheMiss(final String key) {
 
-                webClient.requestForImage(url, new OnWebClientResultListener() {
+                webClient.requestForImage(path, new OnWebClientResultListener() {
 
                     @Override
-                    public void onWebMiss(final URL url) {
+                    public void onWebMiss(final String path) {
                         return;
                     }
 
                     @Override
-                    public void onWebHit(final URL url, final Bitmap bitmap) {
-                        imageCache.put(url.getPath(), bitmap);
+                    public void onWebHit(final String path, final Bitmap bitmap) {
+                        imageCache.put(path, bitmap);
                         setImageBitmap(bitmap);
                     }
                 });
@@ -84,5 +80,18 @@ public class WebImageView extends ImageView {
                 setImageBitmap(bitmap);
             }
         });
+    }
+
+    /**
+     * Sets the content of this WebImageView to the specified URL.
+     * 
+     * @param url
+     *            The Uri of an image
+     */
+    public void setImageURL(final URL url) {
+        if (url == null) {
+            return;
+        }
+        setImageURL(url.getPath());
     }
 }

@@ -1,6 +1,4 @@
-package pl.polidea.webImageView;
-
-import java.net.URL;
+package pl.polidea.webimageview;
 
 import android.graphics.Bitmap;
 
@@ -11,7 +9,7 @@ import android.graphics.Bitmap;
  */
 public interface OnWebClientResultListener {
 
-    void onWebHit(URL url, Bitmap bitmap);
+    void onWebHit(String path, Bitmap bitmap);
 
-    void onWebMiss(URL url);
+    void onWebMiss(String path);
 }
