@@ -5,8 +5,6 @@ package pl.polidea.imagecache;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +25,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void emptyCacheTest() throws IOException {
+    public void emptyCacheTest() {
         // when
         imageCache = new ImageCache(context);
 
@@ -36,7 +34,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void oneBitmapTest() throws IOException {
+    public void oneBitmapTest() {
         // given
         imageCache = new ImageCache(context);
         final int sizeInKb = 512;
@@ -51,7 +49,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void twoBitmapsTest() throws IOException {
+    public void twoBitmapsTest() {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -68,7 +66,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void removeBitmapTest() throws IOException {
+    public void removeBitmapTest() {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -86,7 +84,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void clearCacheTest() throws IOException {
+    public void clearCacheTest() {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -104,7 +102,7 @@ public class SizeCheckTest extends ImageCacheTest {
     }
 
     @Test
-    public void overrideOldBitmapTest() throws IOException {
+    public void overrideOldBitmapTest() {
         // given
         final CacheConfig config = new CacheConfig();
         config.setMemoryCacheSize(1 * MB);

@@ -34,11 +34,14 @@ public class DiskCache {
      * @throws IOException
      *             if creating disk cache error occured
      */
-    public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality)
-            throws IOException {
-        mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
+    public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality) {
         this.compressFormat = compressFormat;
         this.compressQuality = compressQuality;
+        try {
+            mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("Creating disk cache failed", e);
+        }
     }
 
     private DiskLruCache openDiskLruCache(final File directory, final int appVersion, final int valueCount,

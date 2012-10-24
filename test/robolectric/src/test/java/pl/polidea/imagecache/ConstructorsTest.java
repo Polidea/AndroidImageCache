@@ -6,7 +6,6 @@ package pl.polidea.imagecache;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullConfigFailTest() throws IOException {
+    public void nullConfigFailTest() {
         // when
         final CacheConfig config = null;
         imageCache = new ImageCache(config);
@@ -38,7 +37,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullConfigContextFailTest() throws IOException {
+    public void nullConfigContextFailTest() {
         // when
         final CacheConfig config = null;
         imageCache = new ImageCache(context, config);
@@ -48,7 +47,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void emptyConfigFailTest() throws IOException {
+    public void emptyConfigFailTest() {
         // given
         final CacheConfig config = new CacheConfig();
 
@@ -60,7 +59,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void defaultValuesTest() throws IOException {
+    public void defaultValuesTest() {
         // when
         imageCache = new ImageCache(context);
 
@@ -75,7 +74,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void fullConfigTest() throws IOException {
+    public void fullConfigTest() {
         // given
         final int workersNumber = 1;
         final int memoryCacheSize = 6 * 1024 * 1024;
@@ -99,7 +98,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void workersNumberDefaultLoadingTest() throws IOException {
+    public void workersNumberDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final int workersNumber = 2;
@@ -121,7 +120,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void memorySizeDefaultLoadingTest() throws IOException {
+    public void memorySizeDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final int memoryCacheSize = 6 * 1024 * 1024;
@@ -142,7 +141,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void pathDefaultLoadingTest() throws IOException {
+    public void pathDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
@@ -163,7 +162,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void diskSizeDefaultLoadingTest() throws IOException {
+    public void diskSizeDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final long diskCacheSize = (long) 6 * 1024 * 1024;
@@ -184,7 +183,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void compressFormatDefaultLoadingTest() throws IOException {
+    public void compressFormatDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final CompressFormat compressFormat = CompressFormat.PNG;
@@ -205,7 +204,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test
-    public void compressQualityDefaultLoadingTest() throws IOException {
+    public void compressQualityDefaultLoadingTest() {
         // given
         final CacheConfig config = new CacheConfig();
         final int compressQuality = 75;
@@ -226,7 +225,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void workersNumberFailTest() throws IOException {
+    public void workersNumberFailTest() {
         // given
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final CacheConfig config = prepareConfig(null, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024),
@@ -240,7 +239,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void memorySizeFailTest() throws IOException {
+    public void memorySizeFailTest() {
         // given
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final CacheConfig config = prepareConfig(1, null, diskCachePath, (long) (10 * 1024 * 1024),
@@ -254,7 +253,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void pathFailTest() throws IOException {
+    public void pathFailTest() {
         // given
         final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, null, (long) (10 * 1024 * 1024),
                 CompressFormat.JPEG, 80);
@@ -267,7 +266,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void diskSizeFileTest() throws IOException {
+    public void diskSizeFileTest() {
         // given
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, null, CompressFormat.JPEG, 80);
@@ -280,7 +279,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void compressFormatFailTest() throws IOException {
+    public void compressFormatFailTest() {
         // given
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024), null, 80);
@@ -293,7 +292,7 @@ public class ConstructorsTest extends ImageCacheTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void compressQualityFailTest() throws IOException {
+    public void compressQualityFailTest() {
         // given
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
         final CacheConfig config = prepareConfig(1, 6 * 1024 * 1024, diskCachePath, (long) (10 * 1024 * 1024),
@@ -306,8 +305,8 @@ public class ConstructorsTest extends ImageCacheTest {
         // see annotation param
     }
 
-    @Test(expected = IOException.class)
-    public void wrongDiskPathFailTest() throws IOException {
+    @Test(expected = IllegalArgumentException.class)
+    public void wrongDiskPathFailTest() {
         // given
         final CacheConfig config = new CacheConfig();
         config.setDiskCachePath("wrongPath?**|:");

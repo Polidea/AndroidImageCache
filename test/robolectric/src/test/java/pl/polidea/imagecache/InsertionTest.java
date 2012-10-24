@@ -6,8 +6,6 @@ package pl.polidea.imagecache;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +26,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void insertionTest() throws InterruptedException, IOException {
+    public void insertionTest() throws InterruptedException {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -46,7 +44,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void deletionFirstBitmapTest() throws InterruptedException, IOException {
+    public void deletionFirstBitmapTest() throws InterruptedException {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -65,7 +63,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void deletionLastBitmapTest() throws InterruptedException, IOException {
+    public void deletionLastBitmapTest() throws InterruptedException {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -84,7 +82,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void deletionAllBitmapsTest() throws InterruptedException, IOException {
+    public void deletionAllBitmapsTest() throws InterruptedException {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -104,7 +102,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void clearCacheTest() throws InterruptedException, IOException {
+    public void clearCacheTest() throws InterruptedException {
         // given
         imageCache = new ImageCache(context);
         final Bitmap bitmap1 = getBitmap(512);
@@ -123,7 +121,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test
-    public void getNotExistingBitmapFailTest() throws InterruptedException, IOException {
+    public void getNotExistingBitmapFailTest() throws InterruptedException {
         // given
         final String key1 = "key1";
         final String key2 = "key2";
@@ -137,7 +135,7 @@ public class InsertionTest extends ImageCacheTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void bitmapExceedingCacheSizeTest() throws InterruptedException, IOException {
+    public void bitmapExceedingCacheSizeTest() throws InterruptedException {
         // given
         final CacheConfig config = new CacheConfig();
         config.setMemoryCacheSize(2 * MB);
