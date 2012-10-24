@@ -1,9 +1,22 @@
-
+syntax: regexp
+^local\.properties
 syntax: regexp
 ^bin$
 syntax: regexp
 ^gen$
 syntax: regexp
+^tmp$
+syntax: regexp
+^log$
+syntax: regexp
+^ota$
+syntax: regexp
+^\.gradle$
+
+syntax: regexp
 ^test/robolectric/bin$
 syntax: regexp
-^tmp$
+^test/robolectric/build$
+syntax: regexp
+^test/robolectric/\.gradle$
+
