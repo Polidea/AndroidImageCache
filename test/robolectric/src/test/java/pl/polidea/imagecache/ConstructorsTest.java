@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package pl.polidea.imagecache;
 
@@ -309,14 +309,16 @@ public class ConstructorsTest extends ImageCacheTest {
     public void wrongDiskPathFailTest() {
         // given
         final CacheConfig config = new CacheConfig();
-        config.setDiskCachePath("wrongPath?**|:");
+        final String diskCachePath = "/wrongPath?**|\\<>/:^&;\t\n\"";
+        config.setDiskCachePath(diskCachePath);
 
         // when
         imageCache = new ImageCache(context, config);
 
+        final File file = new File(diskCachePath);
+        file.exists();
         // then
         // see annotation param
 
     }
-
 }

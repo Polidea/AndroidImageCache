@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="libs/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="lib" path="libs/robolectric-1.1-jar-with-dependencies.jar" sourcepath="C:/Program Files/Android/android-sdk/extras/android/support/v4/src"/>
-	<classpathentry kind="lib" path="C:/Program Files/Android/android-sdk/platforms/android-16/android.jar"/>
+	<classpathentry kind="lib" path="/home/marek/Downloads/android-sdk/platforms/android-8/android.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ImageCache"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
