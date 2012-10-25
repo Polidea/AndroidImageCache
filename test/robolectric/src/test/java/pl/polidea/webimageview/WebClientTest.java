@@ -50,4 +50,14 @@ public class WebClientTest {
         fail();
     }
 
+    @Test
+    public void testMaximumSimultaneouslyDonwloadingFiles() {
+        fail();
+    }
+
+    @Test
+    public void testPendingDownloads() {
+        fail();
+    }
+
 }
