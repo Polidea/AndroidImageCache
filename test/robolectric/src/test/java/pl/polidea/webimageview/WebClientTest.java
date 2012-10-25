@@ -21,7 +21,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testAddingLinkToDownloadWithoudCallback() {
+    public void testAddingLinkToDownloadWithoutCallback() {
         fail();
     }
 
