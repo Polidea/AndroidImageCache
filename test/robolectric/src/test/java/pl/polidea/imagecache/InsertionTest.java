@@ -3,8 +3,7 @@
  */
 package pl.polidea.imagecache;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -134,7 +133,7 @@ public class InsertionTest extends ImageCacheTest {
         assertFalse(isInCache(key2));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void bitmapExceedingCacheSizeTest() throws InterruptedException {
         // given
         final CacheConfig config = new CacheConfig();

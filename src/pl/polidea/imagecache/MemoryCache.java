@@ -52,7 +52,7 @@ public class MemoryCache {
         }
         final int size = value.getRowBytes() * value.getHeight();
         if (size > maxSize()) {
-            throw new RuntimeException("Tried to put bitmap of size: " + size / 1024
+            throw new IllegalArgumentException("Tried to put bitmap of size: " + size / 1024
                     + " KB, while maximum memory cache size is: " + maxSize() / 1024 + " KB.");
         }
         cache.put(key, value);
