@@ -19,12 +19,7 @@ public class WebInterfaceImpl implements WebInterface {
 
     @Override
     public InputStream execute(final String path) throws IOException {
-        final DefaultHttpClient httpClient = new DefaultHttpClient();
-        final HttpGet httpGet = new HttpGet(path);
-        final HttpResponse execute = httpClient.execute(httpGet);
-        final HttpEntity entity = execute.getEntity();
-        final InputStream content = entity.getContent();
-        return content;
+        return new DefaultHttpClient().execute(new HttpGet(path)).getEntity().getContent();
     }
 
 }

@@ -34,11 +34,6 @@ public class MemoryCache {
         return cache.get(key);
     }
 
-    @Override
-    public int hashCode() {
-        return cache.hashCode();
-    }
-
     public final int hitCount() {
         return cache.hitCount();
     }

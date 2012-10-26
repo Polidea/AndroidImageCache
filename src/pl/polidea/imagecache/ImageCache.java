@@ -154,10 +154,10 @@ public class ImageCache implements IBitmapCache {
             throw new IllegalArgumentException("onCacheResult cannot be null");
         }
         final Bitmap bitmap = memCache.get(hashedKey);
-        if (bitmap != null) {
-            onCacheResultListener.onCacheHit(hashedKey, bitmap);
-        } else {
+        if (bitmap == null) {
             deque.addFirst(new CacheTask(hashedKey, onCacheResultListener));
+        } else {
+            onCacheResultListener.onCacheHit(hashedKey, bitmap);
         }
 
     }

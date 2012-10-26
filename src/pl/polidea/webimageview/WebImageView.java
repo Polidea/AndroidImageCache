@@ -68,7 +68,7 @@ public class WebImageView extends ImageView {
 
                     @Override
                     public void onWebMiss(final String path) {
-                        return;
+                        // N/A
                     }
 
                     @Override
