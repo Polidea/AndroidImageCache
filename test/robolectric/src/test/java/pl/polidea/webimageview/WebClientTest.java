@@ -232,20 +232,4 @@ public class WebClientTest {
         assertNotNull(resultBitmap);
     }
 
-    @Test
-    public void testMaximumSimultaneouslyDonwloadingFiles() {
-        fail();
-    }
-
-    @Test
-    public void testPendingDownloads() {
-        fail();
-    }
-
-    @Test
-    public void testWorkingThreadListeners() {
-        // idea is to have more listeners than working threads
-        fail();
-    }
-
 }
