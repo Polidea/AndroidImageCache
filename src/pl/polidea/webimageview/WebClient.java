@@ -4,11 +4,15 @@
 package pl.polidea.webimageview;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import org.apache.http.client.ClientProtocolException;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
  * @author Marek Multarzynski
@@ -41,8 +45,9 @@ public class WebClient {
                 @Override
                 public void run() {
                     try {
-                        httpClient.execute(path);
-                        pendingTasks.performCallbacks(path, null);
+                        final InputStream stream = httpClient.execute(path);
+                        final Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        pendingTasks.performCallbacks(path, bitmap);
                     } catch (final ClientProtocolException e) {
                         pendingTasks.performMissCallbacks(path);
                     } catch (final IOException e) {

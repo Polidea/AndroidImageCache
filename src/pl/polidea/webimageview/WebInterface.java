@@ -4,8 +4,8 @@
 package pl.polidea.webimageview;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 
 /**
@@ -14,5 +14,5 @@ import org.apache.http.client.ClientProtocolException;
  */
 public interface WebInterface {
 
-    HttpResponse execute(String path) throws ClientProtocolException, IOException;
+    InputStream execute(String path) throws ClientProtocolException, IOException;
 }

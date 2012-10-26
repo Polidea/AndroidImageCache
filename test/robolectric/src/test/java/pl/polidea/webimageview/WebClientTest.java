@@ -4,22 +4,28 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
 
+import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
 import android.graphics.Bitmap;
 
+@RunWith(ImageCacheTestRunner.class)
 public class WebClientTest {
 
     WebClient client;
     WebInterface httpClient;
     TestExecutorService executorService;
+    Bitmap resultBitmap;
 
     @Before
     public void setup() {
@@ -47,7 +53,7 @@ public class WebClientTest {
         // given
         final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
-        when(httpClient.execute(path)).thenReturn(mock(HttpResponse.class));
+        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -84,10 +90,11 @@ public class WebClientTest {
     }
 
     @Test
-    public void testSuccessfulDownload() {
+    public void testSuccessfulDownload() throws ClientProtocolException, IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
+        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -98,10 +105,11 @@ public class WebClientTest {
     }
 
     @Test
-    public void testNoMissOnSuccessfulDownload() {
+    public void testNoMissOnSuccessfulDownload() throws ClientProtocolException, IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
+        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -112,12 +120,13 @@ public class WebClientTest {
     }
 
     @Test
-    public void testPoolSizeAfterSuccessfulDonwload() {
+    public void testPoolSizeAfterSuccessfulDonwload() throws ClientProtocolException, IOException {
 
         // TODO: rename pls
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
+        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -166,7 +175,7 @@ public class WebClientTest {
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
         final WebCallback clientResultListener2 = mock(WebCallback.class);
-        when(httpClient.execute(path)).thenReturn(mock(HttpResponse.class));
+        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
 
         // when
         client.requestForImage(path, clientResultListener1);
@@ -195,6 +204,32 @@ public class WebClientTest {
         // then
         verify(clientResultListener1, times(1)).onWebMiss(anyString());
         verify(clientResultListener2, times(1)).onWebMiss(anyString());
+    }
+
+    @Test
+    public void testGettingBitmapFromWeb() throws ClientProtocolException, FileNotFoundException, IOException {
+        // given
+        final String path = "http://";
+        final WebCallback callback = new WebCallback() {
+
+            @Override
+            public void onWebMiss(final String path) {
+            }
+
+            @Override
+            public void onWebHit(final String path, final Bitmap bitmap) {
+                resultBitmap = bitmap;
+            }
+        };
+
+        when(httpClient.execute(path)).thenReturn(new FileInputStream("test/robolectric/res/key.png"));
+
+        // when
+        client.requestForImage(path, callback);
+        executorService.startCommands();
+
+        // then
+        assertNotNull(resultBitmap);
     }
 
     @Test
