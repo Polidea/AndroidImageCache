@@ -20,6 +20,7 @@ public class WebImageView extends ImageView {
 
     private static ImageCache imageCache;
     private static WebClient webClient;
+    private BitmapProcessor bitmapProcessor;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
@@ -73,8 +74,9 @@ public class WebImageView extends ImageView {
 
                     @Override
                     public void onWebHit(final String path, final Bitmap bitmap) {
-                        imageCache.put(path, bitmap);
-                        setBitmap(bitmap);
+                        final Bitmap bmp = bitmapProcessor == null ? bitmap : bitmapProcessor.process(bitmap);
+                        imageCache.put(path, bmp);
+                        setBitmap(bmp);
                     }
                 });
             }
@@ -107,5 +109,17 @@ public class WebImageView extends ImageView {
             return;
         }
         setImageURL(url.getPath());
+    }
+
+    public BitmapProcessor getBitmapProcessor() {
+        return bitmapProcessor;
+    }
+
+    public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
+        this.bitmapProcessor = bitmapProcessor;
+    }
+
+    public static interface BitmapProcessor {
+        Bitmap process(Bitmap origal);
     }
 }
