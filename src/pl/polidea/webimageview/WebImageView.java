@@ -6,6 +6,8 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.OnCacheResultListener;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -70,13 +72,23 @@ public class WebImageView extends ImageView {
                     @Override
                     public void onWebHit(final String path, final Bitmap bitmap) {
                         imageCache.put(path, bitmap);
-                        setImageBitmap(bitmap);
+                        setBitmap(bitmap);
                     }
                 });
             }
 
             @Override
             public void onCacheHit(final String key, final Bitmap bitmap) {
+                setBitmap(bitmap);
+            }
+        });
+    }
+
+    private void setBitmap(final Bitmap bitmap) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
                 setImageBitmap(bitmap);
             }
         });

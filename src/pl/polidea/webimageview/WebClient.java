@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * @author Marek Multarzynski
@@ -46,6 +47,7 @@ public class WebClient {
                 public void run() {
                     try {
                         final InputStream stream = httpClient.execute(path);
+                        Log.d("WebClient", "Downloading path: " + path);
                         final Bitmap bitmap = BitmapFactory.decodeStream(stream);
                         pendingTasks.performCallbacks(path, bitmap);
                     } catch (final ClientProtocolException e) {
