@@ -182,7 +182,7 @@ public class DiskCache {
         for (final File file : listFiles) {
             if (file.isDirectory()) {
                 deleteFiles(file.listFiles());
-                file.delete();
+                Log.d(TAG, "File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
             }
             Log.d(TAG, "File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
         }
