@@ -22,7 +22,6 @@ import android.util.Log;
 public class WebClient {
 
     TaskContainer pendingTasks = new TaskContainer();
-    TaskContainer workingTasks = new TaskContainer();
     WebInterface httpClient = new WebInterfaceImpl();
     ExecutorService taskExecutor = Executors.newFixedThreadPool(5, new ThreadFactory() {
 

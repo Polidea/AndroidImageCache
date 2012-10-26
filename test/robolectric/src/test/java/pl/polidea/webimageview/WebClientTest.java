@@ -136,7 +136,6 @@ public class WebClientTest {
 
         // then
         assertEquals(0, client.pendingTasks.size());
-        assertEquals(0, client.workingTasks.size());
     }
 
     @SuppressWarnings("unchecked")

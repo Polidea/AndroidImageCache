@@ -23,18 +23,20 @@ public class WebImageView extends ImageView {
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        imageCache = getCache(context);
-        webClient = getWebClient();
+        init(context);
     }
 
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        imageCache = getCache(context);
-        webClient = getWebClient();
+        init(context);
     }
 
     public WebImageView(final Context context) {
         super(context);
+        init(context);
+    }
+
+    private synchronized void init(final Context context) {
         imageCache = getCache(context);
         webClient = getWebClient();
     }

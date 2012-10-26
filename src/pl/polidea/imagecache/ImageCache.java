@@ -241,7 +241,7 @@ public class ImageCache implements IBitmapCache {
         }
     }
 
-    private class CacheTask {
+    private static class CacheTask {
         public String key;
         public OnCacheResultListener onCacheResultListener;
 
