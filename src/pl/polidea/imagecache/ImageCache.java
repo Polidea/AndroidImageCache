@@ -155,9 +155,9 @@ public class ImageCache implements IBitmapCache {
         }
         final Bitmap bitmap = memCache.get(hashedKey);
         if (bitmap == null) {
-            deque.addFirst(new CacheTask(hashedKey, onCacheResultListener));
+            deque.addFirst(new CacheTask(key, hashedKey, onCacheResultListener));
         } else {
-            onCacheResultListener.onCacheHit(hashedKey, bitmap);
+            onCacheResultListener.onCacheHit(key, bitmap);
         }
 
     }
@@ -226,11 +226,11 @@ public class ImageCache implements IBitmapCache {
             try {
                 while (true) {
                     final CacheTask task = deque.takeFirst();
-                    final Bitmap bitmap = diskCache.getBitmap(task.key);
+                    final Bitmap bitmap = diskCache.getBitmap(task.hashedKey);
                     if (bitmap == null || bitmap.isRecycled()) {
                         task.onCacheResultListener.onCacheMiss(task.key);
                     } else {
-                        memCache.put(task.key, bitmap);
+                        memCache.put(task.hashedKey, bitmap);
                         task.onCacheResultListener.onCacheHit(task.key, bitmap);
                     }
                 }
@@ -244,9 +244,11 @@ public class ImageCache implements IBitmapCache {
     private static class CacheTask {
         public String key;
         public OnCacheResultListener onCacheResultListener;
+        private final String hashedKey;
 
-        public CacheTask(final String key, final OnCacheResultListener onCacheResultListener) {
+        public CacheTask(final String key, final String hashedKey, final OnCacheResultListener onCacheResultListener) {
             this.key = key;
+            this.hashedKey = hashedKey;
             this.onCacheResultListener = onCacheResultListener;
         }
     }

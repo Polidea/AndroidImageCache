@@ -21,6 +21,7 @@ public class WebImageView extends ImageView {
     private static ImageCache imageCache;
     private static WebClient webClient;
     private BitmapProcessor bitmapProcessor;
+    private String path;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
@@ -57,6 +58,7 @@ public class WebImageView extends ImageView {
      *            The path of an image
      */
     public void setImageURL(final String path) {
+        this.path = path;
         if (path == null) {
             return;
         }
@@ -76,26 +78,28 @@ public class WebImageView extends ImageView {
                     public void onWebHit(final String path, final Bitmap bitmap) {
                         final Bitmap bmp = bitmapProcessor == null ? bitmap : bitmapProcessor.process(bitmap);
                         imageCache.put(path, bmp);
-                        setBitmap(bmp);
+                        setBitmap(path, bmp);
                     }
                 });
             }
 
             @Override
             public void onCacheHit(final String key, final Bitmap bitmap) {
-                setBitmap(bitmap);
+                setBitmap(key, bitmap);
             }
         });
     }
 
-    private void setBitmap(final Bitmap bitmap) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+    private void setBitmap(final String key, final Bitmap bitmap) {
+        if (key.equals(path)) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
 
-            @Override
-            public void run() {
-                setImageBitmap(bitmap);
-            }
-        });
+                @Override
+                public void run() {
+                    setImageBitmap(bitmap);
+                }
+            });
+        }
     }
 
     /**
