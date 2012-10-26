@@ -10,15 +10,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
 
 import pl.polidea.imagecache.TestExecutorService;
 import android.graphics.Bitmap;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-@RunWith(RobolectricTestRunner.class)
 public class WebClientTest {
 
     WebClient client;
@@ -49,7 +45,7 @@ public class WebClientTest {
     @Test
     public void testAddingLinkToDownload() throws ClientProtocolException, IOException {
         // given
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
         when(httpClient.execute(path)).thenReturn(mock(HttpResponse.class));
 
@@ -75,8 +71,8 @@ public class WebClientTest {
     @Test
     public void testAddingTwoSameLinks() {
         // given
-        final OnWebClientResultListener clientResultListener1 = mock(OnWebClientResultListener.class);
-        final OnWebClientResultListener clientResultListener2 = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener1 = mock(WebCallback.class);
+        final WebCallback clientResultListener2 = mock(WebCallback.class);
         final String path = "http://";
 
         // when
@@ -91,7 +87,7 @@ public class WebClientTest {
     public void testSuccessfulDownload() {
         // given
         final String path = "http://";
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -104,7 +100,7 @@ public class WebClientTest {
     public void testNoMissOnSuccessfulDownload() {
         // given
         final String path = "http://";
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -119,7 +115,7 @@ public class WebClientTest {
         // TODO: rename pls
         // given
         final String path = "http://";
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -132,7 +128,7 @@ public class WebClientTest {
     @Test
     public void testFailureDownload() throws ClientProtocolException, IOException {
         // given
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
         when(httpClient.execute(path)).thenThrow(ClientProtocolException.class);
 
@@ -147,7 +143,7 @@ public class WebClientTest {
     @Test
     public void testNoHitOnFailureDownload() throws ClientProtocolException, IOException {
         // given
-        final OnWebClientResultListener clientResultListener = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
         when(httpClient.execute(path)).thenThrow(ClientProtocolException.class);
 
@@ -162,8 +158,8 @@ public class WebClientTest {
     public void testSuccessfullDownloadingSameLinks() {
         // given
         final String path = "http://";
-        final OnWebClientResultListener clientResultListener1 = mock(OnWebClientResultListener.class);
-        final OnWebClientResultListener clientResultListener2 = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener1 = mock(WebCallback.class);
+        final WebCallback clientResultListener2 = mock(WebCallback.class);
 
         // when
         client.requestForImage(path, clientResultListener1);
@@ -178,8 +174,8 @@ public class WebClientTest {
     public void testFailureDownloadingSameLinks() {
         // given
         final String path = "http://";
-        final OnWebClientResultListener clientResultListener1 = mock(OnWebClientResultListener.class);
-        final OnWebClientResultListener clientResultListener2 = mock(OnWebClientResultListener.class);
+        final WebCallback clientResultListener1 = mock(WebCallback.class);
+        final WebCallback clientResultListener2 = mock(WebCallback.class);
 
         // when
         client.requestForImage(path, clientResultListener1);

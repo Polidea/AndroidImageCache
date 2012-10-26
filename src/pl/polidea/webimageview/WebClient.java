@@ -29,7 +29,7 @@ public class WebClient {
         }
     });
 
-    public void requestForImage(final String path, final OnWebClientResultListener clientResultListener) {
+    public void requestForImage(final String path, final WebCallback clientResultListener) {
 
         if (clientResultListener == null) {
             throw new IllegalArgumentException("clientResultListener cannot be null");

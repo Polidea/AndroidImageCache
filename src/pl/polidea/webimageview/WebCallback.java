@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
  * @author Marek Multrzynski
  * 
  */
-public interface OnWebClientResultListener {
+public interface WebCallback {
 
     void onWebHit(String path, Bitmap bitmap);
 

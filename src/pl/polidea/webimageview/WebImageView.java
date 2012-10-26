@@ -60,7 +60,7 @@ public class WebImageView extends ImageView {
             @Override
             public void onCacheMiss(final String key) {
 
-                webClient.requestForImage(path, new OnWebClientResultListener() {
+                webClient.requestForImage(path, new WebCallback() {
 
                     @Override
                     public void onWebMiss(final String path) {
