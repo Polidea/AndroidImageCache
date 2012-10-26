@@ -53,7 +53,7 @@ public class WebClientTest {
         client.requestForImage(path, clientResultListener);
 
         // then
-        assertTrue(client.pathsWaitingForDownloading.contains(path));
+        assertEquals(1, client.pendingTasks.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -80,7 +80,7 @@ public class WebClientTest {
         client.requestForImage(path, clientResultListener2);
 
         // then
-        assertEquals(1, client.pathsWaitingForDownloading.size());
+        assertEquals(1, client.pendingTasks.size());
     }
 
     @Test
@@ -91,6 +91,7 @@ public class WebClientTest {
 
         // when
         client.requestForImage(path, clientResultListener);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener, times(1)).onWebHit(anyString(), any(Bitmap.class));
@@ -104,6 +105,7 @@ public class WebClientTest {
 
         // when
         client.requestForImage(path, clientResultListener);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener, times(0)).onWebMiss(anyString());
@@ -119,9 +121,11 @@ public class WebClientTest {
 
         // when
         client.requestForImage(path, clientResultListener);
+        executorService.startCommands();
 
         // then
-        assertTrue(client.pathsWaitingForDownloading.isEmpty() && client.downloadingPaths.isEmpty());
+        assertEquals(0, client.pendingTasks.size());
+        assertEquals(0, client.workingTasks.size());
     }
 
     @SuppressWarnings("unchecked")
@@ -134,6 +138,7 @@ public class WebClientTest {
 
         // when
         client.requestForImage(path, clientResultListener);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener, times(1)).onWebMiss(anyString());
@@ -149,37 +154,43 @@ public class WebClientTest {
 
         // when
         client.requestForImage(path, clientResultListener);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener, times(0)).onWebHit(anyString(), any(Bitmap.class));
     }
 
     @Test
-    public void testSuccessfullDownloadingSameLinks() {
+    public void testSuccessfullDownloadingSameLinks() throws ClientProtocolException, IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
         final WebCallback clientResultListener2 = mock(WebCallback.class);
+        when(httpClient.execute(path)).thenReturn(mock(HttpResponse.class));
 
         // when
         client.requestForImage(path, clientResultListener1);
         client.requestForImage(path, clientResultListener2);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener1, times(1)).onWebHit(anyString(), any(Bitmap.class));
         verify(clientResultListener2, times(1)).onWebHit(anyString(), any(Bitmap.class));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void testFailureDownloadingSameLinks() {
+    public void testFailureDownloadingSameLinks() throws ClientProtocolException, IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
         final WebCallback clientResultListener2 = mock(WebCallback.class);
+        when(httpClient.execute(path)).thenThrow(ClientProtocolException.class);
 
         // when
         client.requestForImage(path, clientResultListener1);
         client.requestForImage(path, clientResultListener2);
+        executorService.startCommands();
 
         // then
         verify(clientResultListener1, times(1)).onWebMiss(anyString());

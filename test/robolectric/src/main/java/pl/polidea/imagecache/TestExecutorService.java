@@ -64,6 +64,7 @@ public class TestExecutorService implements ExecutorService {
 
     @Override
     public Future< ? > submit(final Runnable task) {
+        commands.add(task);
         return null;
     }
 

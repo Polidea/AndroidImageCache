@@ -4,8 +4,6 @@
 package pl.polidea.webimageview;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -18,8 +16,8 @@ import org.apache.http.client.ClientProtocolException;
  */
 public class WebClient {
 
-    Set<String> pathsWaitingForDownloading = new HashSet<String>();
-    Set<String> downloadingPaths = new HashSet<String>();
+    TaskContainer pendingTasks = new TaskContainer();
+    TaskContainer workingTasks = new TaskContainer();
     WebInterface httpClient = new WebInterfaceImpl();
     ExecutorService taskExecutor = Executors.newFixedThreadPool(5, new ThreadFactory() {
 
@@ -35,17 +33,25 @@ public class WebClient {
             throw new IllegalArgumentException("clientResultListener cannot be null");
         }
 
-        pathsWaitingForDownloading.add(path);
+        final boolean newTask = pendingTasks.addTask(path, clientResultListener);
 
-        try {
-            httpClient.execute(path);
-            clientResultListener.onWebHit(path, null);
-        } catch (final ClientProtocolException e) {
-            clientResultListener.onWebMiss(path);
-        } catch (final IOException e) {
-            clientResultListener.onWebMiss(path);
+        if (newTask) {
+            taskExecutor.submit(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        httpClient.execute(path);
+                        pendingTasks.performCallbacks(path, null);
+                    } catch (final ClientProtocolException e) {
+                        pendingTasks.performMissCallbacks(path);
+                    } catch (final IOException e) {
+                        pendingTasks.performMissCallbacks(path);
+                    }
+                    pendingTasks.remove(path);
+                }
+            });
         }
-        pathsWaitingForDownloading.remove(path);
     }
 
     /**
