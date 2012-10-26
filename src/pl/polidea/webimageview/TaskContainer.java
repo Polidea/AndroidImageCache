@@ -21,7 +21,7 @@ public class TaskContainer {
      *            the listener
      * @return true, if new key added
      */
-    public boolean addTask(final String path, final WebCallback listener) {
+    public synchronized boolean addTask(final String path, final WebCallback listener) {
         if (map.containsKey(path)) {
             final Set<WebCallback> set = map.get(path);
             set.add(listener);
@@ -34,15 +34,15 @@ public class TaskContainer {
         }
     }
 
-    public int size() {
+    public synchronized int size() {
         return map.size();
     }
 
-    public void remove(final String path) {
+    public synchronized void remove(final String path) {
         map.remove(path);
     }
 
-    public int callbackSize() {
+    public synchronized int callbackSize() {
         int size = 0;
         for (final Entry<String, Set<WebCallback>> task : map.entrySet()) {
             size += task.getValue().size();
@@ -50,14 +50,14 @@ public class TaskContainer {
         return size;
     }
 
-    public void performCallbacks(final String path, final Bitmap bitmap) {
+    public synchronized void performCallbacks(final String path, final Bitmap bitmap) {
         final Set<WebCallback> set = map.get(path);
         for (final WebCallback webCallback : set) {
             webCallback.onWebHit(path, bitmap);
         }
     }
 
-    public void performMissCallbacks(final String path) {
+    public synchronized void performMissCallbacks(final String path) {
         final Set<WebCallback> set = map.get(path);
         for (final WebCallback webCallback : set) {
             webCallback.onWebMiss(path);
