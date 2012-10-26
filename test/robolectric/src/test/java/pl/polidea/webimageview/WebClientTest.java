@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
 
+import pl.polidea.imagecache.TestExecutorService;
 import android.graphics.Bitmap;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -22,18 +23,27 @@ public class WebClientTest {
 
     WebClient client;
     WebInterface httpClient;
+    TestExecutorService executorService;
 
     @Before
     public void setup() {
         client = new WebClient();
+        executorService = new TestExecutorService();
         httpClient = mock(WebInterface.class);
         client.setWebInterface(httpClient);
+        client.setTaskExecutor(executorService);
     }
 
     @Test
     public void testMockingHttpClient() {
         // then
         assertTrue(new MockUtil().isMock(client.httpClient));
+    }
+
+    @Test
+    public void testOverridingExecutor() {
+        // then
+        assertTrue(client.taskExecutor instanceof TestExecutorService);
     }
 
     @Test
