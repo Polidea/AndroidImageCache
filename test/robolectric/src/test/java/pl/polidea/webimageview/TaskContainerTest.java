@@ -10,9 +10,15 @@ import android.graphics.Bitmap;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
+/**
+ * The Class TaskContainerTest.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class TaskContainerTest {
 
+    /**
+     * Test adding new task.
+     */
     @Test
     public void testAddingNewTask() {
         // given
@@ -27,6 +33,9 @@ public class TaskContainerTest {
         assertEquals(1, container.size());
     }
 
+    /**
+     * Test adding tasks with same path.
+     */
     @Test
     public void testAddingTasksWithSamePath() {
         // given
@@ -43,6 +52,9 @@ public class TaskContainerTest {
         assertEquals(1, container.size());
     }
 
+    /**
+     * Test result adding tasks with same path.
+     */
     @Test
     public void testResultAddingTasksWithSamePath() {
         // given
@@ -60,6 +72,9 @@ public class TaskContainerTest {
         assertFalse(add2);
     }
 
+    /**
+     * Test removing task.
+     */
     @Test
     public void testRemovingTask() {
         // given
@@ -78,6 +93,9 @@ public class TaskContainerTest {
         assertEquals(1, container.size());
     }
 
+    /**
+     * Test callbacks number.
+     */
     @Test
     public void testCallbacksNumber() {
         // given
@@ -95,6 +113,9 @@ public class TaskContainerTest {
         assertEquals(2, container.callbackSize());
     }
 
+    /**
+     * Test calling hit callbacks.
+     */
     @Test
     public void testCallingHitCallbacks() {
         // given
@@ -114,6 +135,9 @@ public class TaskContainerTest {
         Mockito.verify(listener1, Mockito.times(1)).onWebHit(path, bitmap);
     }
 
+    /**
+     * Test calling miss callbacks.
+     */
     @Test
     public void testCallingMissCallbacks() {
         // given

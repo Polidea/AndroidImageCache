@@ -26,6 +26,7 @@ import java.util.Map;
  * framework's implementation. See the framework SDK documentation for a class
  * overview.
  */
+@SuppressWarnings("all")
 public class LruCache<K, V> {
     private final LinkedHashMap<K, V> map;
 
@@ -60,7 +61,7 @@ public class LruCache<K, V> {
      * head of the queue. This returns null if a value is not cached and cannot
      * be created.
      */
-    public final V get(final K key) {
+    public V get(final K key) {
         if (key == null) {
             throw new NullPointerException("key == null");
         }
@@ -114,7 +115,7 @@ public class LruCache<K, V> {
      * 
      * @return the previous value mapped by {@code key}.
      */
-    public final V put(final K key, final V value) {
+    public V put(final K key, final V value) {
         if (key == null || value == null) {
             throw new NullPointerException("key == null || value == null");
         }
@@ -173,7 +174,7 @@ public class LruCache<K, V> {
      * 
      * @return the previous value mapped by {@code key}.
      */
-    public final V remove(final K key) {
+    public V remove(final K key) {
         if (key == null) {
             throw new NullPointerException("key == null");
         }
@@ -257,7 +258,7 @@ public class LruCache<K, V> {
     /**
      * Clear the cache, calling {@link #entryRemoved} on each removed entry.
      */
-    public final void evictAll() {
+    public void evictAll() {
         trimToSize(-1); // -1 will evict 0-sized elements
     }
 
@@ -266,7 +267,7 @@ public class LruCache<K, V> {
      * of entries in the cache. For all other caches, this returns the sum of
      * the sizes of the entries in this cache.
      */
-    public synchronized final int size() {
+    public synchronized int size() {
         return size;
     }
 
@@ -275,14 +276,14 @@ public class LruCache<K, V> {
      * number of entries in the cache. For all other caches, this returns the
      * maximum sum of the sizes of the entries in this cache.
      */
-    public synchronized final int maxSize() {
+    public synchronized int maxSize() {
         return maxSize;
     }
 
     /**
      * Returns the number of times {@link #get} returned a value.
      */
-    public synchronized final int hitCount() {
+    public synchronized int hitCount() {
         return hitCount;
     }
 
@@ -290,28 +291,28 @@ public class LruCache<K, V> {
      * Returns the number of times {@link #get} returned null or required a new
      * value to be created.
      */
-    public synchronized final int missCount() {
+    public synchronized int missCount() {
         return missCount;
     }
 
     /**
      * Returns the number of times {@link #create(Object)} returned a value.
      */
-    public synchronized final int createCount() {
+    public synchronized int createCount() {
         return createCount;
     }
 
     /**
      * Returns the number of times {@link #put} was called.
      */
-    public synchronized final int putCount() {
+    public synchronized int putCount() {
         return putCount;
     }
 
     /**
      * Returns the number of values that have been evicted.
      */
-    public synchronized final int evictionCount() {
+    public synchronized int evictionCount() {
         return evictionCount;
     }
 
@@ -319,12 +320,12 @@ public class LruCache<K, V> {
      * Returns a copy of the current contents of the cache, ordered from least
      * recently accessed to most recently accessed.
      */
-    public synchronized final Map<K, V> snapshot() {
+    public synchronized Map<K, V> snapshot() {
         return new LinkedHashMap<K, V>(map);
     }
 
     @Override
-    public synchronized final String toString() {
+    public synchronized String toString() {
         final int accesses = hitCount + missCount;
         final int hitPercent = accesses != 0 ? 100 * hitCount / accesses : 0;
         return String.format("LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]", maxSize, hitCount, missCount,

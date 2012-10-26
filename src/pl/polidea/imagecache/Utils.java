@@ -39,7 +39,7 @@ public final class Utils {
         final StringBuffer buf = new StringBuffer();
         for (final byte element : data) {
             int halfbyte = element >>> 4 & 0x0F;
-            int two_halfs = 0;
+            int twoHalfs = 0;
             do {
                 if (0 <= halfbyte && halfbyte <= 9) {
                     buf.append((char) ('0' + halfbyte));
@@ -47,7 +47,7 @@ public final class Utils {
                     buf.append((char) ('a' + (halfbyte - 10)));
                 }
                 halfbyte = element & 0x0F;
-            } while (two_halfs++ < 1);
+            } while (twoHalfs++ < 1);
         }
         return buf.toString();
     }

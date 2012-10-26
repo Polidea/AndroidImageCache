@@ -76,6 +76,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @param <E>
  *            the type of elements held in this collection
  */
+@SuppressWarnings("all")
 public class LinkedBlockingDeque<E> extends AbstractQueue<E> implements BlockingQueue<E>, java.io.Serializable {
 
     /*
@@ -976,7 +977,7 @@ public class LinkedBlockingDeque<E> extends AbstractQueue<E> implements Blocking
      * @throws NullPointerException
      *             if the specified array is null
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     @Override
     public <T> T[] toArray(T[] a) {
         lock.lock();
@@ -1185,6 +1186,7 @@ public class LinkedBlockingDeque<E> extends AbstractQueue<E> implements Blocking
         last = null;
         // Read in all elements and place in queue
         for (;;) {
+            @SuppressWarnings("unchecked")
             final E item = (E) s.readObject();
             if (item == null) {
                 break;

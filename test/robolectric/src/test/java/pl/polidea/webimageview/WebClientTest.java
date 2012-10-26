@@ -5,7 +5,6 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +18,9 @@ import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
 import android.graphics.Bitmap;
 
+/**
+ * The Class WebClientTest.
+ */
 @RunWith(ImageCacheTestRunner.class)
 public class WebClientTest {
 
@@ -49,7 +51,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testAddingLinkToDownload() throws ClientProtocolException, IOException {
+    public void testAddingLinkToDownload() throws IOException {
         // given
         final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
@@ -90,7 +92,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testSuccessfulDownload() throws ClientProtocolException, IOException {
+    public void testSuccessfulDownload() throws IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
@@ -105,7 +107,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testNoMissOnSuccessfulDownload() throws ClientProtocolException, IOException {
+    public void testNoMissOnSuccessfulDownload() throws IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
@@ -120,7 +122,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testPoolSizeAfterSuccessfulDonwload() throws ClientProtocolException, IOException {
+    public void testPoolSizeAfterSuccessfulDonwload() throws IOException {
 
         // TODO: rename pls
         // given
@@ -139,7 +141,7 @@ public class WebClientTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testFailureDownload() throws ClientProtocolException, IOException {
+    public void testFailureDownload() throws IOException {
         // given
         final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
@@ -155,7 +157,7 @@ public class WebClientTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testNoHitOnFailureDownload() throws ClientProtocolException, IOException {
+    public void testNoHitOnFailureDownload() throws IOException {
         // given
         final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
@@ -170,7 +172,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testSuccessfullDownloadingSameLinks() throws ClientProtocolException, IOException {
+    public void testSuccessfullDownloadingSameLinks() throws IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
@@ -189,7 +191,7 @@ public class WebClientTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testFailureDownloadingSameLinks() throws ClientProtocolException, IOException {
+    public void testFailureDownloadingSameLinks() throws IOException {
         // given
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
@@ -207,7 +209,7 @@ public class WebClientTest {
     }
 
     @Test
-    public void testGettingBitmapFromWeb() throws ClientProtocolException, FileNotFoundException, IOException {
+    public void testGettingBitmapFromWeb() throws IOException {
         // given
         final String path = "http://";
         final WebCallback callback = new WebCallback() {

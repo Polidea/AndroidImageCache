@@ -11,6 +11,9 @@ import pl.polidea.imagecache.ImageCacheTest;
 
 import com.xtremelabs.robolectric.Robolectric;
 
+/**
+ * The Class WebImageTest.
+ */
 public class WebImageTest extends ImageCacheTest {
 
     @Test

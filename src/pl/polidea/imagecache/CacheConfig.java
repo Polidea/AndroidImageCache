@@ -6,7 +6,7 @@ package pl.polidea.imagecache;
 import android.graphics.Bitmap.CompressFormat;
 
 /**
- * Image cache configuration
+ * Image cache configuration.
  * 
  * @author Wojciech Piwonski
  * 
@@ -37,7 +37,7 @@ public class CacheConfig {
     }
 
     /**
-     * Returns size of memory cache in bytes
+     * Returns size of memory cache in bytes.
      * 
      * @return size of memory cache
      */
@@ -46,7 +46,7 @@ public class CacheConfig {
     }
 
     /**
-     * Sets size of memory cache
+     * Sets size of memory cache.
      * 
      * @param memoryCacheSize
      *            size in bytes

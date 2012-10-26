@@ -10,6 +10,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * The Class TestExecutorService.
+ */
 public class TestExecutorService implements ExecutorService {
 
     List<Runnable> commands = new LinkedList<Runnable>();

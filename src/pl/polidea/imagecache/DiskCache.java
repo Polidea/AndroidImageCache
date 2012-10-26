@@ -14,6 +14,9 @@ import android.util.Log;
 
 import com.jakewharton.DiskLruCache;
 
+/**
+ * The Class DiskCache.
+ */
 public class DiskCache {
 
     private static final String TAG = DiskCache.class.getSimpleName();
@@ -25,7 +28,7 @@ public class DiskCache {
     private DiskLruCache mDiskCache;
 
     /**
-     * Creates disk cache in specified directory and size
+     * Creates disk cache in specified directory and size.
      * 
      * @param path
      *            path of the cache directory

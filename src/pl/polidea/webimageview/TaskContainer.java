@@ -8,6 +8,9 @@ import java.util.Set;
 
 import android.graphics.Bitmap;
 
+/**
+ * The Class TaskContainer.
+ */
 public class TaskContainer {
 
     Map<String, Set<WebCallback>> map = new HashMap<String, Set<WebCallback>>();
