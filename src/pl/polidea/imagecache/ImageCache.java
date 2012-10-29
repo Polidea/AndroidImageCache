@@ -140,6 +140,12 @@ public class ImageCache implements IBitmapCache {
         return size;
     }
 
+    /**
+     * Ask ImageCache for given key. If memory cache doesn't have the key it
+     * continue operation in other thread asking disk cache for the key. Passing
+     * null listener throws IllegalArgumentException because passing the key
+     * value is always done by the listener.
+     */
     @Override
     public void get(final String key, final OnCacheResultListener onCacheResultListener) {
         final String hashedKey = Utils.sha1(key);
@@ -162,6 +168,9 @@ public class ImageCache implements IBitmapCache {
 
     }
 
+    /**
+     * Removes bitmpa under key from memory and disc cache.
+     */
     @Override
     public boolean remove(final String key) {
         final String hashedKey = Utils.sha1(key);
@@ -174,6 +183,9 @@ public class ImageCache implements IBitmapCache {
         return removed;
     }
 
+    /**
+     * Puts bitmap to both memory and disc cache.
+     */
     @Override
     public void put(final String key, final Bitmap bitmap) {
         final String hashedKey = Utils.sha1(key);

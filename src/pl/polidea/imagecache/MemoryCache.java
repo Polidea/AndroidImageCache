@@ -46,6 +46,13 @@ public class MemoryCache {
         return cache.missCount();
     }
 
+    /**
+     * Puts bitmap to cache. Both key and value can't be null. Inserting bitmap
+     * bigger than MemoryCache size throw IllegalArgumentException.
+     * 
+     * @param key
+     * @param value
+     */
     public final void put(final String key, final Bitmap value) {
         if (key == null || value == null) {
             return;

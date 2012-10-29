@@ -31,6 +31,16 @@ public class WebClient {
         }
     });
 
+    /**
+     * Request for image. If Image under path url is downloading the current
+     * time the listener is added to collection of callbacks. Otherwise new
+     * download thread is run.
+     * 
+     * @param path
+     *            the path
+     * @param clientResultListener
+     *            the client result listener
+     */
     public void requestForImage(final String path, final WebCallback clientResultListener) {
 
         if (clientResultListener == null) {

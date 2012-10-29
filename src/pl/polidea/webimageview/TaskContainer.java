@@ -53,6 +53,12 @@ public class TaskContainer {
         return size;
     }
 
+    /**
+     * Perform callbacks on all registered classes under path key.
+     * 
+     * @param path
+     * @param bitmap
+     */
     public synchronized void performCallbacks(final String path, final Bitmap bitmap) {
         final Set<WebCallback> set = map.get(path);
         for (final WebCallback webCallback : set) {
@@ -60,6 +66,12 @@ public class TaskContainer {
         }
     }
 
+    /**
+     * Perform miss callbacks on all registered classes under path key.
+     * 
+     * @param path
+     *            the path
+     */
     public synchronized void performMissCallbacks(final String path) {
         final Set<WebCallback> set = map.get(path);
         for (final WebCallback webCallback : set) {

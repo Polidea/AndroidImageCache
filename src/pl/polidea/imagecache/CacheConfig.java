@@ -85,18 +85,40 @@ public class CacheConfig {
         this.diskCacheSize = diskCacheSize;
     }
 
+    /**
+     * Gets the compress format.
+     * 
+     * @return the compress format
+     */
     public CompressFormat getCompressFormat() {
         return compressFormat;
     }
 
+    /**
+     * Sets the compress format.
+     * 
+     * @param compressFormat
+     *            the new compress format
+     */
     public void setCompressFormat(final CompressFormat compressFormat) {
         this.compressFormat = compressFormat;
     }
 
+    /**
+     * Gets the compress quality.
+     * 
+     * @return the compress quality
+     */
     public Integer getCompressQuality() {
         return compressQuality;
     }
 
+    /**
+     * Sets the compress quality.
+     * 
+     * @param compressQuality
+     *            the new compress quality
+     */
     public void setCompressQuality(final Integer compressQuality) {
         this.compressQuality = compressQuality;
     }
