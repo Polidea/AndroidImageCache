@@ -25,3 +25,5 @@ syntax: regexp
 
 syntax: regexp
 ^test/robolectric/\.classpath$
+syntax: regexp
+^doc$
