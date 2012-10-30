@@ -1,6 +1,6 @@
 package pl.polidea.webimageview;
 
-import android.graphics.Bitmap;
+import java.io.File;
 
 /**
  * 
@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
  */
 public interface WebCallback {
 
-    void onWebHit(String path, Bitmap bitmap);
+    void onWebHit(String path, File file);
 
     void onWebMiss(String path);
 }

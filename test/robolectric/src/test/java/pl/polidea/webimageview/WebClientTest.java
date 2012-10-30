@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,9 +17,6 @@ import org.mockito.internal.util.MockUtil;
 
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
-import android.graphics.Bitmap;
-
-import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 
 /**
  * The Class WebClientTest.
@@ -29,7 +27,7 @@ public class WebClientTest {
     WebClient client;
     WebInterface httpClient;
     TestExecutorService executorService;
-    Bitmap resultBitmap;
+    File resultFile;
 
     @Before
     public void setup() {
@@ -104,7 +102,7 @@ public class WebClientTest {
         executorService.startCommands();
 
         // then
-        verify(clientResultListener, times(1)).onWebHit(anyString(), any(Bitmap.class));
+        verify(clientResultListener, times(1)).onWebHit(anyString(), any(File.class));
     }
 
     @Test
@@ -168,7 +166,7 @@ public class WebClientTest {
         executorService.startCommands();
 
         // then
-        verify(clientResultListener, times(0)).onWebHit(anyString(), any(Bitmap.class));
+        verify(clientResultListener, times(0)).onWebHit(anyString(), any(File.class));
     }
 
     @Test
@@ -185,8 +183,8 @@ public class WebClientTest {
         executorService.startCommands();
 
         // then
-        verify(clientResultListener1, times(1)).onWebHit(anyString(), any(Bitmap.class));
-        verify(clientResultListener2, times(1)).onWebHit(anyString(), any(Bitmap.class));
+        verify(clientResultListener1, times(1)).onWebHit(anyString(), any(File.class));
+        verify(clientResultListener2, times(1)).onWebHit(anyString(), any(File.class));
     }
 
     @SuppressWarnings("unchecked")
@@ -219,8 +217,8 @@ public class WebClientTest {
             }
 
             @Override
-            public void onWebHit(final String path, final Bitmap bitmap) {
-                resultBitmap = bitmap;
+            public void onWebHit(final String path, final File bitmap) {
+                resultFile = bitmap;
             }
         };
 
@@ -231,12 +229,11 @@ public class WebClientTest {
         executorService.startCommands();
 
         // then
-        assertNotNull(resultBitmap);
+        assertNotNull(resultFile);
     }
 
     void mockStream(final String path) throws FileNotFoundException, IOException {
         final String name = "test/robolectric/res/key.png";
-        ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37);
         when(httpClient.execute(path)).thenReturn(new FileInputStream(name));
     }
 }

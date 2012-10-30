@@ -1,12 +1,11 @@
 package pl.polidea.webimageview;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import android.graphics.Bitmap;
 
 /**
  * The Class TaskContainer.
@@ -59,10 +58,10 @@ public class TaskContainer {
      * @param path
      * @param bitmap
      */
-    public synchronized void performCallbacks(final String path, final Bitmap bitmap) {
+    public synchronized void performCallbacks(final String path, final File file) {
         final Set<WebCallback> set = map.get(path);
         for (final WebCallback webCallback : set) {
-            webCallback.onWebHit(path, bitmap);
+            webCallback.onWebHit(path, file);
         }
     }
 

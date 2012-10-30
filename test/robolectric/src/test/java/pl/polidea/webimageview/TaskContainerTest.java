@@ -2,11 +2,11 @@ package pl.polidea.webimageview;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import android.graphics.Bitmap;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -122,17 +122,17 @@ public class TaskContainerTest {
         final String path = "path";
         final WebCallback listener = Mockito.mock(WebCallback.class);
         final WebCallback listener1 = Mockito.mock(WebCallback.class);
-        final Bitmap bitmap = Mockito.mock(Bitmap.class);
+        final File file = Mockito.mock(File.class);
         final TaskContainer container = new TaskContainer();
         container.addTask(path, listener);
         container.addTask(path, listener1);
 
         // when
-        container.performCallbacks(path, bitmap);
+        container.performCallbacks(path, file);
 
         // when
-        Mockito.verify(listener, Mockito.times(1)).onWebHit(path, bitmap);
-        Mockito.verify(listener1, Mockito.times(1)).onWebHit(path, bitmap);
+        Mockito.verify(listener, Mockito.times(1)).onWebHit(path, file);
+        Mockito.verify(listener1, Mockito.times(1)).onWebHit(path, file);
     }
 
     /**

@@ -1,5 +1,6 @@
 package pl.polidea.webimageview;
 
+import java.io.File;
 import java.net.URL;
 
 import pl.polidea.imagecache.ImageCache;
@@ -41,6 +42,7 @@ public class WebImageView extends ImageView {
     private synchronized void init(final Context context) {
         imageCache = getCache(context);
         webClient = getWebClient();
+        bitmapProcessor = new DefaultBitmapProcessor(this);
     }
 
     private ImageCache getCache(final Context context) {
@@ -75,8 +77,8 @@ public class WebImageView extends ImageView {
                     }
 
                     @Override
-                    public void onWebHit(final String path, final Bitmap bitmap) {
-                        final Bitmap bmp = bitmapProcessor == null ? bitmap : bitmapProcessor.process(bitmap);
+                    public void onWebHit(final String path, final File file) {
+                        final Bitmap bmp = bitmapProcessor.process(file);
                         imageCache.put(path, bmp);
                         setBitmap(path, bmp);
                     }
@@ -124,6 +126,6 @@ public class WebImageView extends ImageView {
     }
 
     public static interface BitmapProcessor {
-        Bitmap process(Bitmap origal);
+        Bitmap process(File pathToBitmap);
     }
 }

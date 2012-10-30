@@ -14,10 +14,6 @@ import java.util.concurrent.ThreadFactory;
 
 import org.apache.http.client.ClientProtocolException;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
 /**
  * @author Marek Multarzynski
  * 
@@ -39,18 +35,18 @@ public class WebClient {
      * time the listener is added to collection of callbacks. Otherwise new
      * download thread is run.
      * 
-     * @param path
+     * @param url
      *            the path
      * @param clientResultListener
      *            the client result listener
      */
-    public void requestForImage(final String path, final WebCallback clientResultListener) {
+    public void requestForImage(final String url, final WebCallback clientResultListener) {
 
         if (clientResultListener == null) {
             throw new IllegalArgumentException("clientResultListener cannot be null");
         }
 
-        final boolean newTask = pendingTasks.addTask(path, clientResultListener);
+        final boolean newTask = pendingTasks.addTask(url, clientResultListener);
 
         if (newTask) {
             taskExecutor.submit(new Runnable() {
@@ -60,20 +56,18 @@ public class WebClient {
                     File tempFile = null;
                     try {
                         tempFile = File.createTempFile("web", null);
-                        final InputStream stream = httpClient.execute(path);
+                        final InputStream stream = httpClient.execute(url);
                         saveStreamToFile(stream, tempFile);
-                        Log.d("WebClient", "Downloading path: " + path);
-                        final Bitmap bitmap = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
 
-                        pendingTasks.performCallbacks(path, bitmap);
+                        pendingTasks.performCallbacks(url, tempFile);
                     } catch (final ClientProtocolException e) {
-                        pendingTasks.performMissCallbacks(path);
+                        pendingTasks.performMissCallbacks(url);
                     } catch (final IOException e) {
-                        pendingTasks.performMissCallbacks(path);
+                        pendingTasks.performMissCallbacks(url);
                     } finally {
                         tempFile.delete();
                     }
-                    pendingTasks.remove(path);
+                    pendingTasks.remove(url);
                 }
             });
         }
