@@ -3,6 +3,9 @@
  */
 package pl.polidea.webimageview;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
@@ -54,15 +57,21 @@ public class WebClient {
 
                 @Override
                 public void run() {
+                    File tempFile = null;
                     try {
+                        tempFile = File.createTempFile("web", null);
                         final InputStream stream = httpClient.execute(path);
+                        saveStreamToFile(stream, tempFile);
                         Log.d("WebClient", "Downloading path: " + path);
-                        final Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        final Bitmap bitmap = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
+
                         pendingTasks.performCallbacks(path, bitmap);
                     } catch (final ClientProtocolException e) {
                         pendingTasks.performMissCallbacks(path);
                     } catch (final IOException e) {
                         pendingTasks.performMissCallbacks(path);
+                    } finally {
+                        tempFile.delete();
                     }
                     pendingTasks.remove(path);
                 }
@@ -81,6 +90,20 @@ public class WebClient {
 
     public void setTaskExecutor(final ExecutorService taskExecutor) {
         this.taskExecutor = taskExecutor;
+    }
+
+    public void saveStreamToFile(final InputStream is, final File file) throws IOException {
+        if (is == null) {
+            throw new IOException("Empty stream");
+        }
+        final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+        final byte[] data = new byte[16384];
+        int n;
+        while ((n = is.read(data, 0, data.length)) != -1) {
+            os.write(data, 0, n);
+        }
+        os.flush();
+        os.close();
     }
 
 }

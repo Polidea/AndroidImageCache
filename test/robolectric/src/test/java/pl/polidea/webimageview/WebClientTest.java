@@ -5,8 +5,8 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
@@ -17,6 +17,8 @@ import org.mockito.internal.util.MockUtil;
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
 import android.graphics.Bitmap;
+
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 
 /**
  * The Class WebClientTest.
@@ -55,7 +57,7 @@ public class WebClientTest {
         // given
         final WebCallback clientResultListener = mock(WebCallback.class);
         final String path = "http://www.google.pl";
-        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
+        mockStream(path);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -96,8 +98,7 @@ public class WebClientTest {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
-        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
-
+        mockStream(path);
         // when
         client.requestForImage(path, clientResultListener);
         executorService.startCommands();
@@ -111,7 +112,7 @@ public class WebClientTest {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
-        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
+        mockStream(path);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -128,7 +129,7 @@ public class WebClientTest {
         // given
         final String path = "http://";
         final WebCallback clientResultListener = mock(WebCallback.class);
-        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
+        mockStream(path);
 
         // when
         client.requestForImage(path, clientResultListener);
@@ -176,7 +177,7 @@ public class WebClientTest {
         final String path = "http://";
         final WebCallback clientResultListener1 = mock(WebCallback.class);
         final WebCallback clientResultListener2 = mock(WebCallback.class);
-        when(httpClient.execute(path)).thenReturn(mock(InputStream.class));
+        mockStream(path);
 
         // when
         client.requestForImage(path, clientResultListener1);
@@ -223,7 +224,7 @@ public class WebClientTest {
             }
         };
 
-        when(httpClient.execute(path)).thenReturn(new FileInputStream("test/robolectric/res/key.png"));
+        mockStream(path);
 
         // when
         client.requestForImage(path, callback);
@@ -233,4 +234,9 @@ public class WebClientTest {
         assertNotNull(resultBitmap);
     }
 
+    void mockStream(final String path) throws FileNotFoundException, IOException {
+        final String name = "test/robolectric/res/key.png";
+        ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37);
+        when(httpClient.execute(path)).thenReturn(new FileInputStream(name));
+    }
 }
