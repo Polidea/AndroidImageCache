@@ -23,14 +23,17 @@ public class WebImageView extends ImageView {
     private static WebClient webClient;
     private BitmapProcessor bitmapProcessor;
     private String path;
+    AttributeSet attrs = null;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        this.attrs = attrs;
         init(context);
     }
 
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        this.attrs = attrs;
         init(context);
     }
 
