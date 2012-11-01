@@ -54,7 +54,7 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 			return new Processor(ProcessorType.ORIGNAL);
 		}
 
-		if (width > 0 && height > 0) {
+		if (width * height > 0) {
 			return new Processor(ProcessorType.FIX_BOTH, width, height);
 		} else if (width > 0 && (height == WRAP || height == MATCH)) {
 			return new Processor(ProcessorType.FIX_WIDTH, width, height);
