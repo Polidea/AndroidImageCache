@@ -1,7 +1,7 @@
 package pl.polidea.webimageview;
 
 import static org.junit.Assert.*;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.Type.*;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.*;
 
 import java.io.*;
 
@@ -9,7 +9,7 @@ import org.junit.*;
 import org.junit.runner.*;
 
 import pl.polidea.imagecache.*;
-import pl.polidea.webimageview.DefaultBitmapProcessor.Type;
+import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
 import android.graphics.*;
 import android.view.*;
 
@@ -33,7 +33,7 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._wrap_contents);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
 		assertEquals(ORIGNAL, type);
@@ -45,7 +45,7 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._match_parents);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
 		assertEquals(ORIGNAL, type);
@@ -57,10 +57,10 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_width_wrap);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
-		assertEquals(ORIGNAL, type);
+		assertEquals(FIX_WIDTH, type);
 	}
 
 	@Test
@@ -69,10 +69,10 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_width_match);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
-		assertEquals(ORIGNAL, type);
+		assertEquals(FIX_WIDTH, type);
 	}
 
 	@Test
@@ -81,10 +81,10 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_height_wrap);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
-		assertEquals(ORIGNAL, type);
+		assertEquals(FIX_HEIGHT, type);
 	}
 
 	@Test
@@ -93,10 +93,10 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_height_match);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
-		assertEquals(ORIGNAL, type);
+		assertEquals(FIX_HEIGHT, type);
 	}
 
 	@Test
@@ -105,7 +105,19 @@ public class DefaultBitmapProcessorTest {
 		final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
 
 		// when
-		final Type type = processor.determineType();
+		final ProcessorType type = processor.determineProcessor().type;
+
+		// then
+		assertEquals(FIX_BOTH, type);
+	}
+
+	@Test
+	public void testProcessingNoAttributes() {
+		// given
+		final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
+
+		// when
+		final ProcessorType type = processor.determineProcessor().type;
 
 		// then
 		assertEquals(ORIGNAL, type);
@@ -115,12 +127,16 @@ public class DefaultBitmapProcessorTest {
 	public void testProcessingDipsAndPixels() {
 		// given
 		final DefaultBitmapProcessor processor = getProcessor(R.id._dips_and_pix);
+		final int width = 100;
+		final int height = 80;
+		ShadowBitmapFactory.provideWidthAndHeightHints(f.getPath(), width, height);
 
 		// when
-		final Type type = processor.determineType();
+		final Bitmap bitmap = processor.process(f);
 
 		// then
-		assertEquals(ORIGNAL, type);
+		assertEquals(25, bitmap.getWidth());
+		assertEquals(20, bitmap.getHeight());
 	}
 
 	@Test
@@ -151,8 +167,8 @@ public class DefaultBitmapProcessorTest {
 		final Bitmap bitmap = processor.process(f);
 
 		// then
-		assertEquals(25, bitmap.getWidth());
-		assertEquals(20, bitmap.getHeight());
+		assertEquals(60, bitmap.getWidth());
+		assertEquals(48, bitmap.getHeight());
 	}
 
 	@Test
@@ -167,8 +183,8 @@ public class DefaultBitmapProcessorTest {
 		final Bitmap bitmap = processor.process(f);
 
 		// then
-		assertEquals(25, bitmap.getWidth());
-		assertEquals(20, bitmap.getHeight());
+		assertEquals(75, bitmap.getWidth());
+		assertEquals(60, bitmap.getHeight());
 	}
 
 	@Test
@@ -183,8 +199,44 @@ public class DefaultBitmapProcessorTest {
 		final Bitmap bitmap = processor.process(f);
 
 		// then
-		assertEquals(31, bitmap.getWidth());
-		assertEquals(25, bitmap.getHeight());
+		assertEquals(47, bitmap.getWidth());
+		assertEquals(38, bitmap.getHeight());
+	}
+
+	@Test
+	public void testCalculatingDips() {
+		// given
+		final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
+
+		// when
+		final int value = processor.calculateValue("40dip");
+
+		// then
+		assertEquals(60, value);
+	}
+
+	@Test
+	public void testCalculatingDps() {
+		// given
+		final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
+
+		// when
+		final int value = processor.calculateValue("40dp");
+
+		// then
+		assertEquals(60, value);
+	}
+
+	@Test
+	public void testCalculatingPix() {
+		// given
+		final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
+
+		// when
+		final int value = processor.calculateValue("60px");
+
+		// then
+		assertEquals(60, value);
 	}
 
 	DefaultBitmapProcessor getProcessor(final int id) {
