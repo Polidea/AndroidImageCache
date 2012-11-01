@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- Original -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_wrap_contents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Original -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_match_parents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Scaled for width, ratio kept -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_fixed_width_wrap"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content" />
+
+    <!-- Scaled for width, ratio kept -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_fixed_width_match"
+        android:layout_width="40dp"
+        android:layout_height="match_parent" />
+
+    <!-- Scaled for height, ratio kept -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_fixed_height_wrap"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp" />
+
+    <!-- Scaled for height, ratio kept -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_fixed_height_match"
+        android:layout_width="40dp"
+        android:layout_height="match_parent" />
+
+    <!-- Scaled for height and widht keeping ratio -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_fixed_both"
+        android:layout_width="40dp"
+        android:layout_height="25dp" />
+
+    <!-- Mix od dp and px -->
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/_dips_and_pix"
+        android:layout_width="40dp"
+        android:layout_height="20px" />
+
+
+</LinearLayout>
