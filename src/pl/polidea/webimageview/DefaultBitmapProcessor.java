@@ -17,6 +17,9 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 	private final static int WRAP = LayoutParams.WRAP_CONTENT;
 
 	WebImageView webImageView;
+	public static final int[] attrsArray = new int[] { android.R.attr.layout_width, // 0
+			android.R.attr.layout_height // 1
+	};
 
 	public DefaultBitmapProcessor(final WebImageView webImageView) {
 		this.webImageView = webImageView;
@@ -55,19 +58,7 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 			return new Processor(ProcessorType.ORIGNAL);
 		}
 
-		final int[] attrsArray = new int[] { android.R.attr.layout_width, // 0
-				android.R.attr.layout_height // 1
-		};
 		final TypedArray ta = webImageView.getContext().obtainStyledAttributes(attrs, attrsArray);
-		Log.d("DDD", "determineProcessor1");
-		// final String layout_width = attrs.getAttributeValue("android",
-		// "layout_width");
-		Log.d("DDD", "determineProcessor2");
-		// final String layout_height = attrs.getAttributeValue("",
-		// "layout_height");
-		Log.d("DDD", "determineProcessor3");
-		// final int width = guessValue(layout_width);
-		// final int height = guessValue(layout_height);
 
 		final int width = ta.getDimensionPixelSize(0, ViewGroup.LayoutParams.MATCH_PARENT);
 		final int height = ta.getDimensionPixelSize(1, ViewGroup.LayoutParams.MATCH_PARENT);

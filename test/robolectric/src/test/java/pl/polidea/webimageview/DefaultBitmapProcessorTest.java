@@ -249,8 +249,10 @@ public class DefaultBitmapProcessorTest {
 	DefaultBitmapProcessor getProcessor(final int id) {
 		final WebImageView view = getView(id);
 		// TODO: place here implementation of reading xml
-		MyShadowTypedArray.setAttrs(null, null);
-		return new DefaultBitmapProcessor(view);
+		// TODO: arguments can be passed via Mockito
+		final DefaultBitmapProcessor defaultBitmapProcessor = new DefaultBitmapProcessor(view);
+		MyShadowTypedArray.setAttrs(defaultBitmapProcessor.webImageView.attrs, DefaultBitmapProcessor.attrsArray);
+		return defaultBitmapProcessor;
 	}
 
 	WebImageView getView(final int id) {
