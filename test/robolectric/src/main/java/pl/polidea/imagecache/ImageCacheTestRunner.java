@@ -3,11 +3,12 @@
  */
 package pl.polidea.imagecache;
 
-import java.io.*;
+import java.io.File;
 
-import org.junit.runners.model.*;
+import org.junit.runners.model.InitializationError;
 
-import com.xtremelabs.robolectric.*;
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * @author Wojciech Piwonski
@@ -27,7 +28,8 @@ public class ImageCacheTestRunner extends RobolectricTestRunner {
 	protected void bindShadowClasses() {
 		Robolectric.bindShadowClass(MyShadowActivityManager.class);
 		Robolectric.bindShadowClass(HighDensityShadowResources.class);
-
+		Robolectric.bindShadowClass(MyShadowTypedArray.class);
+		// Robolectric.bindShadowClass(MyShadowContext.class);
 	}
 
 }

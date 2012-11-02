@@ -1,10 +1,14 @@
 package pl.polidea.webimageview;
 
-import java.io.*;
+import java.io.File;
 
 import pl.polidea.webimageview.WebImageView.BitmapProcessor;
-import android.graphics.*;
-import android.util.*;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
 public class DefaultBitmapProcessor implements BitmapProcessor {
@@ -20,10 +24,13 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 
 	@Override
 	public Bitmap process(final File pathToBitmap) {
+		Log.d("DDD", "File under processing: " + pathToBitmap.getPath());
 		final Bitmaps bitmaps = new Bitmaps();
 		final Processor processor = determineProcessor();
+		Log.d("DDD", "Processor type: " + processor);
 		Bitmap bitmap = null;
 		final String path = pathToBitmap.getPath();
+
 		switch (processor.type) {
 		case FIX_BOTH:
 			bitmap = bitmaps.generateBitmap(path, processor.width, processor.height);
@@ -42,14 +49,28 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 	}
 
 	Processor determineProcessor() {
-		if (webImageView.attrs == null) {
+		Log.d("DDD", "determineProcessor");
+		final AttributeSet attrs = webImageView.attrs;
+		if (attrs == null) {
 			return new Processor(ProcessorType.ORIGNAL);
 		}
-		final String layout_width = webImageView.attrs.getAttributeValue("", "layout_width");
-		final String layout_height = webImageView.attrs.getAttributeValue("", "layout_height");
-		final int width = guessValue(layout_width);
-		final int height = guessValue(layout_height);
 
+		final int[] attrsArray = new int[] { android.R.attr.layout_width, // 0
+				android.R.attr.layout_height // 1
+		};
+		final TypedArray ta = webImageView.getContext().obtainStyledAttributes(attrs, attrsArray);
+		Log.d("DDD", "determineProcessor1");
+		// final String layout_width = attrs.getAttributeValue("android",
+		// "layout_width");
+		Log.d("DDD", "determineProcessor2");
+		// final String layout_height = attrs.getAttributeValue("",
+		// "layout_height");
+		Log.d("DDD", "determineProcessor3");
+		// final int width = guessValue(layout_width);
+		// final int height = guessValue(layout_height);
+
+		final int width = ta.getDimensionPixelSize(0, ViewGroup.LayoutParams.MATCH_PARENT);
+		final int height = ta.getDimensionPixelSize(1, ViewGroup.LayoutParams.MATCH_PARENT);
 		if (height + width < 0) {
 			return new Processor(ProcessorType.ORIGNAL);
 		}
@@ -81,13 +102,13 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 
 	int calculateValue(final String value) {
 		final DisplayMetrics displayMetrics = webImageView.getContext().getResources().getDisplayMetrics();
-		if (value.contains("dp")) {
+		if (value.endsWith("dp")) {
 			final String number = value.substring(0, value.length() - 2);
 			return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
-		} else if (value.contains("dip")) {
+		} else if (value.endsWith("dip")) {
 			final String number = value.substring(0, value.length() - 3);
 			return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
-		} else if (value.contains("px")) {
+		} else if (value.endsWith("px")) {
 			final String number = value.substring(0, value.length() - 2);
 			return Integer.parseInt(number);
 		}
@@ -112,6 +133,11 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 			this.type = type;
 			this.width = width;
 			this.height = height;
+		}
+
+		@Override
+		public String toString() {
+			return "Processor [type=" + type + ", width=" + width + ", height=" + height + "]";
 		}
 
 	}

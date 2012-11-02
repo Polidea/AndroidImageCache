@@ -1,14 +1,17 @@
 package pl.polidea.webimageview;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URL;
 
-import pl.polidea.imagecache.*;
-import android.content.*;
-import android.graphics.*;
-import android.os.*;
-import android.util.*;
-import android.widget.*;
+import pl.polidea.imagecache.ImageCache;
+import pl.polidea.imagecache.OnCacheResultListener;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.AttributeSet;
+import android.widget.ImageView;
 
 /**
  * 
@@ -39,17 +42,20 @@ public class WebImageView extends ImageView {
 	}
 
 	private synchronized void init(final Context context, final AttributeSet attrs) {
-		this.attrs = attrs;
+
 		imageCache = getCache(context);
 		webClient = getWebClient();
 		bitmapProcessor = new DefaultBitmapProcessor(this);
+
+		this.attrs = attrs;
+
 	}
 
-	private ImageCache getCache(final Context context) {
+	public static ImageCache getCache(final Context context) {
 		return imageCache == null ? new ImageCache(context) : imageCache;
 	}
 
-	private WebClient getWebClient() {
+	public WebClient getWebClient() {
 		return webClient == null ? new WebClient() : webClient;
 	}
 
@@ -127,5 +133,10 @@ public class WebImageView extends ImageView {
 
 	public static interface BitmapProcessor {
 		Bitmap process(File pathToBitmap);
+	}
+
+	@Override
+	protected void onDraw(final Canvas canvas) {
+		super.onDraw(canvas);
 	}
 }

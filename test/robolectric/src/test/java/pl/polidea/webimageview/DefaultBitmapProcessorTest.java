@@ -1,20 +1,27 @@
 package pl.polidea.webimageview;
 
-import static org.junit.Assert.*;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.*;
+import static org.junit.Assert.assertEquals;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL;
 
-import java.io.*;
+import java.io.File;
 
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import pl.polidea.imagecache.*;
+import pl.polidea.imagecache.ImageCacheTestRunner;
+import pl.polidea.imagecache.MyShadowTypedArray;
+import pl.polidea.imagecache.R;
 import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
-import android.graphics.*;
-import android.view.*;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
+import android.view.View;
 
-import com.xtremelabs.robolectric.*;
-import com.xtremelabs.robolectric.shadows.*;
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 
 @RunWith(ImageCacheTestRunner.class)
 public class DefaultBitmapProcessorTest {
@@ -241,6 +248,8 @@ public class DefaultBitmapProcessorTest {
 
 	DefaultBitmapProcessor getProcessor(final int id) {
 		final WebImageView view = getView(id);
+		// TODO: place here implementation of reading xml
+		MyShadowTypedArray.setAttrs(null, null);
 		return new DefaultBitmapProcessor(view);
 	}
 
