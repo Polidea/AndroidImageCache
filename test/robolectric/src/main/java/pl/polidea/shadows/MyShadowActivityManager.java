@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.polidea.imagecache;
+package pl.polidea.shadows;
 
 import android.app.ActivityManager;
 

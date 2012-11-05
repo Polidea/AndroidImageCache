@@ -1,4 +1,4 @@
-package pl.polidea.imagecache;
+package pl.polidea.shadows;
 
 import android.content.res.*;
 import android.util.*;

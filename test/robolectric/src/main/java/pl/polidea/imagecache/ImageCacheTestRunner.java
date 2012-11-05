@@ -7,6 +7,10 @@ import java.io.File;
 
 import org.junit.runners.model.InitializationError;
 
+import pl.polidea.shadows.HighDensityShadowResources;
+import pl.polidea.shadows.MyShadowActivityManager;
+import pl.polidea.shadows.MyShadowTypedArray;
+
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -16,20 +20,19 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
  */
 public class ImageCacheTestRunner extends RobolectricTestRunner {
 
-	/**
-	 * @param testClass
-	 * @throws InitializationError
-	 */
-	public ImageCacheTestRunner(final Class<?> testClass) throws InitializationError {
-		super(testClass, new File("."));
-	}
+    /**
+     * @param testClass
+     * @throws InitializationError
+     */
+    public ImageCacheTestRunner(final Class< ? > testClass) throws InitializationError {
+        super(testClass, new File("."));
+    }
 
-	@Override
-	protected void bindShadowClasses() {
-		Robolectric.bindShadowClass(MyShadowActivityManager.class);
-		Robolectric.bindShadowClass(HighDensityShadowResources.class);
-		Robolectric.bindShadowClass(MyShadowTypedArray.class);
-		// Robolectric.bindShadowClass(MyShadowContext.class);
-	}
+    @Override
+    protected void bindShadowClasses() {
+        Robolectric.bindShadowClass(MyShadowActivityManager.class);
+        Robolectric.bindShadowClass(HighDensityShadowResources.class);
+        Robolectric.bindShadowClass(MyShadowTypedArray.class);
+    }
 
 }
