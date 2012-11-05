@@ -27,3 +27,9 @@ syntax: regexp
 ^test/robolectric/\.classpath$
 syntax: regexp
 ^doc$
+
+syntax: regexp
+^sampleApp/WebImageSampleApp/bin$
+syntax: regexp
+^sampleApp/WebImageSampleApp/gen$
+
