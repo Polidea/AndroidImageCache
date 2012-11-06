@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/web1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/web2"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_launcher" />
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/web3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_launcher" />
+
+    <pl.polidea.webimageview.WebImageView
+        android:id="@+id/web4"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_launcher" />
+
+</LinearLayout>

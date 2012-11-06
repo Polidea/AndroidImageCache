@@ -7,6 +7,9 @@ import java.io.File;
 
 import org.junit.runners.model.InitializationError;
 
+import pl.polidea.shadows.HighDensityShadowResources;
+import pl.polidea.shadows.MyShadowActivityManager;
+
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -27,6 +30,7 @@ public class ImageCacheTestRunner extends RobolectricTestRunner {
     @Override
     protected void bindShadowClasses() {
         Robolectric.bindShadowClass(MyShadowActivityManager.class);
+        Robolectric.bindShadowClass(HighDensityShadowResources.class);
     }
 
 }

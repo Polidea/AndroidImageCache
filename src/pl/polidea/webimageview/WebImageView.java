@@ -7,6 +7,8 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.OnCacheResultListener;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -23,36 +25,44 @@ public class WebImageView extends ImageView {
     private static WebClient webClient;
     private BitmapProcessor bitmapProcessor;
     private String path;
-    AttributeSet attrs = null;
+    AttributeSet attrs;
+    String layout_height;
+    String layout_width;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         this.attrs = attrs;
-        init(context);
+        init(context, attrs);
     }
 
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.attrs = attrs;
-        init(context);
+        init(context, attrs);
     }
 
     public WebImageView(final Context context) {
         super(context);
-        init(context);
+        init(context, null);
     }
 
-    private synchronized void init(final Context context) {
+    private synchronized void init(final Context context, final AttributeSet attrsSet) {
+
         imageCache = getCache(context);
         webClient = getWebClient();
         bitmapProcessor = new DefaultBitmapProcessor(this);
+        this.attrs = attrsSet;
+        if (attrsSet != null) {
+            layout_height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
+            layout_width = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_width");
+        }
     }
 
-    private ImageCache getCache(final Context context) {
+    public static ImageCache getCache(final Context context) {
         return imageCache == null ? new ImageCache(context) : imageCache;
     }
 
-    private WebClient getWebClient() {
+    public WebClient getWebClient() {
         return webClient == null ? new WebClient() : webClient;
     }
 
@@ -131,4 +141,31 @@ public class WebImageView extends ImageView {
     public static interface BitmapProcessor {
         Bitmap process(File pathToBitmap);
     }
+
+    @Override
+    protected void onDraw(final Canvas canvas) {
+        super.onDraw(canvas);
+    }
+
+    public void disableBitmapProcessor() {
+        bitmapProcessor = new BitmapProcessor() {
+
+            @Override
+            public Bitmap process(final File pathToBitmap) {
+                Bitmap bmp = null;
+
+                try {
+                    bmp = BitmapFactory.decodeFile(pathToBitmap.getPath());
+                } catch (final OutOfMemoryError e) {
+
+                }
+                return bmp;
+            }
+        };
+    }
+
+    public void enableDefaultBitmapProcessor() {
+        bitmapProcessor = new DefaultBitmapProcessor(this);
+    }
+
 }
