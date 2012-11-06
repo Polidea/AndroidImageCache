@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.R;
-import pl.polidea.shadows.MyShadowTypedArray;
 import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -207,12 +206,47 @@ public class DefaultBitmapProcessorTest {
         assertEquals(38, bitmap.getHeight());
     }
 
+    @Test
+    public void testCalculatingDips() {
+        // given
+        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
+
+        // when
+        final int value = processor.calculateValue("40dip");
+
+        // then
+        assertEquals(60, value);
+    }
+
+    @Test
+    public void testCalculatingDps() {
+        // given
+        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
+
+        // when
+        final int value = processor.calculateValue("40dp");
+
+        // then
+        assertEquals(60, value);
+    }
+
+    @Test
+    public void testCalculatingPix() {
+        // given
+        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
+
+        // when
+        final int value = processor.calculateValue("60px");
+
+        // then
+        assertEquals(60, value);
+    }
+
     DefaultBitmapProcessor getProcessor(final int id) {
         final WebImageView view = getView(id);
         // TODO: place here implementation of reading xml
         // TODO: arguments can be passed via Mockito
         final DefaultBitmapProcessor defaultBitmapProcessor = new DefaultBitmapProcessor(view);
-        MyShadowTypedArray.setAttrs(defaultBitmapProcessor.webImageView.attrs, DefaultBitmapProcessor.attrsArray);
         return defaultBitmapProcessor;
     }
 

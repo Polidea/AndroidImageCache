@@ -3,10 +3,8 @@ package pl.polidea.webimageview;
 import java.io.File;
 
 import pl.polidea.webimageview.WebImageView.BitmapProcessor;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.util.AttributeSet;
-import android.view.ViewGroup;
+import android.util.DisplayMetrics;
 import android.view.ViewGroup.LayoutParams;
 
 public class DefaultBitmapProcessor implements BitmapProcessor {
@@ -16,7 +14,7 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 
     WebImageView webImageView;
     public static final int[] attrsArray = new int[] { android.R.attr.layout_width, // 0
-            android.R.attr.layout_height // 1
+            android.R.attr.layout_height, android.R.attr.id // 1
     };
 
     public DefaultBitmapProcessor(final WebImageView webImageView) {
@@ -48,15 +46,15 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
     }
 
     Processor determineProcessor() {
-        final AttributeSet attrs = webImageView.attrs;
-        if (attrs == null) {
+        if (webImageView.attrs == null) {
             return new Processor(ProcessorType.ORIGNAL);
         }
+        final String layout_height = webImageView.layout_height;
 
-        final TypedArray ta = webImageView.getContext().obtainStyledAttributes(attrs, attrsArray);
+        final String layout_width = webImageView.layout_width;
 
-        final int width = ta.getDimensionPixelSize(0, ViewGroup.LayoutParams.MATCH_PARENT);
-        final int height = ta.getDimensionPixelSize(1, ViewGroup.LayoutParams.MATCH_PARENT);
+        final int width = guessValue(layout_width);
+        final int height = guessValue(layout_height);
         if (height + width < 0) {
             return new Processor(ProcessorType.ORIGNAL);
         }
@@ -70,6 +68,36 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
         }
 
         return new Processor(ProcessorType.ORIGNAL);
+    }
+
+    int guessValue(final String layout_width) {
+        try {
+            if ("match_parent".equals(layout_width) || "fill_parent".equals(layout_width)) {
+                return MATCH;
+            } else if ("wrap_content".equals(layout_width)) {
+                return WRAP;
+            } else {
+                return calculateValue(layout_width);
+            }
+        } catch (final NumberFormatException e) {
+            return MATCH;
+        }
+    }
+
+    int calculateValue(final String value) {
+        final DisplayMetrics displayMetrics = webImageView.getResources().getDisplayMetrics();
+        if (value.endsWith("dp")) {
+            final String number = value.substring(0, value.length() - 2);
+            return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
+        } else if (value.endsWith("dip")) {
+            final String number = value.substring(0, value.length() - 3);
+            return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
+        } else if (value.endsWith("px")) {
+            final String number = value.substring(0, value.length() - 2);
+            return Integer.parseInt(number);
+        }
+
+        return 0;
     }
 
     public enum ProcessorType {

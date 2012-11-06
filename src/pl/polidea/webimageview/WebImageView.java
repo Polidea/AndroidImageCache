@@ -11,6 +11,8 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 /**
@@ -20,123 +22,139 @@ import android.widget.ImageView;
  */
 public class WebImageView extends ImageView {
 
-	private static ImageCache imageCache;
-	private static WebClient webClient;
-	private BitmapProcessor bitmapProcessor;
-	private String path;
-	AttributeSet attrs;
+    private static ImageCache imageCache;
+    private static WebClient webClient;
+    private BitmapProcessor bitmapProcessor;
+    private String path;
+    AttributeSet attrs;
+    String layout_height;
+    String layout_width;
 
-	public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-		init(context, attrs);
-	}
+    public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        init(context, attrs);
+    }
 
-	public WebImageView(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-		init(context, attrs);
-	}
+    public WebImageView(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs);
+    }
 
-	public WebImageView(final Context context) {
-		super(context);
-		init(context, null);
-	}
+    public WebImageView(final Context context) {
+        super(context);
+        init(context, null);
+    }
 
-	private synchronized void init(final Context context, final AttributeSet attrs) {
+    private synchronized void init(final Context context, final AttributeSet attrsSet) {
 
-		imageCache = getCache(context);
-		webClient = getWebClient();
-		bitmapProcessor = new DefaultBitmapProcessor(this);
+        imageCache = getCache(context);
+        webClient = getWebClient();
+        bitmapProcessor = new DefaultBitmapProcessor(this);
+        this.attrs = attrsSet;
+        if (attrsSet != null) {
+            layout_height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
+            layout_width = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_width");
+        }
+    }
 
-		this.attrs = attrs;
+    public static ImageCache getCache(final Context context) {
+        return imageCache == null ? new ImageCache(context) : imageCache;
+    }
 
-	}
+    public WebClient getWebClient() {
+        return webClient == null ? new WebClient() : webClient;
+    }
 
-	public static ImageCache getCache(final Context context) {
-		return imageCache == null ? new ImageCache(context) : imageCache;
-	}
+    /**
+     * Sets the content of this WebImageView to the specified path.
+     * 
+     * @param path
+     *            The path of an image
+     */
+    public void setImageURL(final String path) {
+        this.path = path;
+        if (path == null) {
+            return;
+        }
+        imageCache.get(path, new OnCacheResultListener() {
 
-	public WebClient getWebClient() {
-		return webClient == null ? new WebClient() : webClient;
-	}
+            @Override
+            public void onCacheMiss(final String key) {
 
-	/**
-	 * Sets the content of this WebImageView to the specified path.
-	 * 
-	 * @param path
-	 *            The path of an image
-	 */
-	public void setImageURL(final String path) {
-		this.path = path;
-		if (path == null) {
-			return;
-		}
-		imageCache.get(path, new OnCacheResultListener() {
+                webClient.requestForImage(path, new WebCallback() {
 
-			@Override
-			public void onCacheMiss(final String key) {
+                    @Override
+                    public void onWebMiss(final String path) {
+                        // N/A
+                    }
 
-				webClient.requestForImage(path, new WebCallback() {
+                    @Override
+                    public void onWebHit(final String path, final File file) {
+                        final Bitmap bmp = bitmapProcessor.process(file);
+                        imageCache.put(path, bmp);
+                        setBitmap(path, bmp);
+                    }
+                });
+            }
 
-					@Override
-					public void onWebMiss(final String path) {
-						// N/A
-					}
+            @Override
+            public void onCacheHit(final String key, final Bitmap bitmap) {
+                setBitmap(key, bitmap);
+            }
+        });
+    }
 
-					@Override
-					public void onWebHit(final String path, final File file) {
-						final Bitmap bmp = bitmapProcessor.process(file);
-						imageCache.put(path, bmp);
-						setBitmap(path, bmp);
-					}
-				});
-			}
+    private void setBitmap(final String key, final Bitmap bitmap) {
+        Log.d("DDD",
+                "Setting bitmap from: " + key + " . Size of bitmap: w: " + bitmap.getWidth() + "px h:"
+                        + bitmap.getHeight() + "px");
+        if (key.equals(path)) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
 
-			@Override
-			public void onCacheHit(final String key, final Bitmap bitmap) {
-				setBitmap(key, bitmap);
-			}
-		});
-	}
+                @Override
+                public void run() {
+                    setImageBitmap(bitmap);
+                }
+            });
+        }
+    }
 
-	private void setBitmap(final String key, final Bitmap bitmap) {
-		if (key.equals(path)) {
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
+    /**
+     * Sets the content of this WebImageView to the specified URL.
+     * 
+     * @param url
+     *            The Uri of an image
+     */
+    public void setImageURL(final URL url) {
+        if (url == null) {
+            return;
+        }
+        setImageURL(url.getPath());
+    }
 
-				@Override
-				public void run() {
-					setImageBitmap(bitmap);
-				}
-			});
-		}
-	}
+    public BitmapProcessor getBitmapProcessor() {
+        return bitmapProcessor;
+    }
 
-	/**
-	 * Sets the content of this WebImageView to the specified URL.
-	 * 
-	 * @param url
-	 *            The Uri of an image
-	 */
-	public void setImageURL(final URL url) {
-		if (url == null) {
-			return;
-		}
-		setImageURL(url.getPath());
-	}
+    public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
+        this.bitmapProcessor = bitmapProcessor;
+    }
 
-	public BitmapProcessor getBitmapProcessor() {
-		return bitmapProcessor;
-	}
+    public static interface BitmapProcessor {
+        Bitmap process(File pathToBitmap);
+    }
 
-	public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
-		this.bitmapProcessor = bitmapProcessor;
-	}
+    @Override
+    protected void onDraw(final Canvas canvas) {
+        final LayoutParams layoutParams = getLayoutParams();
+        System.out.println(layoutParams);
+        super.onDraw(canvas);
+    }
 
-	public static interface BitmapProcessor {
-		Bitmap process(File pathToBitmap);
-	}
-
-	@Override
-	protected void onDraw(final Canvas canvas) {
-		super.onDraw(canvas);
-	}
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        final LayoutParams layoutParams = getLayoutParams();
+        System.out.println(layoutParams);
+    }
 }
