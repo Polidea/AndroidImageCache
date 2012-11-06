@@ -3,6 +3,7 @@
  */
 package pl.polidea.webimageview;
 
+import static org.junit.Assert.assertFalse;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -38,5 +39,17 @@ public class WebImageTest extends ImageCacheTest {
 
         // then
         Assert.assertNull(imageView.getDrawable());
+    }
+
+    @Test
+    public void testDisablingDefaultBitmapProcessor() {
+        // given
+        final WebImageView imageView = new WebImageView(Robolectric.application);
+
+        // when
+        imageView.disableBitmapProcessor();
+
+        // then
+        assertFalse(imageView.getBitmapProcessor() instanceof DefaultBitmapProcessor);
     }
 }

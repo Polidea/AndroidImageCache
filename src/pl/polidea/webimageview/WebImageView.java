@@ -7,12 +7,12 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.OnCacheResultListener;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 /**
@@ -146,15 +146,28 @@ public class WebImageView extends ImageView {
 
     @Override
     protected void onDraw(final Canvas canvas) {
-        final LayoutParams layoutParams = getLayoutParams();
-        System.out.println(layoutParams);
         super.onDraw(canvas);
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        final LayoutParams layoutParams = getLayoutParams();
-        System.out.println(layoutParams);
+    public void disableBitmapProcessor() {
+        bitmapProcessor = new BitmapProcessor() {
+
+            @Override
+            public Bitmap process(final File pathToBitmap) {
+                Bitmap bmp = null;
+
+                try {
+                    bmp = BitmapFactory.decodeFile(pathToBitmap.getPath());
+                } catch (final OutOfMemoryError e) {
+
+                }
+                return bmp;
+            }
+        };
     }
+
+    public void enableDefaultBitmapProcessor() {
+        bitmapProcessor = new DefaultBitmapProcessor(this);
+    }
+
 }
