@@ -33,3 +33,8 @@ syntax: regexp
 syntax: regexp
 ^sampleApp/WebImageSampleApp/gen$
 
+
+syntax: regexp
+^\.fatjar$
+syntax: regexp
+^\.settings$

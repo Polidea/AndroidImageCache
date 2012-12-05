@@ -14,6 +14,8 @@ import java.util.concurrent.ThreadFactory;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.content.Context;
+
 /**
  * @author Marek Multarzynski
  * 
@@ -29,6 +31,11 @@ public class WebClient {
             return new Thread(r, "Image downloading thread");
         }
     });
+    private final File cacheDir;
+
+    public WebClient(final Context context) {
+        cacheDir = context.getCacheDir();
+    }
 
     /**
      * Request for image. If Image under path url is downloading the current
@@ -55,7 +62,7 @@ public class WebClient {
                 public void run() {
                     File tempFile = null;
                     try {
-                        tempFile = File.createTempFile("web", null);
+                        tempFile = File.createTempFile("web", null, cacheDir);
                         final InputStream stream = httpClient.execute(url);
                         saveStreamToFile(stream, tempFile);
 

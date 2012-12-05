@@ -49,7 +49,7 @@ public class WebImageView extends ImageView {
     private synchronized void init(final Context context, final AttributeSet attrsSet) {
 
         imageCache = getCache(context);
-        webClient = getWebClient();
+        webClient = getWebClient(context);
         bitmapProcessor = new DefaultBitmapProcessor(this);
         this.attrs = attrsSet;
         if (attrsSet != null) {
@@ -62,8 +62,8 @@ public class WebImageView extends ImageView {
         return imageCache == null ? new ImageCache(context) : imageCache;
     }
 
-    public WebClient getWebClient() {
-        return webClient == null ? new WebClient() : webClient;
+    public WebClient getWebClient(final Context context) {
+        return webClient == null ? new WebClient(context) : webClient;
     }
 
     /**

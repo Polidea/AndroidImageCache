@@ -18,6 +18,8 @@ import org.mockito.internal.util.MockUtil;
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
 
+import com.xtremelabs.robolectric.Robolectric;
+
 /**
  * The Class WebClientTest.
  */
@@ -31,7 +33,7 @@ public class WebClientTest {
 
     @Before
     public void setup() {
-        client = new WebClient();
+        client = new WebClient(Robolectric.application);
         executorService = new TestExecutorService();
         httpClient = mock(WebInterface.class);
         client.setWebInterface(httpClient);
