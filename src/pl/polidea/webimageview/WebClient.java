@@ -28,9 +28,12 @@ public class WebClient {
 
         @Override
         public Thread newThread(final Runnable r) {
-            return new Thread(r, "Image downloading thread");
+            final Thread thread = new Thread(r, "Image downloading thread");
+            thread.setPriority(Thread.MIN_PRIORITY);
+            return thread;
         }
     });
+
     private final File cacheDir;
 
     public WebClient(final Context context) {

@@ -71,6 +71,7 @@ public class ImageCache implements IBitmapCache {
         workers = new Thread[workersNumber];
         for (int i = 0; i < workersNumber; ++i) {
             workers[i] = new Thread(new TaskExecutor());
+            workers[i].setPriority(Thread.MIN_PRIORITY);
         }
     }
 

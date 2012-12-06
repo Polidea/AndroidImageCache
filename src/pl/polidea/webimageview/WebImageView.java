@@ -28,6 +28,7 @@ public class WebImageView extends ImageView {
     AttributeSet attrs;
     String layout_height;
     String layout_width;
+    private Handler handler;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
@@ -56,6 +57,7 @@ public class WebImageView extends ImageView {
             layout_height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
             layout_width = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_width");
         }
+        handler = new Handler(Looper.getMainLooper());
     }
 
     public static ImageCache getCache(final Context context) {
@@ -73,10 +75,10 @@ public class WebImageView extends ImageView {
      *            The path of an image
      */
     public void setImageURL(final String path) {
-        this.path = path;
-        if (path == null) {
+        if (path == null || path.equals(this.path)) {
             return;
         }
+        this.path = path;
         imageCache.get(path, new OnCacheResultListener() {
 
             @Override
@@ -90,10 +92,12 @@ public class WebImageView extends ImageView {
                     }
 
                     @Override
-                    public void onWebHit(final String path, final File file) {
-                        final Bitmap bmp = bitmapProcessor.process(file);
-                        imageCache.put(path, bmp);
-                        setBitmap(path, bmp);
+                    public void onWebHit(final String resource, final File file) {
+                        if (resource.equals(WebImageView.this.path)) {
+                            final Bitmap bmp = bitmapProcessor.process(file);
+                            imageCache.put(resource, bmp);
+                            setBitmap(resource, bmp);
+                        }
                     }
                 });
             }
@@ -107,13 +111,7 @@ public class WebImageView extends ImageView {
 
     private void setBitmap(final String key, final Bitmap bitmap) {
         if (key.equals(path)) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-                @Override
-                public void run() {
-                    setImageBitmap(bitmap);
-                }
-            });
+            handler.post(new RunnableImplementation(bitmap));
         }
     }
 
@@ -136,6 +134,19 @@ public class WebImageView extends ImageView {
 
     public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
         this.bitmapProcessor = bitmapProcessor;
+    }
+
+    private final class RunnableImplementation implements Runnable {
+        private final Bitmap bitmap;
+
+        private RunnableImplementation(final Bitmap bitmap) {
+            this.bitmap = bitmap;
+        }
+
+        @Override
+        public void run() {
+            setImageBitmap(bitmap);
+        }
     }
 
     public static interface BitmapProcessor {

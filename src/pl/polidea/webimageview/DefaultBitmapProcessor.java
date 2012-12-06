@@ -88,13 +88,13 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
         final DisplayMetrics displayMetrics = webImageView.getResources().getDisplayMetrics();
         if (value.endsWith("dp")) {
             final String number = value.substring(0, value.length() - 2);
-            return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
+            return (int) ((Float.parseFloat(number) * displayMetrics.density) + 0.5);
         } else if (value.endsWith("dip")) {
             final String number = value.substring(0, value.length() - 3);
-            return (int) ((Integer.parseInt(number) * displayMetrics.density) + 0.5);
+            return (int) ((Float.parseFloat(number) * displayMetrics.density) + 0.5);
         } else if (value.endsWith("px")) {
             final String number = value.substring(0, value.length() - 2);
-            return Integer.parseInt(number);
+            return (int) Float.parseFloat(number);
         }
 
         return 0;
