@@ -3,7 +3,6 @@ package pl.polidea.imagecache;
 import java.util.Map;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 /**
  * The Class MemoryCache.
@@ -63,9 +62,8 @@ public class MemoryCache {
                     + " KB, while maximum memory cache size is: " + maxSize() / 1024 + " KB.");
         }
         cache.put(key, value);
-        Log.i(TAG,
-                "Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " width:" + value.getWidth()
-                        + "\theight: " + value.getHeight() + " Cache size: " + size() / 1000 + " KB");
+        Utils.log("Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " width:"
+                + value.getWidth() + "\theight: " + value.getHeight() + " Cache size: " + size() / 1000 + " KB");
     }
 
     public final int putCount() {

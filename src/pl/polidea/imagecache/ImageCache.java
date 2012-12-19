@@ -10,7 +10,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.util.Log;
 
 /**
  * @author Wojciech Piwonski
@@ -128,7 +127,7 @@ public class ImageCache implements IBitmapCache {
         final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         final int memClass = activityManager.getMemoryClass();
         final int size = 1024 * 1024 * memClass / 8;
-        Log.i(TAG, "Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
+        Utils.log("Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
         return size;
     }
 
@@ -137,7 +136,7 @@ public class ImageCache implements IBitmapCache {
 
         final int memClass = activityManager.getMemoryClass();
         final long size = 1024 * 1024 * memClass / 4;
-        Log.i(TAG, "Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
+        Utils.log("Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
         return size;
     }
 
@@ -179,7 +178,7 @@ public class ImageCache implements IBitmapCache {
         try {
             removed = diskCache.remove(hashedKey) || removed;
         } catch (final IOException e) {
-            Log.e(TAG, "Removing bitmap error");
+            Utils.log("Removing bitmap error");
         }
         return removed;
     }
@@ -248,7 +247,7 @@ public class ImageCache implements IBitmapCache {
                     }
                 }
             } catch (final InterruptedException e) {
-                Log.e(TAG, e.getMessage());
+                Utils.log(e.getMessage());
             }
 
         }

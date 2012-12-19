@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.jakewharton.DiskLruCache;
 
@@ -66,7 +65,7 @@ public class DiskCache {
 
     public void put(final String key, final Bitmap data) {
         if (data == null) {
-            Log.d(TAG, "null ERROR on: image put on disk cache " + key);
+            Utils.log("null ERROR on: image put on disk cache " + key);
             return;
         }
         DiskLruCache.Editor editor = null;
@@ -79,23 +78,23 @@ public class DiskCache {
             if (writeBitmapToFile(data, editor)) {
                 mDiskCache.flush();
                 editor.commit();
-                Log.d(TAG, "image put on disk cache " + key);
+                Utils.log("image put on disk cache " + key);
             } else {
                 editor.abort();
-                Log.d(TAG, "abort ERROR on: image put on disk cache " + key);
+                Utils.log("abort ERROR on: image put on disk cache " + key);
             }
         } catch (final IOException e) {
-            Log.d(TAG, "IOException ERROR on: image put on disk cache " + key);
+            Utils.log("IOException ERROR on: image put on disk cache " + key);
             try {
                 if (editor != null) {
                     editor.abort();
                 }
             } catch (final IOException ignored) {
-                Log.e(TAG, "Editor abort error");
+                Utils.log("Editor abort error");
             }
         }
 
-        Log.d(TAG, "Cache disk current size: " + mDiskCache.size());
+        Utils.log("Cache disk current size: " + mDiskCache.size());
 
     }
 
@@ -113,21 +112,21 @@ public class DiskCache {
             if (in != null) {
                 final BufferedInputStream buffIn = new BufferedInputStream(in, 1024);
                 try {
-                    Log.i(TAG, "Loading bitmap from disk");
+                    Utils.log("Loading bitmap from disk");
                     bitmap = BitmapFactory.decodeStream(buffIn);
                 } catch (final OutOfMemoryError e) {
-                    Log.e(TAG, e.getMessage());
+                    Utils.log(e);
                 }
             }
         } catch (final IOException e) {
-            Log.e(TAG, "Loading bitmap from disk error.");
+            Utils.log("Loading bitmap from disk error.");
         } finally {
             if (snapshot != null) {
                 snapshot.close();
             }
         }
 
-        Log.d(TAG, bitmap == null ? "" : "image read from disk " + key);
+        Utils.log(bitmap == null ? "" : "image read from disk " + key);
 
         return bitmap;
 
@@ -141,7 +140,7 @@ public class DiskCache {
             snapshot = mDiskCache.get(key);
             contained = snapshot != null;
         } catch (final IOException e) {
-            Log.e(TAG, "Reading disk cache error");
+            Utils.log("Reading disk cache error");
         } finally {
             if (snapshot != null) {
                 snapshot.close();
@@ -162,16 +161,16 @@ public class DiskCache {
         try {
             mDiskCache.delete();
             final String message = "disk cache CLEARED";
-            Log.d(TAG, message);
+            Utils.log(message);
         } catch (final IOException e) {
             final File[] listFiles = directory.listFiles();
             deleteFiles(listFiles);
-            Log.e(TAG, "Clearing disk cache error.", e);
+            Utils.log("Clearing disk cache error.", e);
         }
         try {
             mDiskCache = openDiskLruCache(directory, APP_VERSION, VALUE_COUNT, maxSize);
         } catch (final IOException e) {
-            Log.e(TAG, "Opening disk cache error", e);
+            Utils.log("Opening disk cache error", e);
         }
     }
 
@@ -182,9 +181,9 @@ public class DiskCache {
         for (final File file : listFiles) {
             if (file.isDirectory()) {
                 deleteFiles(file.listFiles());
-                Log.d(TAG, "File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
+                Utils.log("File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
             }
-            Log.d(TAG, "File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
+            Utils.log("File " + file.getAbsolutePath() + " deleted with success? " + file.delete());
         }
     }
 

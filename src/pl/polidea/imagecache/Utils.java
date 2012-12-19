@@ -15,7 +15,7 @@ import android.util.Log;
  */
 public final class Utils {
 
-    private static final String TAG = Utils.class.getSimpleName();
+    private static final String TAG = "ImageCache";
 
     private Utils() {
     }
@@ -52,4 +52,21 @@ public final class Utils {
         return buf.toString();
     }
 
+    public static void log(final String msg) {
+        Log.d(TAG, msg);
+    }
+
+    public static void log(final Throwable t) {
+        if (t != null) {
+            Log.d(TAG, t.getMessage(), t);
+        }
+    }
+
+    public static void log(final String msg, final Throwable t) {
+        if (t != null) {
+            Log.d(TAG, t.getMessage(), t);
+        } else {
+            Log.d(TAG, msg, t);
+        }
+    }
 }
