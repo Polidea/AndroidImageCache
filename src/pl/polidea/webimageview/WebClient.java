@@ -9,8 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -24,15 +25,16 @@ public class WebClient {
 
     TaskContainer pendingTasks = new TaskContainer();
     WebInterface httpClient = new WebInterfaceImpl();
-    ExecutorService taskExecutor = Executors.newFixedThreadPool(5, new ThreadFactory() {
+    ExecutorService taskExecutor = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new StackBlockingDeque(),
+            new ThreadFactory() {
 
-        @Override
-        public Thread newThread(final Runnable r) {
-            final Thread thread = new Thread(r, "Image downloading thread");
-            thread.setPriority(Thread.MIN_PRIORITY);
-            return thread;
-        }
-    });
+                @Override
+                public Thread newThread(final Runnable r) {
+                    final Thread thread = new Thread(r, "Image downloading thread");
+                    thread.setPriority(Thread.MIN_PRIORITY);
+                    return thread;
+                }
+            });
 
     private final File cacheDir;
 

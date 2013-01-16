@@ -110,7 +110,7 @@ public class WebImageView extends ImageView {
     }
 
     private void setBitmap(final String key, final Bitmap bitmap) {
-        if (key.equals(path)) {
+        if (key.equals(path) && bitmap != null && bitmap.isRecycled()) {
             handler.post(new RunnableImplementation(bitmap));
         }
     }
