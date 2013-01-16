@@ -64,7 +64,7 @@ public class WebImageView extends ImageView {
         return imageCache == null ? new ImageCache(context) : imageCache;
     }
 
-    public WebClient getWebClient(final Context context) {
+    public static WebClient getWebClient(final Context context) {
         return webClient == null ? new WebClient(context) : webClient;
     }
 
@@ -75,6 +75,10 @@ public class WebImageView extends ImageView {
      *            The path of an image
      */
     public void setImageURL(final String path) {
+        setImageURL(path, null);
+    }
+
+    public void setImageURL(final String path, final WebImageListener webImageListener) {
         if (path == null || path.equals(this.path)) {
             return;
         }
@@ -83,12 +87,14 @@ public class WebImageView extends ImageView {
 
             @Override
             public void onCacheMiss(final String key) {
-
+                if (webImageListener != null) {
+                    webImageListener.imageFailed(WebImageView.this.path);
+                }
                 webClient.requestForImage(path, new WebCallback() {
 
                     @Override
                     public void onWebMiss(final String path) {
-                        // N/A
+
                     }
 
                     @Override
@@ -96,7 +102,7 @@ public class WebImageView extends ImageView {
                         if (resource.equals(WebImageView.this.path)) {
                             final Bitmap bmp = bitmapProcessor.process(file);
                             imageCache.put(resource, bmp);
-                            setBitmap(resource, bmp);
+                            setBitmap(resource, bmp, webImageListener);
                         }
                     }
                 });
@@ -104,14 +110,17 @@ public class WebImageView extends ImageView {
 
             @Override
             public void onCacheHit(final String key, final Bitmap bitmap) {
-                setBitmap(key, bitmap);
+                setBitmap(key, bitmap, webImageListener);
             }
         });
     }
 
-    private void setBitmap(final String key, final Bitmap bitmap) {
+    private void setBitmap(final String key, final Bitmap bitmap, final WebImageListener webImageListener) {
         if (key.equals(path) && bitmap != null && bitmap.isRecycled()) {
             handler.post(new RunnableImplementation(bitmap));
+        }
+        if (webImageListener != null) {
+            webImageListener.imageSet(path);
         }
     }
 
@@ -177,6 +186,12 @@ public class WebImageView extends ImageView {
 
     public void enableDefaultBitmapProcessor() {
         bitmapProcessor = new DefaultBitmapProcessor(this);
+    }
+
+    public static interface WebImageListener {
+        void imageSet(String url);
+
+        void imageFailed(String url);
     }
 
 }

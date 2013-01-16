@@ -4,11 +4,15 @@
 package pl.polidea.webimageview;
 
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import pl.polidea.imagecache.ImageCacheTest;
+import pl.polidea.webimageview.WebImageView.WebImageListener;
+import android.graphics.Bitmap;
 
 import com.xtremelabs.robolectric.Robolectric;
 
@@ -52,4 +56,19 @@ public class WebImageTest extends ImageCacheTest {
         // then
         assertFalse(imageView.getBitmapProcessor() instanceof DefaultBitmapProcessor);
     }
+
+    @Test
+    public void testActionOnListenerAfterRequestingForImage() {
+        // given
+        final WebImageView imageView = new WebImageView(Robolectric.application);
+        WebImageView.getCache(Robolectric.application).put("", Mockito.mock(Bitmap.class));
+        final WebImageListener mock = Mockito.mock(WebImageListener.class);
+
+        // when
+        imageView.setImageURL("", mock);
+
+        // then
+        verify(mock, times(1)).imageSet("");
+    }
+
 }
