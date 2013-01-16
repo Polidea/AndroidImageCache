@@ -20,7 +20,7 @@ public class ImageCache implements IBitmapCache {
     private static final String TAG = ImageCache.class.getSimpleName();
 
     private static final int DEFAULT_WORKERS_NUMBER = 1;
-    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
+    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     private static final int DEFAULT_COMPRESS_QUALITY = 100;
 
     final MemoryCache memCache;
