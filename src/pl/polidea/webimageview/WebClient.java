@@ -25,7 +25,7 @@ public class WebClient {
 
     TaskContainer pendingTasks = new TaskContainer();
     WebInterface httpClient = new WebInterfaceImpl();
-    ExecutorService taskExecutor = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new StackBlockingDeque(),
+    ExecutorService taskExecutor = new ThreadPoolExecutor(5, 5, 10L, TimeUnit.SECONDS, new StackBlockingDeque(),
             new ThreadFactory() {
 
                 @Override
