@@ -33,18 +33,24 @@ public class WebImageView extends ImageView {
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         this.attrs = attrs;
-        init(context, attrs);
+        if (!isInEditMode()) {
+            init(context, attrs);
+        }
     }
 
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.attrs = attrs;
-        init(context, attrs);
+        if (!isInEditMode()) {
+            init(context, attrs);
+        }
     }
 
     public WebImageView(final Context context) {
         super(context);
-        init(context, null);
+        if (!isInEditMode()) {
+            init(context, null);
+        }
     }
 
     private synchronized void init(final Context context, final AttributeSet attrsSet) {
