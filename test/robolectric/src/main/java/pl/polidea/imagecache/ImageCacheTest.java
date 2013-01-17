@@ -27,7 +27,7 @@ public abstract class ImageCacheTest {
 
     private static final int BYTES_PER_PIXEL = 4;
     protected static final int DEFAULT_WORKERS_NUMBER = 1;
-    protected static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
+    protected static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     protected static final int DEFAULT_COMPRESS_QUALITY = 100;
 
     protected Context context;
