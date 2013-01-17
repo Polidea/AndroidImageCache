@@ -79,9 +79,13 @@ public class WebImageView extends ImageView {
     }
 
     public void setImageURL(final String path, final WebImageListener webImageListener) {
-        if (path == null || path.equals(this.path)) {
+        if (path == null) {
             return;
         }
+        if (path.equals(this.path)) {
+            invalidate();
+        }
+
         this.path = path;
         imageCache.get(path, new OnCacheResultListener() {
 
