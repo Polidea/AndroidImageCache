@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -85,7 +86,7 @@ public class WebImageView extends ImageView {
     }
 
     public void setImageURL(final String path, final WebImageListener webImageListener) {
-        if (path == null) {
+        if (TextUtils.isEmpty(path)) {
             return;
         }
         if (path.equals(this.path)) {
