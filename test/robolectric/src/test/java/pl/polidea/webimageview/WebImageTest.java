@@ -61,14 +61,14 @@ public class WebImageTest extends ImageCacheTest {
     public void testActionOnListenerAfterRequestingForImage() {
         // given
         final WebImageView imageView = new WebImageView(Robolectric.application);
-        WebImageView.getCache(Robolectric.application).put("", Mockito.mock(Bitmap.class));
+        WebImageView.getCache(Robolectric.application).put("any", Mockito.mock(Bitmap.class));
         final WebImageListener mock = Mockito.mock(WebImageListener.class);
 
         // when
-        imageView.setImageURL("", mock);
+        imageView.setImageURL("any", mock);
 
         // then
-        verify(mock, times(1)).imageSet("");
+        verify(mock, times(1)).imageSet("any");
     }
 
 }
