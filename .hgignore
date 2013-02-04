@@ -14,6 +14,8 @@ syntax: regexp
 ^\.gradle$
 syntax: regexp
 ^\.idea$
+regexp
+^out$
 
 syntax: regexp
 ^test/robolectric/bin$
@@ -36,8 +38,11 @@ syntax: regexp
 syntax: regexp
 ^sampleApp/WebImageSampleApp/gen$
 
-syntax: regexp
-^\*\.iml
+syntax: glob
+*\.iml
+*\.iws
+*\.ipr
+
 
 syntax: regexp
 ^\.fatjar$
