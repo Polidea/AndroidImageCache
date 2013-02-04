@@ -22,3 +22,58 @@ apply plugin: 'ameba-android-release'
 apply plugin: 'ameba-android-analysis'
 apply plugin: 'ameba-android-test'
 //apply plugin: 'ameba-android-jarlibrary'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+eclipse {
+    project {
+        natures = ['com.android.ide.eclipse.adt.AndroidNature', 'org.eclipse.jdt.core.javanature']
+        [
+                'com.android.ide.eclipse.adt.ResourceManagerBuilder',
+                'com.android.ide.eclipse.adt.PreCompilerBuilder',
+                'org.eclipse.jdt.core.javabuilder',
+                'com.android.ide.eclipse.adt.ApkBuilder'
+        ].each { buildCommand it }
+    }
+    classpath {
+        file {
+            whenMerged { classpath ->
+                classpath.entries.removeAll { entry -> entry.path.toString() == 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+            }
+        }
+        containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK'
+    }
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src', 'gen'
+        }
+
+        output.classesDir = 'bin/classes'
+    }
+}
+
+clean {
+    delete 'gen'
+}
+
+idea {
+    module {
+        jdkName = 'Android 2.2 Platform'
+
+        sourceDirs += file('gen')
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+compileJava.enabled = false
+
+compileJava.dependsOn compileAndroid

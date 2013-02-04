@@ -1,0 +1,2 @@
+include 'test/robospock'
+project(':test/robospock').name = 'RoboSpock'

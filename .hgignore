@@ -12,6 +12,8 @@ syntax: regexp
 ^ota$
 syntax: regexp
 ^\.gradle$
+syntax: regexp
+^\.idea$
 
 syntax: regexp
 ^test/robolectric/bin$
@@ -21,7 +23,8 @@ syntax: regexp
 ^test/robolectric/\.gradle$
 syntax: regexp
 ^test/robolectric/\.classpath$
-
+syntax: regexp
+^test/robolectric/tmp$
 
 syntax: regexp
 ^test/robolectric/\.classpath$
@@ -33,6 +36,8 @@ syntax: regexp
 syntax: regexp
 ^sampleApp/WebImageSampleApp/gen$
 
+syntax: regexp
+^\*\.iml
 
 syntax: regexp
 ^\.fatjar$
