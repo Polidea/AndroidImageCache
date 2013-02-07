@@ -48,3 +48,7 @@ syntax: regexp
 ^\.fatjar$
 syntax: regexp
 ^\.settings$
+
+syntax: regexp
+^build$
+^test/robospock/build$

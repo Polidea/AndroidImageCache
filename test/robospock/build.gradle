@@ -19,4 +19,4 @@ dependencies {
     compile rootProject
 }
 
-idea.module.jdkName = '1.6'
+//idea.module.jdkName = '1.6'
