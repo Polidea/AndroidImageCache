@@ -18,9 +18,7 @@ import java.io.IOException;
  */
 public class ImageCache  {
 
-    private static final int DEFAULT_WORKERS_NUMBER = 1;
-    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
-    private static final int DEFAULT_COMPRESS_QUALITY = 100;
+
     final MemoryCache memCache;
     final DiskCache diskCache;
     private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque();
@@ -50,25 +48,7 @@ public class ImageCache  {
 
     private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
         checkConfigNotNull(config);
-        if (config.workersNumber == null) {
-            config.workersNumber = DEFAULT_WORKERS_NUMBER;
-        }
-        if (config.memoryCacheSize == null) {
-            config.memoryCacheSize = getDefaultMemoryCacheSize(context);
-        }
-        if (config.diskCachePath == null) {
-            config.diskCachePath = getDefaultDiskCachePath(context);
-        }
-        if (config.diskCacheSize == null) {
-            config.diskCacheSize  = getDefaultDiskCacheSize(context);
-        }
-        if (config.compressFormat == null) {
-            config.compressFormat = DEFAULT_COMPRESS_FORMAT;
-        }
-        if (config.compressQuality == null) {
-            config.compressQuality = DEFAULT_COMPRESS_QUALITY;
-        }
-        return config;
+        return CacheConfig.buildDefault(context, config);
     }
 
     private static void checkConfigNotNull(final CacheConfig config) {
@@ -77,26 +57,7 @@ public class ImageCache  {
         }
     }
 
-    private static String getDefaultDiskCachePath(final Context context) {
-        return context.getCacheDir().getPath() + File.separator + "bitmaps";
-    }
 
-    private static int getDefaultMemoryCacheSize(final Context context) {
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        final int memClass = activityManager.getMemoryClass();
-        final int size = 1024 * 1024 * memClass / 8;
-        Utils.log("Device memory class: " + memClass + " LRUCache size: " + size / 1000 + " kB");
-        return size;
-    }
-
-    private static long getDefaultDiskCacheSize(final Context context) {
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-
-        final int memClass = activityManager.getMemoryClass();
-        final long size = 1024 * 1024 * memClass / 4;
-        Utils.log("Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
-        return size;
-    }
 
     private void checkAllValuesFilled(final CacheConfig config) {
         checkConfigNotNull(config);
