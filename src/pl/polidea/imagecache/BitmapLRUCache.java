@@ -1,6 +1,7 @@
 package pl.polidea.imagecache;
 
 import android.graphics.Bitmap;
+import pl.polidea.imagecache.thridparty.LruCache;
 
 /**
  * Class extends generic LRU cache using Bitmap as a value. Size of each element

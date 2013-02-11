@@ -33,7 +33,7 @@
  * http://creativecommons.org/licenses/publicdomain
  */
 
-package pl.polidea.imagecache;
+package pl.polidea.imagecache.thridparty;
 
 import java.util.AbstractQueue;
 import java.util.Collection;

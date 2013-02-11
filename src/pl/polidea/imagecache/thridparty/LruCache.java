@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.polidea.imagecache;
+package pl.polidea.imagecache.thridparty;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

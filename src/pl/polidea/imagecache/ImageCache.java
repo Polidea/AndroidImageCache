@@ -1,66 +1,40 @@
 /**
- * 
+ *
  */
 package pl.polidea.imagecache;
-
-import java.io.File;
-import java.io.IOException;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import pl.polidea.imagecache.thridparty.DiskCache;
+import pl.polidea.imagecache.thridparty.LinkedBlockingDeque;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Wojciech Piwonski
- * 
  */
 public class ImageCache implements IBitmapCache {
-
-    private static final String TAG = ImageCache.class.getSimpleName();
 
     private static final int DEFAULT_WORKERS_NUMBER = 1;
     private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     private static final int DEFAULT_COMPRESS_QUALITY = 100;
-
     final MemoryCache memCache;
     final DiskCache diskCache;
     private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque<CacheTask>();
     private final Thread[] workers;
     private boolean areWorkersWork = false;
 
-    /**
-     * Creates image cache with default parameters.
-     * 
-     * @param context
-     * @throws IOException
-     */
     public ImageCache(final Context context) {
         this(fillEmptyValuesWithDefault(context, new CacheConfig()));
     }
 
-    /**
-     * Creates image cache with default parameters stored in config parameter.
-     * Empty config's fields will be replaced by default values.
-     * 
-     * @param context
-     * @throws IOException
-     */
     public ImageCache(final Context context, final CacheConfig config) {
         this(fillEmptyValuesWithDefault(context, config));
     }
 
-    /**
-     * Creates image cache with parameters stored in config parameter. <br>
-     * WARNING! All fields of the config have to be provided! If you want define
-     * only some parameters, use constructor
-     * {@link ImageCache#ImageCache(Context, CacheConfig)}
-     * 
-     * @param config
-     *            cache configuration
-     * @throws IOException
-     *             if disk cache creation failed
-     */
     public ImageCache(final CacheConfig config) {
         checkAllValuesFilled(config);
         memCache = new MemoryCache(config.getMemoryCacheSize());
@@ -74,22 +48,6 @@ public class ImageCache implements IBitmapCache {
         }
     }
 
-    private void checkAllValuesFilled(final CacheConfig config) {
-        checkConfigNotNull(config);
-        if (config.getWorkersNumber() == null || config.getMemoryCacheSize() == null
-                || config.getDiskCachePath() == null || config.getDiskCacheSize() == null
-                || config.getCompressFormat() == null || config.getCompressQuality() == null) {
-            throw new IllegalArgumentException("All config's fields have to be filled");
-        }
-    }
-
-    /**
-     * Fills empty configuration's values with default.
-     * 
-     * @param context
-     * @param config
-     *            cache configuration
-     */
     private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
         checkConfigNotNull(config);
         if (config.getWorkersNumber() == null) {
@@ -138,6 +96,15 @@ public class ImageCache implements IBitmapCache {
         final long size = 1024 * 1024 * memClass / 4;
         Utils.log("Device memory class: " + memClass + " DiskLruCache size: " + size / 1000 + " kB");
         return size;
+    }
+
+    private void checkAllValuesFilled(final CacheConfig config) {
+        checkConfigNotNull(config);
+        if (config.getWorkersNumber() == null || config.getMemoryCacheSize() == null
+                || config.getDiskCachePath() == null || config.getDiskCacheSize() == null
+                || config.getCompressFormat() == null || config.getCompressQuality() == null) {
+            throw new IllegalArgumentException("All config's fields have to be filled");
+        }
     }
 
     /**
@@ -231,6 +198,18 @@ public class ImageCache implements IBitmapCache {
         return diskCache.getCompressQuality();
     }
 
+    private static class CacheTask {
+        private final String hashedKey;
+        public String key;
+        public OnCacheResultListener onCacheResultListener;
+
+        public CacheTask(final String key, final String hashedKey, final OnCacheResultListener onCacheResultListener) {
+            this.key = key;
+            this.hashedKey = hashedKey;
+            this.onCacheResultListener = onCacheResultListener;
+        }
+    }
+
     private class TaskExecutor implements Runnable {
 
         @Override
@@ -250,18 +229,6 @@ public class ImageCache implements IBitmapCache {
                 Utils.log(e.getMessage());
             }
 
-        }
-    }
-
-    private static class CacheTask {
-        public String key;
-        public OnCacheResultListener onCacheResultListener;
-        private final String hashedKey;
-
-        public CacheTask(final String key, final String hashedKey, final OnCacheResultListener onCacheResultListener) {
-            this.key = key;
-            this.hashedKey = hashedKey;
-            this.onCacheResultListener = onCacheResultListener;
         }
     }
 }

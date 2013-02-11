@@ -1,41 +1,24 @@
-package pl.polidea.imagecache;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+package pl.polidea.imagecache.thridparty;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-
 import com.jakewharton.DiskLruCache;
+import pl.polidea.imagecache.Utils;
+
+import java.io.*;
 
 /**
  * The Class DiskCache.
  */
 public class DiskCache {
 
-    private static final String TAG = DiskCache.class.getSimpleName();
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
-
     private final CompressFormat compressFormat;
     private final int compressQuality;
     private DiskLruCache mDiskCache;
 
-    /**
-     * Creates disk cache in specified directory and size.
-     * 
-     * @param path
-     *            path of the cache directory
-     * @param size
-     *            cache size in bytes
-     * @throws IOException
-     *             if creating disk cache error occured
-     */
     public DiskCache(final String path, final long size, final CompressFormat compressFormat, final int compressQuality) {
         this.compressFormat = compressFormat;
         this.compressQuality = compressQuality;
@@ -47,7 +30,7 @@ public class DiskCache {
     }
 
     private DiskLruCache openDiskLruCache(final File directory, final int appVersion, final int valueCount,
-            final long size) throws IOException {
+                                          final long size) throws IOException {
         return DiskLruCache.open(directory, appVersion, valueCount, size);
     }
 
@@ -174,9 +157,6 @@ public class DiskCache {
         }
     }
 
-    /**
-     * @param listFiles
-     */
     private void deleteFiles(final File[] listFiles) {
         for (final File file : listFiles) {
             if (file.isDirectory()) {
