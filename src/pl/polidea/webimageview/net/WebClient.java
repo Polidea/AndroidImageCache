@@ -1,7 +1,7 @@
 /**
  *
  */
-package pl.polidea.webimageview;
+package pl.polidea.webimageview.net;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

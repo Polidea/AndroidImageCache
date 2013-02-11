@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import pl.polidea.webimageview.net.TaskContainer;
+import pl.polidea.webimageview.net.WebCallback;
 
 /**
  * The Class TaskContainerTest.

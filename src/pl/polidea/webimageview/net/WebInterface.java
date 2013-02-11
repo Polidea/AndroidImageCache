@@ -1,7 +1,7 @@
 /**
  *
  */
-package pl.polidea.webimageview;
+package pl.polidea.webimageview.net;
 
 import java.io.IOException;
 import java.io.InputStream;

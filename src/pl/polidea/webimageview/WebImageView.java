@@ -14,6 +14,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import pl.polidea.webimageview.net.WebCallback;
+import pl.polidea.webimageview.net.WebClient;
 
 /**
  * 

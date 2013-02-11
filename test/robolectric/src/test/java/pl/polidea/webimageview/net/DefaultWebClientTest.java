@@ -1,23 +1,21 @@
 /**
  *
  */
-package pl.polidea.webimageview;
+package pl.polidea.webimageview.net;
 
-import static org.junit.Assert.*;
-
-import java.util.concurrent.ThreadPoolExecutor;
-
+import com.xtremelabs.robolectric.Robolectric;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
-
 import pl.polidea.imagecache.ImageCacheTestRunner;
 
-import com.xtremelabs.robolectric.Robolectric;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Marek Multarzynski
- * 
  */
 @RunWith(ImageCacheTestRunner.class)
 public class DefaultWebClientTest {

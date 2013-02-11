@@ -16,14 +16,14 @@ import java.io.IOException;
 /**
  * @author Wojciech Piwonski
  */
-public class ImageCache implements IBitmapCache {
+public class ImageCache  {
 
     private static final int DEFAULT_WORKERS_NUMBER = 1;
     private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     private static final int DEFAULT_COMPRESS_QUALITY = 100;
     final MemoryCache memCache;
     final DiskCache diskCache;
-    private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque<CacheTask>();
+    private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque();
     private final Thread[] workers;
     private boolean areWorkersWork = false;
 
@@ -113,7 +113,6 @@ public class ImageCache implements IBitmapCache {
      * null listener throws IllegalArgumentException because passing the key
      * value is always done by the listener.
      */
-    @Override
     public void get(final String key, final OnCacheResultListener onCacheResultListener) {
         final String hashedKey = Utils.sha1(key);
         if (!areWorkersWork) {
@@ -138,7 +137,6 @@ public class ImageCache implements IBitmapCache {
     /**
      * Removes bitmpa under key from memory and disc cache.
      */
-    @Override
     public boolean remove(final String key) {
         final String hashedKey = Utils.sha1(key);
         boolean removed = memCache.remove(hashedKey) != null;
@@ -153,14 +151,12 @@ public class ImageCache implements IBitmapCache {
     /**
      * Puts bitmap to both memory and disc cache.
      */
-    @Override
     public void put(final String key, final Bitmap bitmap) {
         final String hashedKey = Utils.sha1(key);
         memCache.put(hashedKey, bitmap);
         diskCache.put(hashedKey, bitmap);
     }
 
-    @Override
     public void clear() {
         memCache.evictAll();
         diskCache.clearCache();

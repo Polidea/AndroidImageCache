@@ -1,4 +1,4 @@
-package pl.polidea.webimageview;
+package pl.polidea.webimageview.net;
 
 import pl.polidea.imagecache.thridparty.LinkedBlockingDeque;
 

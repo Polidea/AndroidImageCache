@@ -1,4 +1,4 @@
-package pl.polidea.webimageview;
+package pl.polidea.webimageview.net;
 
 import java.io.File;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class TaskContainer {
 
-    Map<String, Set<WebCallback>> map = new HashMap<String, Set<WebCallback>>();
+    Map<String, Set<WebCallback>> map = new HashMap();
 
     /**
      * Adds the task.
@@ -29,7 +29,7 @@ public class TaskContainer {
             set.add(listener);
             return false;
         } else {
-            final Set<WebCallback> set = new HashSet<WebCallback>();
+            final Set<WebCallback> set = new HashSet();
             set.add(listener);
             map.put(path, set);
             return true;
@@ -56,7 +56,6 @@ public class TaskContainer {
      * Perform callbacks on all registered classes under path key.
      * 
      * @param path
-     * @param bitmap
      */
     public synchronized void performCallbacks(final String path, final File file) {
         final Set<WebCallback> set = map.get(path);
