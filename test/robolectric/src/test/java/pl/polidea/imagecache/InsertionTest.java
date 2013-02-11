@@ -1,20 +1,18 @@
 /**
- * 
+ *
  */
 package pl.polidea.imagecache;
 
-import static org.junit.Assert.*;
-
+import android.graphics.Bitmap;
+import com.xtremelabs.robolectric.Robolectric;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-
-import com.xtremelabs.robolectric.Robolectric;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Wojciech Piwonski
- * 
  */
 public class InsertionTest extends ImageCacheTest {
 
@@ -137,7 +135,7 @@ public class InsertionTest extends ImageCacheTest {
     public void bitmapExceedingCacheSizeTest() throws InterruptedException {
         // given
         final CacheConfig config = new CacheConfig();
-        config.setMemoryCacheSize(2 * MB);
+        config.memoryCacheSize = 2 * MB;
         imageCache = new ImageCache(context, config);
         final Bitmap bitmap = getBitmap(3 * 1024);
         final String key = "key";

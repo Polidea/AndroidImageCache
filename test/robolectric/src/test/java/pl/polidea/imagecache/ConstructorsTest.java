@@ -3,20 +3,17 @@
  */
 package pl.polidea.imagecache;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-
+import android.graphics.Bitmap.CompressFormat;
+import com.xtremelabs.robolectric.Robolectric;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap.CompressFormat;
+import java.io.File;
 
-import com.xtremelabs.robolectric.Robolectric;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Wojciech Piwonski
- * 
  */
 public class ConstructorsTest extends ImageCacheTest {
 
@@ -102,7 +99,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final int workersNumber = 2;
-        config.setWorkersNumber(workersNumber);
+        config.workersNumber = workersNumber;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -124,7 +121,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final int memoryCacheSize = 6 * 1024 * 1024;
-        config.setMemoryCacheSize(memoryCacheSize);
+        config.memoryCacheSize = memoryCacheSize;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -145,7 +142,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final String diskCachePath = context.getCacheDir().getPath() + File.separator + "cache";
-        config.setDiskCachePath(diskCachePath);
+        config.diskCachePath = diskCachePath;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -166,7 +163,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final long diskCacheSize = (long) 6 * 1024 * 1024;
-        config.setDiskCacheSize(diskCacheSize);
+        config.diskCacheSize = diskCacheSize;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -187,7 +184,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final CompressFormat compressFormat = CompressFormat.PNG;
-        config.setCompressFormat(compressFormat);
+        config.compressFormat = compressFormat;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -208,7 +205,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final int compressQuality = 75;
-        config.setCompressQuality(compressQuality);
+        config.compressQuality = compressQuality;
 
         // when
         imageCache = new ImageCache(context, config);
@@ -310,7 +307,7 @@ public class ConstructorsTest extends ImageCacheTest {
         // given
         final CacheConfig config = new CacheConfig();
         final String diskCachePath = "/wrongPath?**|\\<>/:^&;\t\n\"";
-        config.setDiskCachePath(diskCachePath);
+        config.diskCachePath = diskCachePath;
 
         // when
         imageCache = new ImageCache(context, config);

@@ -1,59 +1,55 @@
 /**
- * 
+ *
  */
 package pl.polidea.imagecache;
-
-import java.io.File;
-import java.io.OutputStream;
-import java.util.concurrent.CountDownLatch;
-
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.io.File;
+import java.io.OutputStream;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Wojciech Piwonski
- * 
  */
 @RunWith(ImageCacheTestRunner.class)
 public abstract class ImageCacheTest {
 
     protected static final int KB = 1024;
     protected static final int MB = 1024 * KB;
-
-    private static final int BYTES_PER_PIXEL = 4;
     protected static final int DEFAULT_WORKERS_NUMBER = 1;
     protected static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     protected static final int DEFAULT_COMPRESS_QUALITY = 100;
-
+    private static final int BYTES_PER_PIXEL = 4;
     protected Context context;
     protected ImageCache imageCache;
 
     protected CacheConfig prepareConfig(final Integer workersNumber, final Integer memoryCacheSize,
-            final String diskCachePath, final Long diskCacheSize, final CompressFormat compressFormat,
-            final Integer compressQuality) {
+                                        final String diskCachePath, final Long diskCacheSize, final CompressFormat compressFormat,
+                                        final Integer compressQuality) {
         final CacheConfig config = new CacheConfig();
         if (workersNumber != null) {
-            config.setWorkersNumber(workersNumber);
+            config.workersNumber = workersNumber;
         }
         if (memoryCacheSize != null) {
-            config.setMemoryCacheSize(memoryCacheSize);
+            config.memoryCacheSize = memoryCacheSize;
         }
         if (diskCacheSize != null) {
-            config.setDiskCacheSize(diskCacheSize);
+            config.diskCacheSize = diskCacheSize;
         }
         if (diskCachePath != null) {
-            config.setDiskCachePath(diskCachePath);
+            config.diskCachePath = diskCachePath;
         }
         if (compressFormat != null) {
-            config.setCompressFormat(compressFormat);
+            config.compressFormat = compressFormat;
         }
         if (compressQuality != null) {
-            config.setCompressQuality(compressQuality);
+            config.compressQuality = compressQuality;
         }
         return config;
     }
@@ -96,13 +92,8 @@ public abstract class ImageCacheTest {
         return result.value;
     }
 
-    protected class Result {
-        public boolean value = false;
-    }
-
     /**
-     * @param size
-     *            size in KB
+     * @param size size in KB
      * @return
      */
     protected Bitmap getBitmap(final int size) {
@@ -119,6 +110,10 @@ public abstract class ImageCacheTest {
         Mockito.when(b.compress(Mockito.any(CompressFormat.class), Mockito.anyInt(), Mockito.any(OutputStream.class)))
                 .thenReturn(true);
         return b;
+    }
+
+    protected class Result {
+        public boolean value = false;
     }
 
 }

@@ -37,10 +37,10 @@ public class ImageCache implements IBitmapCache {
 
     public ImageCache(final CacheConfig config) {
         checkAllValuesFilled(config);
-        memCache = new MemoryCache(config.getMemoryCacheSize());
-        diskCache = new DiskCache(config.getDiskCachePath(), config.getDiskCacheSize(), config.getCompressFormat(),
-                config.getCompressQuality());
-        final int workersNumber = config.getWorkersNumber();
+        memCache = new MemoryCache(config.memoryCacheSize);
+        diskCache = new DiskCache(config.diskCachePath, config.diskCacheSize, config.compressFormat,
+                config.compressQuality);
+        final int workersNumber = config.workersNumber;
         workers = new Thread[workersNumber];
         for (int i = 0; i < workersNumber; ++i) {
             workers[i] = new Thread(new TaskExecutor());
@@ -50,23 +50,23 @@ public class ImageCache implements IBitmapCache {
 
     private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
         checkConfigNotNull(config);
-        if (config.getWorkersNumber() == null) {
-            config.setWorkersNumber(DEFAULT_WORKERS_NUMBER);
+        if (config.workersNumber == null) {
+            config.workersNumber = DEFAULT_WORKERS_NUMBER;
         }
-        if (config.getMemoryCacheSize() == null) {
-            config.setMemoryCacheSize(getDefaultMemoryCacheSize(context));
+        if (config.memoryCacheSize == null) {
+            config.memoryCacheSize = getDefaultMemoryCacheSize(context);
         }
-        if (config.getDiskCachePath() == null) {
-            config.setDiskCachePath(getDefaultDiskCachePath(context));
+        if (config.diskCachePath == null) {
+            config.diskCachePath = getDefaultDiskCachePath(context);
         }
-        if (config.getDiskCacheSize() == null) {
-            config.setDiskCacheSize(getDefaultDiskCacheSize(context));
+        if (config.diskCacheSize == null) {
+            config.diskCacheSize  = getDefaultDiskCacheSize(context);
         }
-        if (config.getCompressFormat() == null) {
-            config.setCompressFormat(DEFAULT_COMPRESS_FORMAT);
+        if (config.compressFormat == null) {
+            config.compressFormat = DEFAULT_COMPRESS_FORMAT;
         }
-        if (config.getCompressQuality() == null) {
-            config.setCompressQuality(DEFAULT_COMPRESS_QUALITY);
+        if (config.compressQuality == null) {
+            config.compressQuality = DEFAULT_COMPRESS_QUALITY;
         }
         return config;
     }
@@ -100,9 +100,9 @@ public class ImageCache implements IBitmapCache {
 
     private void checkAllValuesFilled(final CacheConfig config) {
         checkConfigNotNull(config);
-        if (config.getWorkersNumber() == null || config.getMemoryCacheSize() == null
-                || config.getDiskCachePath() == null || config.getDiskCacheSize() == null
-                || config.getCompressFormat() == null || config.getCompressQuality() == null) {
+        if (config.workersNumber == null || config.memoryCacheSize == null
+                || config.diskCachePath == null || config.diskCacheSize == null
+                || config.compressFormat == null || config.compressQuality == null) {
             throw new IllegalArgumentException("All config's fields have to be filled");
         }
     }
