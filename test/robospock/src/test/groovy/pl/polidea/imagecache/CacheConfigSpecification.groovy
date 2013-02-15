@@ -76,4 +76,23 @@ class CacheConfigSpecification extends RoboSpecification {
         config.memoryCacheSize == 1000
     }
 
+    def "should fix negative numbers in config"(){
+        given:
+        CacheConfig config  = new CacheConfig();
+        config.memoryCacheSize = -1
+        config.compressQuality = -1
+        config.diskCacheSize = -1
+        config.workersNumber = -1
+
+        when:
+        config = CacheConfig.buildDefault(Robolectric.application, config)
+
+        then:
+        config.memoryCacheSize == 8388608
+        config.diskCacheSize == 16777216
+        config.workersNumber == 1
+        config.compressQuality == 100
+    }
+
+
 }

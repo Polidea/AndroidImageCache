@@ -32,29 +32,29 @@ public class CacheConfig {
     CompressFormat compressFormat;
     Integer compressQuality;
 
-    public static CacheConfig buildDefault(Context context){
+    public static CacheConfig buildDefault(Context context) {
         return buildDefault(context, null);
     }
 
     public static CacheConfig buildDefault(Context context, CacheConfig cacheConfig) {
         if (cacheConfig == null) cacheConfig = new CacheConfig();
 
-        if (cacheConfig.workersNumber == null) {
+        if (cacheConfig.workersNumber == null || cacheConfig.workersNumber < 1) {
             cacheConfig.workersNumber = DEFAULT_WORKERS_NUMBER;
         }
-        if (cacheConfig.memoryCacheSize == null) {
+        if (cacheConfig.memoryCacheSize == null || cacheConfig.memoryCacheSize < 1) {
             cacheConfig.memoryCacheSize = getDefaultMemoryCacheSize(context);
         }
         if (cacheConfig.diskCachePath == null) {
             cacheConfig.diskCachePath = getDefaultDiskCachePath(context);
         }
-        if (cacheConfig.diskCacheSize == null) {
+        if (cacheConfig.diskCacheSize == null || cacheConfig.diskCacheSize < 1) {
             cacheConfig.diskCacheSize = getDefaultDiskCacheSize(context);
         }
         if (cacheConfig.compressFormat == null) {
             cacheConfig.compressFormat = DEFAULT_COMPRESS_FORMAT;
         }
-        if (cacheConfig.compressQuality == null) {
+        if (cacheConfig.compressQuality == null || cacheConfig.compressQuality < 1) {
             cacheConfig.compressQuality = DEFAULT_COMPRESS_QUALITY;
         }
 
