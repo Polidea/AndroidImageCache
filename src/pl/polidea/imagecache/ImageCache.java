@@ -34,6 +34,7 @@ public class ImageCache  {
     }
 
     public ImageCache(final CacheConfig config) {
+        // XXX: this is done in UI thread !
         checkAllValuesFilled(config);
         memCache = new MemoryCache(config.memoryCacheSize);
         diskCache = new DiskCache(config.diskCachePath, config.diskCacheSize, config.compressFormat,

@@ -57,9 +57,10 @@ public class WebImageView extends ImageView {
     }
 
     private synchronized void init(final Context context, final AttributeSet attrsSet) {
-
+        // XXX: this is done in UI thread !
         imageCache = getCache(context);
         webClient = getWebClient(context);
+        // XXX: this is done in UI thread, read from disc !
         bitmapProcessor = new DefaultBitmapProcessor(this);
         this.attrs = attrsSet;
         if (attrsSet != null) {

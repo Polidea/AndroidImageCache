@@ -23,6 +23,7 @@ public class DiskCache {
         this.compressFormat = compressFormat;
         this.compressQuality = compressQuality;
         try {
+            // XXX: this is done in UI thread !
             mDiskCache = openDiskLruCache(new File(path), APP_VERSION, VALUE_COUNT, size);
         } catch (final IOException e) {
             throw new IllegalArgumentException("Creating disk cache failed", e);

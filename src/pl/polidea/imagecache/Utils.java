@@ -1,21 +1,21 @@
 /**
- * 
+ *
  */
 package pl.polidea.imagecache;
+
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import android.util.Log;
-
 /**
  * @author Wojciech Piwonski
- * 
  */
 public final class Utils {
 
     private static final String TAG = "ImageCache";
+    private static boolean USE_LOGS = false;
 
     private Utils() {
     }
@@ -53,20 +53,36 @@ public final class Utils {
     }
 
     public static void log(final String msg) {
-        Log.d(TAG, msg);
+        if (USE_LOGS) {
+            Log.d(TAG, msg);
+        }
     }
 
     public static void log(final Throwable t) {
         if (t != null) {
-            Log.d(TAG, t.getMessage(), t);
+            printThrowable(t.getMessage(), t);
         }
     }
 
     public static void log(final String msg, final Throwable t) {
         if (t != null) {
-            Log.d(TAG, t.getMessage(), t);
+            printThrowable(t.getMessage(), t);
         } else {
+            printThrowable(msg, t);
+        }
+    }
+
+    private static void printThrowable(String msg, Throwable t) {
+        if (USE_LOGS) {
             Log.d(TAG, msg, t);
         }
+    }
+
+    static boolean getUseLogs() {
+        return USE_LOGS;
+    }
+
+    static void setUseLogs(boolean value) {
+        USE_LOGS = value;
     }
 }

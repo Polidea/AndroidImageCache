@@ -48,22 +48,24 @@ public class MemoryCache {
     /**
      * Puts bitmap to cache. Both key and value can't be null. Inserting bitmap
      * bigger than MemoryCache size throw IllegalArgumentException.
-     * 
+     *
      * @param key
-     * @param value
+     * @param bitmap
      */
-    public final void put(final String key, final Bitmap value) {
-        if (key == null || value == null) {
-            return;
+    public final Bitmap put(final String key, final Bitmap bitmap) {
+        if (key == null || bitmap == null) {
+            throw new NullPointerException("key == null || value == null");
         }
-        final int size = value.getRowBytes() * value.getHeight();
+        final int size = bitmap.getRowBytes() * bitmap.getHeight();
         if (size > maxSize()) {
             throw new IllegalArgumentException("Tried to put bitmap of size: " + size / 1024
                     + " KB, while maximum memory cache size is: " + maxSize() / 1024 + " KB.");
         }
-        cache.put(key, value);
+        Bitmap put = cache.put(key, bitmap);
         Utils.log("Inserting " + key + " into LRU Cache Bitmap with size: " + size + "B " + " width:"
-                + value.getWidth() + "\theight: " + value.getHeight() + " Cache size: " + size() / 1000 + " KB");
+                + bitmap.getWidth() + "\theight: " + bitmap.getHeight() + " Cache size: " + size() / 1000 + " KB");
+
+        return put;
     }
 
     public final int putCount() {
