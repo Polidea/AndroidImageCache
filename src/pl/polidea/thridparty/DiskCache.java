@@ -1,10 +1,10 @@
-package pl.polidea.imagecache.thridparty;
+package pl.polidea.thridparty;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import com.jakewharton.DiskLruCache;
-import pl.polidea.imagecache.Utils;
+import pl.polidea.utils.Utils;
 
 import java.io.*;
 

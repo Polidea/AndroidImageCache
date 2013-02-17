@@ -1,6 +1,6 @@
-package pl.polidea.webimageview.net;
+package pl.polidea.utils;
 
-import pl.polidea.imagecache.thridparty.LinkedBlockingDeque;
+import pl.polidea.thridparty.LinkedBlockingDeque;
 
 public class StackBlockingDeque extends LinkedBlockingDeque<Runnable> {
 

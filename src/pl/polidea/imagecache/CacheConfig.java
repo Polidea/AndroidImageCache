@@ -6,6 +6,7 @@ package pl.polidea.imagecache;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap.CompressFormat;
+import pl.polidea.utils.Utils;
 
 import java.io.File;
 

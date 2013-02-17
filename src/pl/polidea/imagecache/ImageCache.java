@@ -3,34 +3,30 @@
  */
 package pl.polidea.imagecache;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import pl.polidea.imagecache.thridparty.DiskCache;
-import pl.polidea.imagecache.thridparty.LinkedBlockingDeque;
+import android.text.TextUtils;
+import pl.polidea.thridparty.DiskCache;
+import pl.polidea.utils.StackPoolExecutor;
+import pl.polidea.utils.Utils;
 
-import java.io.File;
 import java.io.IOException;
-
-/**
- * @author Wojciech Piwonski
- */
-public class ImageCache  {
+import java.util.concurrent.ExecutorService;
 
 
-    final MemoryCache memCache;
-    final DiskCache diskCache;
-    private final LinkedBlockingDeque<CacheTask> deque = new LinkedBlockingDeque();
-    private final Thread[] workers;
-    private boolean areWorkersWork = false;
+public class ImageCache {
+
+    MemoryCache memCache;
+    DiskCache diskCache;
+    ExecutorService taskExecutor;
 
     public ImageCache(final Context context) {
-        this(fillEmptyValuesWithDefault(context, new CacheConfig()));
+        this(CacheConfig.buildDefault(context));
     }
 
     public ImageCache(final Context context, final CacheConfig config) {
-        this(fillEmptyValuesWithDefault(context, config));
+        this(CacheConfig.buildDefault(context, config));
     }
 
     public ImageCache(final CacheConfig config) {
@@ -39,17 +35,8 @@ public class ImageCache  {
         memCache = new MemoryCache(config.memoryCacheSize);
         diskCache = new DiskCache(config.diskCachePath, config.diskCacheSize, config.compressFormat,
                 config.compressQuality);
-        final int workersNumber = config.workersNumber;
-        workers = new Thread[workersNumber];
-        for (int i = 0; i < workersNumber; ++i) {
-            workers[i] = new Thread(new TaskExecutor());
-            workers[i].setPriority(Thread.MIN_PRIORITY);
-        }
-    }
 
-    private static CacheConfig fillEmptyValuesWithDefault(final Context context, final CacheConfig config) {
-        checkConfigNotNull(config);
-        return CacheConfig.buildDefault(context, config);
+        taskExecutor = new StackPoolExecutor(config.workersNumber);
     }
 
     private static void checkConfigNotNull(final CacheConfig config) {
@@ -58,9 +45,7 @@ public class ImageCache  {
         }
     }
 
-
-
-    private void checkAllValuesFilled(final CacheConfig config) {
+    void checkAllValuesFilled(final CacheConfig config) {
         checkConfigNotNull(config);
         if (config.workersNumber == null || config.memoryCacheSize == null
                 || config.diskCachePath == null || config.diskCacheSize == null
@@ -77,19 +62,13 @@ public class ImageCache  {
      */
     public void get(final String key, final OnCacheResultListener onCacheResultListener) {
         final String hashedKey = Utils.sha1(key);
-        if (!areWorkersWork) {
-            areWorkersWork = true;
-            for (final Thread thread : workers) {
-                thread.start();
-            }
-        }
 
         if (onCacheResultListener == null) {
             throw new IllegalArgumentException("onCacheResult cannot be null");
         }
         final Bitmap bitmap = memCache.get(hashedKey);
         if (bitmap == null) {
-            deque.addFirst(new CacheTask(key, hashedKey, onCacheResultListener));
+            taskExecutor.submit(new CacheTask(key, hashedKey, onCacheResultListener));
         } else {
             onCacheResultListener.onCacheHit(key, bitmap);
         }
@@ -114,6 +93,8 @@ public class ImageCache  {
      * Puts bitmap to both memory and disc cache.
      */
     public void put(final String key, final Bitmap bitmap) {
+        if (TextUtils.isEmpty(key) || bitmap == null || bitmap.isRecycled())
+            throw new IllegalArgumentException("Key is empty either bitmap isn't valid");
         final String hashedKey = Utils.sha1(key);
         memCache.put(hashedKey, bitmap);
         diskCache.put(hashedKey, bitmap);
@@ -122,10 +103,6 @@ public class ImageCache  {
     public void clear() {
         memCache.evictAll();
         diskCache.clearCache();
-    }
-
-    public int getWorkersNumber() {
-        return workers.length;
     }
 
     public int getMemoryCacheSize() {
@@ -156,7 +133,7 @@ public class ImageCache  {
         return diskCache.getCompressQuality();
     }
 
-    private static class CacheTask {
+    private class CacheTask implements Runnable {
         private final String hashedKey;
         public String key;
         public OnCacheResultListener onCacheResultListener;
@@ -166,27 +143,17 @@ public class ImageCache  {
             this.hashedKey = hashedKey;
             this.onCacheResultListener = onCacheResultListener;
         }
-    }
-
-    private class TaskExecutor implements Runnable {
 
         @Override
         public void run() {
-            try {
-                while (true) {
-                    final CacheTask task = deque.takeFirst();
-                    final Bitmap bitmap = diskCache.getBitmap(task.hashedKey);
-                    if (bitmap == null || bitmap.isRecycled()) {
-                        task.onCacheResultListener.onCacheMiss(task.key);
-                    } else {
-                        memCache.put(task.hashedKey, bitmap);
-                        task.onCacheResultListener.onCacheHit(task.key, bitmap);
-                    }
-                }
-            } catch (final InterruptedException e) {
-                Utils.log(e.getMessage());
+            final Bitmap bitmap = diskCache.getBitmap(hashedKey);
+            if (bitmap == null || bitmap.isRecycled()) {
+                onCacheResultListener.onCacheMiss(key);
+            } else {
+                memCache.put(hashedKey, bitmap);
+                onCacheResultListener.onCacheHit(key, bitmap);
             }
-
         }
     }
+
 }

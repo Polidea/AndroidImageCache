@@ -3,6 +3,7 @@ package pl.polidea.imagecache
 import android.graphics.Bitmap
 import com.xtremelabs.robolectric.shadows.ShadowLog
 import pl.polidea.robospock.RoboSpecification
+import pl.polidea.utils.Utils
 
 class MemoryCacheSpecification extends RoboSpecification {
 
@@ -27,7 +28,7 @@ class MemoryCacheSpecification extends RoboSpecification {
         memoryCache.put(null, mock)
 
         then:
-        thrown(NullPointerException)
+        thrown(IllegalArgumentException)
     }
 
     def "should throw an exception when bitmap is null"() {
@@ -38,7 +39,7 @@ class MemoryCacheSpecification extends RoboSpecification {
         memoryCache.put("a", null)
 
         then:
-        thrown(NullPointerException)
+        thrown(IllegalArgumentException)
     }
 
     def "should throw an exception when inserted bitmap is bigger than cache"() {

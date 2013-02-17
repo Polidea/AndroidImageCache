@@ -2,6 +2,7 @@ package pl.polidea.imagecache
 
 import com.xtremelabs.robolectric.shadows.ShadowLog
 import pl.polidea.robospock.RoboSpecification
+import pl.polidea.utils.Utils
 
 class UtilsSpecification extends RoboSpecification {
 

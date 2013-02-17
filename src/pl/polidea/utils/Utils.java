@@ -1,7 +1,7 @@
 /**
  *
  */
-package pl.polidea.imagecache;
+package pl.polidea.utils;
 
 import android.util.Log;
 

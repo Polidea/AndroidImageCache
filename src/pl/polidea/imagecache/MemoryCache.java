@@ -3,6 +3,7 @@ package pl.polidea.imagecache;
 import java.util.Map;
 
 import android.graphics.Bitmap;
+import pl.polidea.utils.Utils;
 
 /**
  * The Class MemoryCache.
@@ -54,7 +55,7 @@ public class MemoryCache {
      */
     public final Bitmap put(final String key, final Bitmap bitmap) {
         if (key == null || bitmap == null) {
-            throw new NullPointerException("key == null || value == null");
+            throw new IllegalArgumentException("key == null || value == null");
         }
         final int size = bitmap.getRowBytes() * bitmap.getHeight();
         if (size > maxSize()) {

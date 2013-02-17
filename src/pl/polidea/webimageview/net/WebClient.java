@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.client.ClientProtocolException;
 
 import android.content.Context;
+import pl.polidea.utils.StackBlockingDeque;
 
 /**
  * @author Marek Multarzynski
