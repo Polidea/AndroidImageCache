@@ -3,6 +3,7 @@ package pl.polidea.imagecache
 import android.graphics.Bitmap
 import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowLog
+import pl.polidea.imagecache.ImageCache.CacheTask
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
 import pl.polidea.thridparty.DiskCache
@@ -192,7 +193,7 @@ class ImageCacheSpecification extends RoboSpecification {
     def "should put new task to deque when bitmap is not present in cache"() {
         given:
         def cache = new ImageCache(Robolectric.application)
-        and: " mock the executor"
+        and: "mock the executor"
         cache.taskExecutor = Mock(ExecutorService)
 
         when:
@@ -202,16 +203,80 @@ class ImageCacheSpecification extends RoboSpecification {
         1 * cache.taskExecutor.submit(_)
     }
 
+    def "should be able to create a CacheTask"() {
+        given:
+        def cache = new ImageCache(Robolectric.application)
+        def listenerMock = Mock(OnCacheResultListener)
+
+        when:
+        def task = new CacheTask(cache, "a", "a", listenerMock)
+
+        then:
+        task
+    }
 
 
+    def "should call cache miss when bitmap is not in cache"() {
+        given:
+        def cache = new ImageCache(Robolectric.application)
+        and: "create mock disc cache"
+        def diskCacheMock = Mock(DiskCache)
+        diskCacheMock.getBitmap(_) >>> [null, mockRecycled()]
+        cache.diskCache = diskCacheMock
+        and: "create a mock listener to track method invoking"
+        def listenerMock = Mock(OnCacheResultListener)
+        and: "create a cache task"
+        def task = new CacheTask(cache, "a", "a", listenerMock)
 
+        when:
+        task.run()
+        task.run()
+
+        then:
+        2 * listenerMock.onCacheMiss("a")
+    }
+
+    def "should call cache hit when bitmap is available"() {
+        given:
+        def cache = new ImageCache(Robolectric.application)
+
+        and: "create a mocked disc cache"
+        def diskCacheMock = Mock(DiskCache)
+        def bitmapMock = mock(10, 10)
+        diskCacheMock.getBitmap(_) >> bitmapMock
+        cache.diskCache = diskCacheMock
+
+        and: "create a mocked memory cache to track method invoking"
+        def memCacheMock = Mock(MemoryCache)
+        cache.memCache = memCacheMock
+
+        and: "create a mocked listener to track method invoking"
+        def listenerMock = Mock(OnCacheResultListener)
+
+        and: "create a cache task"
+        def task = new CacheTask(cache, "a", "a", listenerMock)
+
+        when:
+        task.run()
+
+        then:
+        1 * listenerMock.onCacheHit("a", bitmapMock)
+        1 * memCacheMock.put("a", bitmapMock)
+    }
 
 
     Bitmap mock(int rowBytes, int height) {
         def mock = Mock(Bitmap)
         mock.getRowBytes() >> rowBytes
         mock.getHeight() >> height
-        return mock;
+        return mock
+    }
+
+    Bitmap mockRecycled() {
+        def mock = Mock(Bitmap)
+        mock.isRecycled() >> true
+        return mock
+
     }
 
 }

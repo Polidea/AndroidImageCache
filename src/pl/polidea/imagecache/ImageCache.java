@@ -133,12 +133,12 @@ public class ImageCache {
         return diskCache.getCompressQuality();
     }
 
-    private class CacheTask implements Runnable {
-        private final String hashedKey;
-        public String key;
-        public OnCacheResultListener onCacheResultListener;
+    class CacheTask implements Runnable {
+        String hashedKey;
+        String key;
+        OnCacheResultListener onCacheResultListener;
 
-        public CacheTask(final String key, final String hashedKey, final OnCacheResultListener onCacheResultListener) {
+        public CacheTask(String key, String hashedKey, OnCacheResultListener onCacheResultListener) {
             this.key = key;
             this.hashedKey = hashedKey;
             this.onCacheResultListener = onCacheResultListener;
@@ -146,7 +146,7 @@ public class ImageCache {
 
         @Override
         public void run() {
-            final Bitmap bitmap = diskCache.getBitmap(hashedKey);
+            Bitmap bitmap = diskCache.getBitmap(hashedKey);
             if (bitmap == null || bitmap.isRecycled()) {
                 onCacheResultListener.onCacheMiss(key);
             } else {

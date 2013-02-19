@@ -1,9 +1,9 @@
 package pl.polidea.imagecache;
 
-import java.util.Map;
-
 import android.graphics.Bitmap;
 import pl.polidea.utils.Utils;
+
+import java.util.Map;
 
 /**
  * The Class MemoryCache.
@@ -11,38 +11,37 @@ import pl.polidea.utils.Utils;
 public class MemoryCache {
 
     private static final String TAG = MemoryCache.class.getSimpleName();
-
-    private final BitmapLRUCache cache;
+    BitmapLRUCache cache;
 
     public MemoryCache(final int size) {
         cache = new BitmapLRUCache(size);
     }
 
-    public final int createCount() {
+    public int createCount() {
         return cache.createCount();
     }
 
-    public final void evictAll() {
+    public void evictAll() {
         cache.evictAll();
     }
 
-    public final int evictionCount() {
+    public int evictionCount() {
         return cache.evictionCount();
     }
 
-    public final Bitmap get(final String key) {
+    public Bitmap get(final String key) {
         return cache.get(key);
     }
 
-    public final int hitCount() {
+    public int hitCount() {
         return cache.hitCount();
     }
 
-    public final int maxSize() {
+    public int maxSize() {
         return cache.maxSize();
     }
 
-    public final int missCount() {
+    public int missCount() {
         return cache.missCount();
     }
 
@@ -53,7 +52,7 @@ public class MemoryCache {
      * @param key
      * @param bitmap
      */
-    public final Bitmap put(final String key, final Bitmap bitmap) {
+    public Bitmap put(final String key, final Bitmap bitmap) {
         if (key == null || bitmap == null) {
             throw new IllegalArgumentException("key == null || value == null");
         }
@@ -69,19 +68,19 @@ public class MemoryCache {
         return put;
     }
 
-    public final int putCount() {
+    public int putCount() {
         return cache.putCount();
     }
 
-    public final Bitmap remove(final String key) {
+    public Bitmap remove(final String key) {
         return cache.remove(key);
     }
 
-    public final int size() {
+    public int size() {
         return cache.size();
     }
 
-    public final Map<String, Bitmap> snapshot() {
+    public Map<String, Bitmap> snapshot() {
         return cache.snapshot();
     }
 
