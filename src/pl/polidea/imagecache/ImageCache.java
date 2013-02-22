@@ -68,7 +68,7 @@ public class ImageCache {
         }
         final Bitmap bitmap = memCache.get(hashedKey);
         if (bitmap == null) {
-            taskExecutor.submit(new CacheTask(key, hashedKey, onCacheResultListener));
+            taskExecutor.submit(buildTask(key, hashedKey, onCacheResultListener));
         } else {
             onCacheResultListener.onCacheHit(key, bitmap);
         }
@@ -131,6 +131,10 @@ public class ImageCache {
 
     public int getCompressQuality() {
         return diskCache.getCompressQuality();
+    }
+
+    CacheTask buildTask(String key, String hashedKey, OnCacheResultListener onCacheResultListener) {
+        return new CacheTask(key, hashedKey, onCacheResultListener);
     }
 
     class CacheTask implements Runnable {
