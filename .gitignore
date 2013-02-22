@@ -2,13 +2,15 @@
 *.iws
 *.iml
 *.ipr
-.idea
+.idea/
+out/
 
 # android gen files
 gen/
 log/
 local.properties
+tmp/
 
 # gradle files
-.gradle
+.gradle/
 
