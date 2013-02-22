@@ -1,0 +1,14 @@
+# idea files
+*.iws
+*.iml
+*.ipr
+.idea
+
+# android gen files
+gen/
+log/
+local.properties
+
+# gradle files
+.gradle
+
