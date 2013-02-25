@@ -1,4 +1,4 @@
-package pl.polidea.imagecache
+package pl.polidea.utils
 
 import com.xtremelabs.robolectric.shadows.ShadowLog
 import pl.polidea.robospock.RoboSpecification

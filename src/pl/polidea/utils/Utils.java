@@ -78,11 +78,11 @@ public final class Utils {
         }
     }
 
-    static boolean getUseLogs() {
+    public static boolean getUseLogs() {
         return USE_LOGS;
     }
 
-    static void setUseLogs(boolean value) {
+    public static void setUseLogs(boolean value) {
         USE_LOGS = value;
     }
 }
