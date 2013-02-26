@@ -11,12 +11,27 @@ public class StackBlockingDeque extends LinkedBlockingDeque<Runnable> {
      */
     private static final long serialVersionUID = 1635542918696298694L;
 
+    public StackBlockingDeque() {
+        super();
+    }
+
+    public StackBlockingDeque(int capacity) {
+        super(capacity);
+    }
+
     @Override
     public boolean offer(Runnable runnable) {
         if (contains(runnable)) {
-            remove(runnable);
+            return false;
         }
-        return super.offer(runnable);
+
+        if (remainingCapacity() > 0) {
+            return super.offer(runnable);
+        } else {
+            pollFirst();
+            return super.offer(runnable);
+        }
+
     }
 
     @Override
