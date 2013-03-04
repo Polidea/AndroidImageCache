@@ -51,4 +51,6 @@ class StackPoolExecutorSpecification extends Specification {
         doneRunnables == runnables[5..3]
     }
 
+
+    // TODO: test another constructors or failing situations
 }
