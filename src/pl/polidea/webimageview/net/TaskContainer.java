@@ -1,5 +1,7 @@
 package pl.polidea.webimageview.net;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +26,10 @@ public class TaskContainer {
      * @return true, if new key added
      */
     public synchronized boolean addTask(final String path, final WebCallback listener) {
+        if(TextUtils.isEmpty(path)){
+            throw new IllegalArgumentException("path can't be empty or null");
+        }
+
         if (map.containsKey(path)) {
             final Set<WebCallback> set = map.get(path);
             set.add(listener);
