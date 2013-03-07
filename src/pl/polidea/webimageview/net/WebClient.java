@@ -3,41 +3,22 @@
  */
 package pl.polidea.webimageview.net;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.http.client.ClientProtocolException;
-
 import android.content.Context;
-import pl.polidea.utils.StackBlockingDeque;
+import org.apache.http.client.ClientProtocolException;
+import pl.polidea.utils.StackPoolExecutor;
+
+import java.io.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Marek Multarzynski
- * 
  */
 public class WebClient {
 
+    final File cacheDir;
     TaskContainer pendingTasks = new TaskContainer();
-    WebInterface httpClient = new WebInterfaceImpl();
-    ExecutorService taskExecutor = new ThreadPoolExecutor(5, 5, 10L, TimeUnit.SECONDS, new StackBlockingDeque(),
-            new ThreadFactory() {
-
-                @Override
-                public Thread newThread(final Runnable r) {
-                    final Thread thread = new Thread(r, "Image downloading thread");
-                    thread.setPriority(Thread.MIN_PRIORITY);
-                    return thread;
-                }
-            });
-
-    private final File cacheDir;
+    WebInterface webInterface = new WebInterfaceImpl();
+    ExecutorService taskExecutor = new StackPoolExecutor(5);
 
     public WebClient(final Context context) {
         cacheDir = context.getCacheDir();
@@ -47,42 +28,20 @@ public class WebClient {
      * Request for image. If Image under path url is downloading the current
      * time the listener is added to collection of callbacks. Otherwise new
      * download thread is run.
-     * 
-     * @param url
-     *            the path
-     * @param clientResultListener
-     *            the client result listener
+     *
+     * @param url         the path
+     * @param webCallback the client result listener
      */
-    public void requestForImage(final String url, final WebCallback clientResultListener) {
+    public void requestForImage(final String url, final WebCallback webCallback) {
 
-        if (clientResultListener == null) {
-            throw new IllegalArgumentException("clientResultListener cannot be null");
+        if (webCallback == null) {
+            throw new IllegalArgumentException("webCallback cannot be null");
         }
 
-        final boolean newTask = pendingTasks.addTask(url, clientResultListener);
+        final boolean newTask = pendingTasks.addTask(url, webCallback);
 
         if (newTask) {
-            taskExecutor.submit(new Runnable() {
-
-                @Override
-                public void run() {
-                    File tempFile = null;
-                    try {
-                        tempFile = File.createTempFile("web", null, cacheDir);
-                        final InputStream stream = httpClient.execute(url);
-                        saveStreamToFile(stream, tempFile);
-
-                        pendingTasks.performCallbacks(url, tempFile);
-                    } catch (final ClientProtocolException e) {
-                        pendingTasks.performMissCallbacks(url);
-                    } catch (final IOException e) {
-                        pendingTasks.performMissCallbacks(url);
-                    } finally {
-                        tempFile.delete();
-                    }
-                    pendingTasks.remove(url);
-                }
-            });
+            taskExecutor.submit(buildTask(url));
         }
     }
 
@@ -91,7 +50,7 @@ public class WebClient {
      */
     public void setWebInterface(final WebInterface httpClient) {
         if (httpClient != null) {
-            this.httpClient = httpClient;
+            this.webInterface = httpClient;
         }
     }
 
@@ -99,18 +58,50 @@ public class WebClient {
         this.taskExecutor = taskExecutor;
     }
 
-    public void saveStreamToFile(final InputStream is, final File file) throws IOException {
-        if (is == null) {
-            throw new IOException("Empty stream");
+    DownloadTask buildTask(String url){
+        return new DownloadTask(url);
+    }
+
+    class DownloadTask implements Runnable {
+
+        private final String url;
+
+        public DownloadTask(String url) {
+            this.url = url;
         }
-        final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-        final byte[] data = new byte[16384];
-        int n;
-        while ((n = is.read(data, 0, data.length)) != -1) {
-            os.write(data, 0, n);
+
+        @Override
+        public void run() {
+            File tempFile = null;
+            try {
+                tempFile = File.createTempFile("web", null, cacheDir);
+                final InputStream stream = webInterface.execute(url);
+                saveStreamToFile(stream, tempFile);
+
+                pendingTasks.performCallbacks(url, tempFile);
+            } catch (final ClientProtocolException e) {
+                pendingTasks.performMissCallbacks(url);
+            } catch (final IOException e) {
+                pendingTasks.performMissCallbacks(url);
+            } finally {
+                tempFile.delete();
+            }
+            pendingTasks.remove(url);
         }
-        os.flush();
-        os.close();
+
+        public void saveStreamToFile(final InputStream is, final File file) throws IOException {
+            if (is == null) {
+                throw new IOException("Empty stream");
+            }
+            final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+            final byte[] data = new byte[16384];
+            int n;
+            while ((n = is.read(data, 0, data.length)) != -1) {
+                os.write(data, 0, n);
+            }
+            os.flush();
+            os.close();
+        }
     }
 
 }
