@@ -71,4 +71,25 @@ class TaskContainerSpecification extends RoboSpecification {
         where:
         key << [null, ""]
     }
+
+    def "should calculate number of all callback registered"() {
+
+    }
+
+    def "should call callbacks connected with path "() {
+
+    }
+
+    def "should not call callbacks when path is not connected"() {
+
+    }
+
+    def "should call miss callback connected with path"() {
+
+    }
+
+    def "should not call miss callback when path is not connected"(){
+
+    }
+
 }
