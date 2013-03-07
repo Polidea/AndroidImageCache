@@ -18,15 +18,13 @@ public class TaskContainer {
 
     /**
      * Adds the task.
-     * 
-     * @param path
-     *            the path
-     * @param listener
-     *            the listener
+     *
+     * @param path     the path
+     * @param listener the listener
      * @return true, if new key added
      */
     public synchronized boolean addTask(final String path, final WebCallback listener) {
-        if(TextUtils.isEmpty(path)){
+        if (TextUtils.isEmpty(path)) {
             throw new IllegalArgumentException("path can't be empty or null");
         }
 
@@ -60,11 +58,12 @@ public class TaskContainer {
 
     /**
      * Perform callbacks on all registered classes under path key.
-     * 
+     *
      * @param path
      */
     public synchronized void performCallbacks(final String path, final File file) {
         final Set<WebCallback> set = map.get(path);
+        if (set == null) return;
         for (final WebCallback webCallback : set) {
             webCallback.onWebHit(path, file);
         }
@@ -72,12 +71,12 @@ public class TaskContainer {
 
     /**
      * Perform miss callbacks on all registered classes under path key.
-     * 
-     * @param path
-     *            the path
+     *
+     * @param path the path
      */
     public synchronized void performMissCallbacks(final String path) {
         final Set<WebCallback> set = map.get(path);
+        if( set == null ) return;
         for (final WebCallback webCallback : set) {
             webCallback.onWebMiss(path);
         }

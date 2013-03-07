@@ -73,23 +73,129 @@ class TaskContainerSpecification extends RoboSpecification {
     }
 
     def "should calculate number of all callback registered"() {
+        given:
+        def taskContainer = new TaskContainer()
+        def mockCallback = Mock(WebCallback)
 
+        when:
+        ('a'..'f').each { taskContainer.addTask(it, mockCallback) }
+
+        then:
+        taskContainer.callbackSize() == 6
     }
 
     def "should call callbacks connected with path "() {
+        given:
+        def taskContainer = new TaskContainer()
 
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+        def mockCallback2 = Mock(WebCallback)
+
+        and: "add callbacks under same key"
+        taskContainer.addTask("a", mockCallback)
+        taskContainer.addTask("a", mockCallback2)
+
+        when:
+        taskContainer.performCallbacks("a", null);
+
+        then:
+        1 * mockCallback.onWebHit("a", null)
+        1 * mockCallback2.onWebHit("a", null)
     }
 
     def "should not call callbacks when path is not connected"() {
+        given:
+        def taskContainer = new TaskContainer()
 
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+        def mockCallback2 = Mock(WebCallback)
+
+        and: "add callbacks under different key"
+        taskContainer.addTask("a", mockCallback)
+        taskContainer.addTask("b", mockCallback2)
+
+        when:
+        taskContainer.performCallbacks("a", null);
+
+        then:
+        1 * mockCallback.onWebHit("a", null)
+        0 * mockCallback2.onWebHit("a", null)
+    }
+
+    def "should not perform callbacks on key which doesn't exist"(){
+        given:
+        def taskContainer = new TaskContainer()
+
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+
+        and: "add callbacks under different key"
+        taskContainer.addTask("a", mockCallback)
+
+        when:
+        taskContainer.performCallbacks("b", null);
+
+        then:
+        0 * mockCallback.onWebHit(_,_)
     }
 
     def "should call miss callback connected with path"() {
+        given:
+        def taskContainer = new TaskContainer()
 
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+        def mockCallback2 = Mock(WebCallback)
+
+        and: "add callbacks under same key"
+        taskContainer.addTask("a", mockCallback)
+        taskContainer.addTask("a", mockCallback2)
+
+        when:
+        taskContainer.performMissCallbacks("a");
+
+        then:
+        1 * mockCallback.onWebMiss("a")
+        1 * mockCallback2.onWebMiss("a")
     }
 
-    def "should not call miss callback when path is not connected"(){
+    def "should not call miss callback when path is not connected"() {
+        given:
+        def taskContainer = new TaskContainer()
 
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+        def mockCallback2 = Mock(WebCallback)
+
+        and: "add callbacks different same key"
+        taskContainer.addTask("a", mockCallback)
+        taskContainer.addTask("b", mockCallback2)
+
+        when:
+        taskContainer.performMissCallbacks("a");
+
+        then:
+        1 * mockCallback.onWebMiss("a")
+        0 * mockCallback2.onWebMiss(_)
+    }
+
+    def "should not perform miss callbacks on key which doesn't exist"(){
+        given:
+        def taskContainer = new TaskContainer()
+
+        and: "define mock callbacks"
+        def mockCallback = Mock(WebCallback)
+
+        and: "add callbacks under different key"
+        taskContainer.addTask("a", mockCallback)
+
+        when:
+        taskContainer.performMissCallbacks("b");
+
+        then:
+        0 * mockCallback.onWebMiss(_)
     }
 
 }

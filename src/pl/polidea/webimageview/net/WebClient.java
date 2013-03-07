@@ -79,8 +79,6 @@ public class WebClient {
                 saveStreamToFile(stream, tempFile);
 
                 pendingTasks.performCallbacks(url, tempFile);
-            } catch (final ClientProtocolException e) {
-                pendingTasks.performMissCallbacks(url);
             } catch (final IOException e) {
                 pendingTasks.performMissCallbacks(url);
             } finally {

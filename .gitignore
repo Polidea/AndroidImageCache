@@ -10,6 +10,9 @@ gen/
 log/
 local.properties
 tmp/
+bin/
+build/
+test/robospock/build/
 
 # gradle files
 .gradle/
