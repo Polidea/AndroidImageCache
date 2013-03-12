@@ -167,7 +167,7 @@ class WebClientSpecification extends RoboSpecification {
         task.run()
 
         then:
-        taskContainerMock.performMissCallbacks("a")
+        1 * taskContainerMock.performMissCallbacks("a")
     }
 
     def "should download task eventually create a file"() {
