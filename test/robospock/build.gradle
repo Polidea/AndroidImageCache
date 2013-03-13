@@ -1,6 +1,6 @@
 repositories {
     mavenCentral()
-    maven {url "https://oss.sonatype.org/content/repositories/snapshots"}
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 apply plugin: 'idea'
@@ -8,6 +8,8 @@ apply plugin: 'groovy'
 apply plugin: 'java'
 
 def projectDir = "../.."
+def classes = "/bin/classes"
+def jar = "/libs"
 
 test {
     workingDir = new File(projectDir)
@@ -16,7 +18,10 @@ test {
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:1.8.6"
     compile 'pl.polidea:robospock:0.2-SNAPSHOT'
-    compile rootProject
-}
 
-//idea.module.jdkName = '1.6'
+    // compile rootProject
+
+    // this version works, but it's not perfect
+    compile files(projectDir + classes)
+    compile fileTree(dir: projectDir + jar, include: '*.jar')
+}
