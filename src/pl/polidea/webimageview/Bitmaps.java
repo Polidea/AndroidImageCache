@@ -6,33 +6,44 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Bitmaps {
 
-    public Bitmap generateBitmap(final String path) throws BitmapDecodeException {
-        return getBitmap(path, getOptions(path), getOptions(path).outWidth, getOptions(path).outHeight);
+    String path;
+    Options options;
+
+    public Bitmaps(String path) {
+        if (path == null || !new File(path).exists()) {
+            throw new IllegalArgumentException("Can't find a bitmap under path: " + path);
+        }
+
+        this.path = path;
+        options = getOptions();
     }
 
-    public Bitmap generateScaledWidthBitmap(final String path, final int width) throws BitmapDecodeException {
-        final Options options = getOptions(path);
+    public Bitmap generateBitmap() throws BitmapDecodeException {
+        return getBitmap(getOptions(), getOptions().outWidth, getOptions().outHeight);
+    }
+
+    public Bitmap generateScaledWidthBitmap(final int width) throws BitmapDecodeException {
         final float scale = options.outWidth / (float) width;
         final int height = (int) (options.outHeight / scale);
-        return getBitmap(path, options, width, height);
+        return getBitmap(options, width, height);
     }
 
-    public Bitmap generateScaledHeightBitmap(final String path, final int height) throws BitmapDecodeException {
-        final Options options = getOptions(path);
+    public Bitmap generateScaledHeightBitmap(final int height) throws BitmapDecodeException {
         final float scale = options.outHeight / (float) height;
         final int width = (int) (options.outWidth / scale);
-        return getBitmap(path, options, width, height);
+        return getBitmap(options, width, height);
     }
 
-    public Bitmap generateBitmap(final String path, final int desiredWidth, final int desiredHeight) throws BitmapDecodeException {
-        return getBitmap(path, getOptions(path), desiredWidth, desiredHeight);
+    public Bitmap generateBitmap(final int desiredWidth, final int desiredHeight) throws BitmapDecodeException {
+        return getBitmap(getOptions(), desiredWidth, desiredHeight);
     }
 
-    Options getOptions(final String path) {
+    Options getOptions() {
         final Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -40,7 +51,7 @@ public class Bitmaps {
     }
 
     // TODO: rewrite method, it has 42 lines of code, handle exception and null!
-    Bitmap getBitmap(final String path, final Options options, final float desiredWidth,
+    Bitmap getBitmap(final Options options, final float desiredWidth,
                      final float desiredHeight) throws BitmapDecodeException {
 
         try {

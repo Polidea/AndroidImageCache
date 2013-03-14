@@ -11,19 +11,38 @@ import shadows.MyShadowBitmapFactory
 class BitmapsSpecification extends RoboSpecification {
 
     def name = "testBitmapName"
+    def file = new File(name)
 
     def setup() {
         MyShadowBitmap.shouldThrowException = false
         MyShadowBitmapFactory.shouldThrowException = false
+        file.createNewFile()
     }
+
+    def cleanup() {
+        file.delete()
+        ShadowBitmapFactory.reset()
+    }
+
+    def "should throw exception when creating bitmaps with non existing file"() {
+        when:
+        def bitmaps = new Bitmaps(value)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        value << [null, "asdasdasd"]
+    }
+
 
     def "should generate bitmap from file name"() {
         given: "provide bitmap"
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
+        def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.generateBitmap(name)
+        def bitmap = bitmaps.generateBitmap()
 
         then:
         bitmap
@@ -33,11 +52,11 @@ class BitmapsSpecification extends RoboSpecification {
 
     def "should generate bitmap scaled by width"() {
         given: "provide bitmap"
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 1000, 800)
+        def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.generateScaledWidthBitmap(name, 320)
+        def bitmap = bitmaps.generateScaledWidthBitmap(320)
 
         then:
         bitmap
@@ -47,11 +66,11 @@ class BitmapsSpecification extends RoboSpecification {
 
     def "should generate bitmap scaled by height"() {
         given: "provide bitmap"
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 1000, 800)
+        def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.generateScaledHeightBitmap(name, 256)
+        def bitmap = bitmaps.generateScaledHeightBitmap(256)
 
         then:
         bitmap
@@ -61,11 +80,11 @@ class BitmapsSpecification extends RoboSpecification {
 
     def "should generate bitmap scaled both width and height"() {
         given: "provide bitmap"
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
+        def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.generateBitmap(name, 20, 20)
+        def bitmap = bitmaps.generateBitmap(20, 20)
 
         then:
         bitmap
@@ -74,11 +93,11 @@ class BitmapsSpecification extends RoboSpecification {
     }
 
     def "should generate scaled bitmap"() {
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
+        def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.getBitmap(name, bitmaps.getOptions(name), 20, 20)
+        def bitmap = bitmaps.getBitmap(bitmaps.getOptions(), 20, 20)
 
         then:
         bitmap
@@ -88,8 +107,8 @@ class BitmapsSpecification extends RoboSpecification {
 
     def "should throw exception when decode file lacks of memory"() {
         given:
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
+        def bitmaps = new Bitmaps(name)
         and: "simulate out of memory"
         MyShadowBitmapFactory.shouldThrowException = true
         and: "create bitmap options"
@@ -98,7 +117,7 @@ class BitmapsSpecification extends RoboSpecification {
         options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(name, options, 20, 20)
+        bitmaps.getBitmap(options, 20, 20)
 
         then:
         thrown(BitmapDecodeException)
@@ -106,8 +125,8 @@ class BitmapsSpecification extends RoboSpecification {
 
     def "should throw exception when created scale bitmap"() {
         given:
-        def bitmaps = new Bitmaps()
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
+        def bitmaps = new Bitmaps(name)
         and: "simulate out of memory"
         MyShadowBitmap.shouldThrowException = true
         and: "create bitmap options"
@@ -116,7 +135,7 @@ class BitmapsSpecification extends RoboSpecification {
         options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(name, options, 20, 20)
+        bitmaps.getBitmap(options, 20, 20)
 
         then:
         thrown(BitmapDecodeException)

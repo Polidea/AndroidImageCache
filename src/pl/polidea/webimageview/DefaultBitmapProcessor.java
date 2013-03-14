@@ -1,21 +1,20 @@
 package pl.polidea.webimageview;
 
-import java.io.File;
-
-import pl.polidea.webimageview.WebImageView.BitmapProcessor;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup.LayoutParams;
+import pl.polidea.webimageview.WebImageView.BitmapProcessor;
+
+import java.io.File;
 
 public class DefaultBitmapProcessor implements BitmapProcessor {
 
-    private final static int MATCH = LayoutParams.MATCH_PARENT;
-    private final static int WRAP = LayoutParams.WRAP_CONTENT;
-
-    WebImageView webImageView;
-    public static final int[] attrsArray = new int[] { android.R.attr.layout_width, // 0
+    public static final int[] attrsArray = new int[]{android.R.attr.layout_width, // 0
             android.R.attr.layout_height, android.R.attr.id // 1
     };
+    private final static int MATCH = LayoutParams.MATCH_PARENT;
+    private final static int WRAP = LayoutParams.WRAP_CONTENT;
+    WebImageView webImageView;
 
     public DefaultBitmapProcessor(final WebImageView webImageView) {
         this.webImageView = webImageView;
@@ -23,24 +22,23 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
 
     @Override
     public Bitmap process(final File pathToBitmap) throws BitmapDecodeException {
-        final Bitmaps bitmaps = new Bitmaps();
+        final Bitmaps bitmaps = new Bitmaps(pathToBitmap.getPath());
         final Processor processor = determineProcessor();
         Bitmap bitmap = null;
-        final String path = pathToBitmap.getPath();
 
         switch (processor.type) {
-        case FIX_BOTH:
-            bitmap = bitmaps.generateBitmap(path, processor.width, processor.height);
-            break;
-        case FIX_HEIGHT:
-            bitmap = bitmaps.generateScaledHeightBitmap(path, processor.height);
-            break;
-        case FIX_WIDTH:
-            bitmap = bitmaps.generateScaledWidthBitmap(path, processor.width);
-            break;
-        case ORIGNAL:
-            bitmap = bitmaps.generateBitmap(path);
-            break;
+            case FIX_BOTH:
+                bitmap = bitmaps.generateBitmap(processor.width, processor.height);
+                break;
+            case FIX_HEIGHT:
+                bitmap = bitmaps.generateScaledHeightBitmap(processor.height);
+                break;
+            case FIX_WIDTH:
+                bitmap = bitmaps.generateScaledWidthBitmap(processor.width);
+                break;
+            case ORIGNAL:
+                bitmap = bitmaps.generateBitmap();
+                break;
         }
         return bitmap;
     }
