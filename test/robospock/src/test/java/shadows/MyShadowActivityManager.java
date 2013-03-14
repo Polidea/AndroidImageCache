@@ -1,6 +1,7 @@
-package shadows; /**
+/**
  * 
  */
+package shadows;
 
 import android.app.ActivityManager;
 import com.xtremelabs.robolectric.internal.Implements;
