@@ -4,9 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import com.jakewharton.DiskLruCache;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import pl.polidea.utils.Utils;
-
-import java.io.*;
 
 /**
  * The Class DiskCache.

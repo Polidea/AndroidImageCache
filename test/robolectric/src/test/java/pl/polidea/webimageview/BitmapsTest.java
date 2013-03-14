@@ -2,13 +2,11 @@ package pl.polidea.webimageview;
 
 import static org.junit.Assert.assertEquals;
 
+import android.graphics.Bitmap;
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import pl.polidea.imagecache.ImageCacheTestRunner;
-import android.graphics.Bitmap;
-
-import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 
 @RunWith(ImageCacheTestRunner.class)
 public class BitmapsTest {

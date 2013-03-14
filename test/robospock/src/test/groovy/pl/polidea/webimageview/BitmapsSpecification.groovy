@@ -1,6 +1,5 @@
 package pl.polidea.webimageview
 
-import android.graphics.BitmapFactory
 import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows

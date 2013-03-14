@@ -5,12 +5,10 @@ package pl.polidea.imagecache;
 
 import static org.junit.Assert.assertEquals;
 
+import android.graphics.Bitmap;
+import com.xtremelabs.robolectric.Robolectric;
 import org.junit.Before;
 import org.junit.Test;
-
-import android.graphics.Bitmap;
-
-import com.xtremelabs.robolectric.Robolectric;
 
 /**
  * @author Wojciech Piwonski

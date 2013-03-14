@@ -1,8 +1,7 @@
 package pl.polidea.utils;
 
-import pl.polidea.thridparty.LinkedBlockingDeque;
-
 import java.util.concurrent.TimeUnit;
+import pl.polidea.thridparty.LinkedBlockingDeque;
 
 public class StackBlockingDeque extends LinkedBlockingDeque<Runnable> {
 

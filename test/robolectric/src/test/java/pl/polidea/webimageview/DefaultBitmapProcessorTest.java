@@ -1,23 +1,23 @@
 package pl.polidea.webimageview;
 
 import static org.junit.Assert.assertEquals;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.*;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH;
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL;
 
-import java.io.File;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import pl.polidea.imagecache.ImageCacheTestRunner;
-import pl.polidea.imagecache.R;
-import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
-
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
+import java.io.File;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import pl.polidea.imagecache.ImageCacheTestRunner;
+import pl.polidea.imagecache.R;
+import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
 
 @RunWith(ImageCacheTestRunner.class)
 public class DefaultBitmapProcessorTest {

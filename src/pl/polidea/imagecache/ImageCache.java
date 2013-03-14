@@ -7,12 +7,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.text.TextUtils;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 import pl.polidea.thridparty.DiskCache;
 import pl.polidea.utils.StackPoolExecutor;
 import pl.polidea.utils.Utils;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 
 
 public class ImageCache {

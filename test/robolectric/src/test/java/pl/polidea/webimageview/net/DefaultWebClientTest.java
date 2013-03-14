@@ -3,16 +3,15 @@
  */
 package pl.polidea.webimageview.net;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.xtremelabs.robolectric.Robolectric;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
 import pl.polidea.imagecache.ImageCacheTestRunner;
-
-import java.util.concurrent.ThreadPoolExecutor;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Marek Multarzynski

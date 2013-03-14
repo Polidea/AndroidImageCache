@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import com.xtremelabs.robolectric.internal.Implementation;
 import com.xtremelabs.robolectric.internal.Implements;
 import com.xtremelabs.robolectric.shadows.ShadowBitmap;
-import pl.polidea.webimageview.BitmapDecodeException;
 
 
 @Implements(Bitmap.class)

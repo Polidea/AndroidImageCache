@@ -9,13 +9,12 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import java.io.File;
+import java.net.URL;
 import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.OnCacheResultListener;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
-
-import java.io.File;
-import java.net.URL;
 
 /**
  * @author Marek Multarzynski

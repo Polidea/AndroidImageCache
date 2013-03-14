@@ -1,7 +1,6 @@
 package pl.polidea.webimageview.net;
 
 import android.text.TextUtils;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;

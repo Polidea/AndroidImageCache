@@ -4,7 +4,6 @@
 package pl.polidea.utils;
 
 import android.util.Log;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

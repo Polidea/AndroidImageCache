@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-
 import java.io.File;
 import java.io.IOException;
 

@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import com.xtremelabs.robolectric.internal.Implementation;
 import com.xtremelabs.robolectric.internal.Implements;
 import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
-import pl.polidea.webimageview.BitmapDecodeException;
 
 @Implements(BitmapFactory.class)
 public class MyShadowBitmapFactory extends ShadowBitmapFactory {

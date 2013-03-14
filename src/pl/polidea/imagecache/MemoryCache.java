@@ -1,9 +1,8 @@
 package pl.polidea.imagecache;
 
 import android.graphics.Bitmap;
-import pl.polidea.utils.Utils;
-
 import java.util.Map;
+import pl.polidea.utils.Utils;
 
 /**
  * The Class MemoryCache.

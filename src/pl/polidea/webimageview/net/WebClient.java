@@ -4,11 +4,13 @@
 package pl.polidea.webimageview.net;
 
 import android.content.Context;
-import org.apache.http.client.ClientProtocolException;
-import pl.polidea.utils.StackPoolExecutor;
-
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
+import pl.polidea.utils.StackPoolExecutor;
 
 /**
  * @author Marek Multarzynski

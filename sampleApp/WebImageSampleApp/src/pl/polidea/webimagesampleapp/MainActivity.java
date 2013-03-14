@@ -1,9 +1,9 @@
 package pl.polidea.webimagesampleapp;
 
-import pl.polidea.webimageview.WebImageView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import pl.polidea.webimageview.WebImageView;
 
 public class MainActivity extends Activity {
 

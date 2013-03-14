@@ -1,6 +1,15 @@
 package pl.polidea.webimageview.net;
 
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
 import com.xtremelabs.robolectric.Robolectric;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,16 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.internal.util.MockUtil;
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.TestExecutorService;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
 
 /**
  * The Class WebClientTest.

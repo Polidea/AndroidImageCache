@@ -4,7 +4,6 @@ import spock.lang.Specification
 import spock.lang.Timeout
 
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.locks.ReentrantLock
 
 class StackPoolExecutorSpecification extends Specification {
 

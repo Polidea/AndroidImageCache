@@ -5,16 +5,14 @@ package pl.polidea.webimageview;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
-import junit.framework.Assert;
 
+import android.graphics.Bitmap;
+import com.xtremelabs.robolectric.Robolectric;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import pl.polidea.imagecache.ImageCacheTest;
 import pl.polidea.webimageview.WebImageView.WebImageListener;
-import android.graphics.Bitmap;
-
-import com.xtremelabs.robolectric.Robolectric;
 
 /**
  * The Class WebImageTest.

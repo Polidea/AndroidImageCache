@@ -2,7 +2,6 @@ package pl.polidea.utils
 
 import spock.lang.Specification
 
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class StackBlockingDequeSpecification extends Specification {

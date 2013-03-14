@@ -7,12 +7,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
 import java.io.File;
 import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 /**
  * @author Wojciech Piwonski

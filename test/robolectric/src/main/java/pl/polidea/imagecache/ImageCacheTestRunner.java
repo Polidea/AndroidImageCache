@@ -3,15 +3,12 @@
  */
 package pl.polidea.imagecache;
 
-import java.io.File;
-
-import org.junit.runners.model.InitializationError;
-
-import pl.polidea.shadows.HighDensityShadowResources;
-import pl.polidea.shadows.MyShadowActivityManager;
-
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import java.io.File;
+import org.junit.runners.model.InitializationError;
+import pl.polidea.shadows.HighDensityShadowResources;
+import pl.polidea.shadows.MyShadowActivityManager;
 
 /**
  * @author Wojciech Piwonski

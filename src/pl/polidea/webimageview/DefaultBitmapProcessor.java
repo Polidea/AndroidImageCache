@@ -3,9 +3,8 @@ package pl.polidea.webimageview;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup.LayoutParams;
-import pl.polidea.webimageview.WebImageView.BitmapProcessor;
-
 import java.io.File;
+import pl.polidea.webimageview.WebImageView.BitmapProcessor;
 
 public class DefaultBitmapProcessor implements BitmapProcessor {
 

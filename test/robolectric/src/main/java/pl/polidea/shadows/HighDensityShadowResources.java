@@ -1,12 +1,8 @@
 package pl.polidea.shadows;
 
-import android.content.res.*;
-import android.util.*;
-import android.view.*;
-
-import com.xtremelabs.robolectric.*;
-import com.xtremelabs.robolectric.internal.*;
-import com.xtremelabs.robolectric.shadows.*;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.view.Display;
 
 @Implements(Resources.class)
 public class HighDensityShadowResources extends ShadowResources {

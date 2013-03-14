@@ -3,14 +3,13 @@
  */
 package pl.polidea.imagecache;
 
+import static org.junit.Assert.assertEquals;
+
 import android.graphics.Bitmap.CompressFormat;
 import com.xtremelabs.robolectric.Robolectric;
+import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Wojciech Piwonski
