@@ -10,25 +10,25 @@ import java.io.IOException;
 
 public class Bitmaps {
 
-    public Bitmap generateBitmap(final String path) {
+    public Bitmap generateBitmap(final String path) throws BitmapDecodeException {
         return getBitmap(path, getOptions(path), getOptions(path).outWidth, getOptions(path).outHeight);
     }
 
-    public Bitmap generateScaledWidthBitmap(final String path, final int width) {
+    public Bitmap generateScaledWidthBitmap(final String path, final int width) throws BitmapDecodeException {
         final Options options = getOptions(path);
         final float scale = options.outWidth / (float) width;
         final int height = (int) (options.outHeight / scale);
         return getBitmap(path, options, width, height);
     }
 
-    public Bitmap generateScaledHeightBitmap(final String path, final int height) {
+    public Bitmap generateScaledHeightBitmap(final String path, final int height) throws BitmapDecodeException {
         final Options options = getOptions(path);
         final float scale = options.outHeight / (float) height;
         final int width = (int) (options.outWidth / scale);
         return getBitmap(path, options, width, height);
     }
 
-    public Bitmap generateBitmap(final String path, final int desiredWidth, final int desiredHeight) {
+    public Bitmap generateBitmap(final String path, final int desiredWidth, final int desiredHeight) throws BitmapDecodeException {
         return getBitmap(path, getOptions(path), desiredWidth, desiredHeight);
     }
 
@@ -41,62 +41,48 @@ public class Bitmaps {
 
     // TODO: rewrite method, it has 42 lines of code, handle exception and null!
     Bitmap getBitmap(final String path, final Options options, final float desiredWidth,
-                             final float desiredHeight) {
+                     final float desiredHeight) throws BitmapDecodeException {
 
-        final float scale;
-        int width, height;
-        final int originalHeight = options.outHeight;
-        final int originalWidth = options.outWidth;
-        final float scaleH = originalHeight / desiredHeight;
-        final float scaleW = originalWidth / desiredWidth;
-
-        scale = Math.max(1, Math.max(scaleH, scaleW));
-
-        width = (int) (originalWidth / scale);
-        height = (int) (originalHeight / scale);
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = (int) scale;
-        options.inScaled = false;
-
-        final Bitmap decodeFile;
         try {
-            decodeFile = BitmapFactory.decodeFile(path, options);
-        } catch (final OutOfMemoryError e) {
-            throw new OutOfMemoryError();
+            final float scale;
+            int width, height;
+            final int originalHeight = options.outHeight;
+            final int originalWidth = options.outWidth;
+            final float scaleH = originalHeight / desiredHeight;
+            final float scaleW = originalWidth / desiredWidth;
+
+            scale = Math.max(1, Math.max(scaleH, scaleW));
+
+            width = (int) (originalWidth / scale);
+            height = (int) (originalHeight / scale);
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = (int) scale;
+            options.inScaled = false;
+
+            Bitmap bitmapFromFile = BitmapFactory.decodeFile(path, options);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmapFromFile, width, height, true);
+
+            if (scaledBitmap != bitmapFromFile) {// LOL :)
+                bitmapFromFile.recycle();
+            }
+
+            final int orientation = getOrientation(path);
+            if (orientation != 0) {
+                final Bitmap rotatedBitmap;
+                final Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(),
+                        matrix, true);
+
+                scaledBitmap.recycle();
+
+                return rotatedBitmap;
+            }
+
+            return scaledBitmap;
+        } catch (OutOfMemoryError e) {
+            throw new BitmapDecodeException();
         }
-
-        if (decodeFile == null) {
-            return null;
-        }
-
-        final Bitmap scaledBitmap;
-        try {
-            scaledBitmap = Bitmap.createScaledBitmap(decodeFile, width, height, true);
-        } catch (final OutOfMemoryError e) {
-            throw new OutOfMemoryError();
-        }
-        if (scaledBitmap == null) {
-            return null;
-        }
-
-        if (scaledBitmap != decodeFile) {// LOL :)
-            decodeFile.recycle();
-        }
-
-        final int orientation = getOrientation(path);
-        if (orientation != 0) {
-            final Bitmap rotatedBitmap;
-            final Matrix matrix = new Matrix();
-            matrix.postRotate(orientation);
-            rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(),
-                    matrix, true);
-
-            scaledBitmap.recycle();
-
-            return rotatedBitmap;
-        }
-
-        return scaledBitmap;
     }
 
     private int getOrientation(final String path) {

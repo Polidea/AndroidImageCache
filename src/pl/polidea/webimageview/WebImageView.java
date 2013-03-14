@@ -1,10 +1,5 @@
 package pl.polidea.webimageview;
 
-import java.io.File;
-import java.net.URL;
-
-import pl.polidea.imagecache.ImageCache;
-import pl.polidea.imagecache.OnCacheResultListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,23 +9,26 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import pl.polidea.imagecache.ImageCache;
+import pl.polidea.imagecache.OnCacheResultListener;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
 
+import java.io.File;
+import java.net.URL;
+
 /**
- * 
  * @author Marek Multarzynski
- * 
  */
 public class WebImageView extends ImageView {
 
     private static ImageCache imageCache;
     private static WebClient webClient;
-    private BitmapProcessor bitmapProcessor;
-    private String path;
     AttributeSet attrs;
     String layout_height;
     String layout_width;
+    private BitmapProcessor bitmapProcessor;
+    private String path;
     private Handler handler;
 
     public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -56,6 +54,14 @@ public class WebImageView extends ImageView {
         }
     }
 
+    public static ImageCache getCache(final Context context) {
+        return imageCache == null ? new ImageCache(context) : imageCache;
+    }
+
+    public static WebClient getWebClient(final Context context) {
+        return webClient == null ? new WebClient(context) : webClient;
+    }
+
     private synchronized void init(final Context context, final AttributeSet attrsSet) {
         // XXX: this is done in UI thread !
         imageCache = getCache(context);
@@ -70,19 +76,10 @@ public class WebImageView extends ImageView {
         handler = new Handler(Looper.getMainLooper());
     }
 
-    public static ImageCache getCache(final Context context) {
-        return imageCache == null ? new ImageCache(context) : imageCache;
-    }
-
-    public static WebClient getWebClient(final Context context) {
-        return webClient == null ? new WebClient(context) : webClient;
-    }
-
     /**
      * Sets the content of this WebImageView to the specified path.
-     * 
-     * @param path
-     *            The path of an image
+     *
+     * @param path The path of an image
      */
     public void setImageURL(final String path) {
         setImageURL(path, null);
@@ -114,9 +111,14 @@ public class WebImageView extends ImageView {
                     @Override
                     public void onWebHit(final String resource, final File file) {
                         if (resource.equals(WebImageView.this.path)) {
-                            final Bitmap bmp = bitmapProcessor.process(file);
-                            imageCache.put(resource, bmp);
-                            setBitmap(resource, bmp, webImageListener);
+                            final Bitmap bmp;
+                            try {
+                                bmp = bitmapProcessor.process(file);
+                                setBitmap(resource, bmp, webImageListener);
+                                imageCache.put(resource, bmp);
+                            } catch (BitmapDecodeException e) {
+                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            }
                         }
                     }
                 });
@@ -140,9 +142,8 @@ public class WebImageView extends ImageView {
 
     /**
      * Sets the content of this WebImageView to the specified URL.
-     * 
-     * @param url
-     *            The Uri of an image
+     *
+     * @param url The Uri of an image
      */
     public void setImageURL(final URL url) {
         if (url == null) {
@@ -157,23 +158,6 @@ public class WebImageView extends ImageView {
 
     public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
         this.bitmapProcessor = bitmapProcessor;
-    }
-
-    private final class RunnableImplementation implements Runnable {
-        private final Bitmap bitmap;
-
-        private RunnableImplementation(final Bitmap bitmap) {
-            this.bitmap = bitmap;
-        }
-
-        @Override
-        public void run() {
-            setImageBitmap(bitmap);
-        }
-    }
-
-    public static interface BitmapProcessor {
-        Bitmap process(File pathToBitmap);
     }
 
     @Override
@@ -202,10 +186,27 @@ public class WebImageView extends ImageView {
         bitmapProcessor = new DefaultBitmapProcessor(this);
     }
 
+    public static interface BitmapProcessor {
+        Bitmap process(File pathToBitmap) throws BitmapDecodeException;
+    }
+
     public static interface WebImageListener {
         void imageSet(String url);
 
         void imageFailed(String url);
+    }
+
+    private final class RunnableImplementation implements Runnable {
+        private final Bitmap bitmap;
+
+        private RunnableImplementation(final Bitmap bitmap) {
+            this.bitmap = bitmap;
+        }
+
+        @Override
+        public void run() {
+            setImageBitmap(bitmap);
+        }
     }
 
 }

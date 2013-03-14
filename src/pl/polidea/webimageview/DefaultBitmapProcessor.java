@@ -22,7 +22,7 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
     }
 
     @Override
-    public Bitmap process(final File pathToBitmap) {
+    public Bitmap process(final File pathToBitmap) throws BitmapDecodeException {
         final Bitmaps bitmaps = new Bitmaps();
         final Processor processor = determineProcessor();
         Bitmap bitmap = null;

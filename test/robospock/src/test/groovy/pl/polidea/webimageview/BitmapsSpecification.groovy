@@ -1,5 +1,6 @@
 package pl.polidea.webimageview
 
+import android.graphics.BitmapFactory
 import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
@@ -91,12 +92,16 @@ class BitmapsSpecification extends RoboSpecification {
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
         and: "simulate out of memory"
         MyShadowBitmapFactory.shouldThrowException = true
+        and: "create bitmap options"
+        def options = new BitmapFactory.Options();
+        options.outWidth = 36
+        options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(name, bitmaps.getOptions(name), 20, 20)
+        bitmaps.getBitmap(name, options, 20, 20)
 
         then:
-        thrown(OutOfMemoryError)
+        thrown(BitmapDecodeException)
     }
 
     def "should throw exception when created scale bitmap"() {
@@ -105,11 +110,15 @@ class BitmapsSpecification extends RoboSpecification {
         ShadowBitmapFactory.provideWidthAndHeightHints(name, 36, 37)
         and: "simulate out of memory"
         MyShadowBitmap.shouldThrowException = true
+        and: "create bitmap options"
+        def options = new BitmapFactory.Options();
+        options.outWidth = 36
+        options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(name, bitmaps.getOptions(name), 20, 20)
+        bitmaps.getBitmap(name, options, 20, 20)
 
         then:
-        thrown(OutOfMemoryError)
+        thrown(BitmapDecodeException)
     }
 }
