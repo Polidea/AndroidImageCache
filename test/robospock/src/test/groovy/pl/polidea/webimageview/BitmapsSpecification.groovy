@@ -97,7 +97,7 @@ class BitmapsSpecification extends RoboSpecification {
         def bitmaps = new Bitmaps(name)
 
         when:
-        def bitmap = bitmaps.getBitmap(bitmaps.getOptions(), 20, 20)
+        def bitmap = bitmaps.getBitmap(20, 20)
 
         then:
         bitmap
@@ -111,13 +111,9 @@ class BitmapsSpecification extends RoboSpecification {
         def bitmaps = new Bitmaps(name)
         and: "simulate out of memory"
         MyShadowBitmapFactory.shouldThrowException = true
-        and: "create bitmap options"
-        def options = new BitmapFactory.Options();
-        options.outWidth = 36
-        options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(options, 20, 20)
+        bitmaps.getBitmap(20, 20)
 
         then:
         thrown(BitmapDecodeException)
@@ -129,13 +125,9 @@ class BitmapsSpecification extends RoboSpecification {
         def bitmaps = new Bitmaps(name)
         and: "simulate out of memory"
         MyShadowBitmap.shouldThrowException = true
-        and: "create bitmap options"
-        def options = new BitmapFactory.Options();
-        options.outWidth = 36
-        options.outHeight = 37
 
         when:
-        bitmaps.getBitmap(options, 20, 20)
+        bitmaps.getBitmap(20, 20)
 
         then:
         thrown(BitmapDecodeException)

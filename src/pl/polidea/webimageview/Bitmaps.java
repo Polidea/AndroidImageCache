@@ -24,43 +24,33 @@ public class Bitmaps {
     }
 
     public Bitmap generateBitmap() throws BitmapDecodeException {
-        return getBitmap(getOptions(), getOptions().outWidth, getOptions().outHeight);
+        return getBitmap(options.outWidth, options.outHeight);
     }
 
-    public Bitmap generateScaledWidthBitmap(final int width) throws BitmapDecodeException {
+    public Bitmap generateScaledWidthBitmap(int width) throws BitmapDecodeException {
         final float scale = options.outWidth / (float) width;
         final int height = (int) (options.outHeight / scale);
-        return getBitmap(options, width, height);
+        return getBitmap(width, height);
     }
 
-    public Bitmap generateScaledHeightBitmap(final int height) throws BitmapDecodeException {
+    public Bitmap generateScaledHeightBitmap(int height) throws BitmapDecodeException {
         final float scale = options.outHeight / (float) height;
         final int width = (int) (options.outWidth / scale);
-        return getBitmap(options, width, height);
+        return getBitmap(width, height);
     }
 
-    public Bitmap generateBitmap(final int desiredWidth, final int desiredHeight) throws BitmapDecodeException {
-        return getBitmap(getOptions(), desiredWidth, desiredHeight);
+    public Bitmap generateBitmap(int desiredWidth, int desiredHeight) throws BitmapDecodeException {
+        return getBitmap(desiredWidth, desiredHeight);
     }
 
-    Options getOptions() {
-        final Options options = new Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        return options;
-    }
-
-    // TODO: rewrite method, it has 42 lines of code, handle exception and null!
-    Bitmap getBitmap(final Options options, final float desiredWidth,
-                     final float desiredHeight) throws BitmapDecodeException {
-
+    Bitmap getBitmap(float desiredWidth, float desiredHeight) throws BitmapDecodeException {
         try {
-            final float scale;
+            float scale;
             int width, height;
-            final int originalHeight = options.outHeight;
-            final int originalWidth = options.outWidth;
-            final float scaleH = originalHeight / desiredHeight;
-            final float scaleW = originalWidth / desiredWidth;
+            int originalHeight = options.outHeight;
+            int originalWidth = options.outWidth;
+            float scaleH = originalHeight / desiredHeight;
+            float scaleW = originalWidth / desiredWidth;
 
             scale = Math.max(1, Math.max(scaleH, scaleW));
 
@@ -77,7 +67,7 @@ public class Bitmaps {
                 bitmapFromFile.recycle();
             }
 
-            final int orientation = getOrientation(path);
+            int orientation = getOrientation();
             if (orientation != 0) {
                 final Bitmap rotatedBitmap;
                 final Matrix matrix = new Matrix();
@@ -96,7 +86,14 @@ public class Bitmaps {
         }
     }
 
-    private int getOrientation(final String path) {
+    Options getOptions() {
+        final Options options = new Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        return options;
+    }
+
+    int getOrientation() {
         try {
             final ExifInterface exif = new ExifInterface(path);
             switch (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)) {
