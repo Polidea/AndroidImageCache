@@ -11,14 +11,13 @@ class StackPoolExecutorSpecification extends Specification {
     @Timeout(1)
     def "should run 1 task while pending tasks are limited to 3 element list"() {
         given: 'awaiting task'
-        def initLock = new ReentrantLock()
-        initLock.lock()
+        def initLock = new CountDownLatch(1)
 
-        def waitingTask = { initLock.newCondition().await() } as Runnable
+        def waitingTask = { initLock.await() } as Runnable
 
         and: 'simple runnables'
         def processingDoneLatch = new CountDownLatch(3)
-        def doneRunnables = [] as Vector
+        def doneRunnables = Collections.synchronizedList([] as List)
 
         def runnables = (1..6).collect {
             new Runnable() {
@@ -41,7 +40,7 @@ class StackPoolExecutorSpecification extends Specification {
         runnables.each { executor.submit(it) }
 
         when: 'release waiting task'
-        initLock.unlock()
+        initLock.countDown()
 
         and: 'wait for the rest to finish'
         processingDoneLatch.await()
@@ -50,7 +49,6 @@ class StackPoolExecutorSpecification extends Specification {
         executor.getQueue().size() == 0
         doneRunnables == runnables[5..3]
     }
-
 
     // TODO: test another constructors or failing situations
 }
