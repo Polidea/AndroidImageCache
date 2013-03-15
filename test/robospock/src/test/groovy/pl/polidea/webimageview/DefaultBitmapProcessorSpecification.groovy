@@ -1,5 +1,10 @@
 package pl.polidea.webimageview
 
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH
+import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL
+
 import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +17,7 @@ import shadows.HighDensityShadowResources
 import shadows.MyShadowActivityManager
 import shadows.MyShadowBitmap
 import shadows.MyShadowBitmapFactory
+import spock.lang.Unroll
 
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
@@ -19,7 +25,7 @@ import shadows.MyShadowBitmapFactory
 @UseShadows([MyShadowActivityManager, HighDensityShadowResources])
 class DefaultBitmapProcessorSpecification extends RoboSpecification {
 
-    LayoutInflater inflater;
+    def LayoutInflater inflater;
     def name = "testBitmapName"
     def file = new File(name)
 
@@ -35,84 +41,26 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
         ShadowBitmapFactory.reset()
     }
 
-    def "should process two wrap content"() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._wrap_contents);
-
+    @Unroll
+    def "should have #expectedProcessorType for id #idResId"() {
         when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
+        DefaultBitmapProcessor.ProcessorType type = getProcessor(idResId).determineProcessor().type;
 
         then:
-        DefaultBitmapProcessor.ProcessorType.ORIGNAL == type;
+        type == expectedProcessorType;
+
+        where:
+        idResId                  | expectedProcessorType
+        R.id._wrap_contents      | ORIGNAL
+        R.id._match_parents      | ORIGNAL
+        R.id._fixed_width_wrap   | FIX_WIDTH
+        R.id._fixed_width_match  | FIX_WIDTH
+        R.id._fixed_height_wrap  | FIX_HEIGHT
+        R.id._fixed_height_match | FIX_HEIGHT
+        R.id._fixed_both         | FIX_BOTH
     }
 
-    def testProcessingTwoMatchParent() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._match_parents);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.ORIGNAL == type;
-    }
-
-    def testProcessingFixedWidthWithWrapConent() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_width_wrap);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.FIX_WIDTH == type;
-    }
-
-    def testProcessingFixedWidthWithMatchParent() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_width_match);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.FIX_WIDTH == type;
-    }
-
-    def testProcessingFixedHeightWithWrapContent() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_height_wrap);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT == type;
-    }
-
-    def testProcessingFixedHeightWithMatchParent() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_height_match);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT == type;
-    }
-
-    def testProcessingFixedHeightAndWidth() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-
-        when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
-
-        then:
-        DefaultBitmapProcessor.ProcessorType.FIX_BOTH == type;
-    }
-
-    def testProcessingNoAttributes() {
+    def "should have ORIGINAL type by default, when no attributes passed to processor"() {
         given:
         final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
 
@@ -120,123 +68,50 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
         final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
 
         then:
-        DefaultBitmapProcessor.ProcessorType.ORIGNAL == type
+        ORIGNAL == type
     }
 
-    def testProcessingDipsAndPixels() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._dips_and_pix);
-        final int width = 100;
-        final int height = 80;
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), width, height);
-
+    @Unroll
+    def "should be w:#bitmapWidth h:#bitmapHeight for input w:#inputWidth h:#inputHeight and processor type #processorTypeAsString"() {
         when:
+        final DefaultBitmapProcessor processor = getProcessor(processorTypeResId);
+        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), inputWidth, inputHeight);
         final Bitmap bitmap = processor.process(file);
 
         then:
-        bitmap.getWidth() == 25
-        bitmap.getHeight() == 20
+        bitmap.getWidth() == bitmapWidth
+        bitmap.getHeight() == bitmapHeight
+
+        where:
+        processorTypeAsString | processorTypeResId      | inputWidth | inputHeight | bitmapWidth | bitmapHeight
+        "_dips_and_pix"       | R.id._dips_and_pix      | 100        | 80          | 25          | 20
+        "_wrap_contents"      | R.id._wrap_contents     | 50         | 60          | 50          | 60
+        "_fixed_width_wrap"   | R.id._fixed_width_wrap  | 100        | 80          | 60          | 48
+        "_fixed_height_wrap"  | R.id._fixed_height_wrap | 100        | 80          | 75          | 60
+        "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 47          | 38
     }
 
-    def testProcessingOriginal() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._wrap_contents);
-        final int width = 50;
-        final int height = 60;
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), width, height);
-
+    @Unroll
+    def "should calculate = #expectedValue for input as string = #inputAsString"() {
         when:
-        final Bitmap bitmap = processor.process(file);
+        DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
+        int value = processor.calculateValue(inputAsString);
 
         then:
-        bitmap.width == 50;
-        bitmap.height == 60;
-    }
+        value == expectedValue;
 
-    def testProcessingFixedWidth() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_width_wrap);
-        final int width = 100;
-        final int height = 80;
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), width, height);
-
-        when:
-        final Bitmap bitmap = processor.process(file);
-
-        then:
-        bitmap.getWidth() == 60;
-        bitmap.getHeight() == 48;
-    }
-
-    def testProcessingFixedHeight() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_height_wrap);
-        final int width = 100;
-        final int height = 80;
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), width, height);
-
-        when:
-        final Bitmap bitmap = processor.process(file);
-
-        then:
-        75 == bitmap.getWidth();
-        60 == bitmap.getHeight();
-    }
-
-    def testProcessingFixedBoth() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-        final int width = 100;
-        final int height = 80;
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), width, height);
-
-        when:
-        final Bitmap bitmap = processor.process(file);
-
-        then:
-        47 == bitmap.getWidth();
-        38 == bitmap.getHeight();
-    }
-
-    def testCalculatingDips() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-
-        when:
-        final int value = processor.calculateValue("40dip");
-
-        then:
-        60 ==  value;
-    }
-
-    def testCalculatingDps() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-
-        when:
-        final int value = processor.calculateValue("40dp");
-
-        then:
-        60 ==  value;
-    }
-
-    def testCalculatingPix() {
-        given:
-        final DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-
-        when:
-        final int value = processor.calculateValue("60px");
-
-        then:
-        60 == value;
+        where:
+        processorTypeAsString | processorTypeResId | inputAsString | expectedValue
+        "_fixed_both"         | R.id._fixed_both   | "40dip"       | 60
+        "_fixed_both"         | R.id._fixed_both   | "40dp"        | 60
+        "_fixed_both"         | R.id._fixed_both   | "60px"        | 60
     }
 
     DefaultBitmapProcessor getProcessor(final int id) {
         final WebImageView view = getView(id);
         // TODO: place here implementation of reading xml
         // TODO: arguments can be passed via Mockito
-        final DefaultBitmapProcessor defaultBitmapProcessor = new DefaultBitmapProcessor(view);
-        return defaultBitmapProcessor;
+        return new DefaultBitmapProcessor(view);
     }
 
     WebImageView getView(final int id) {
