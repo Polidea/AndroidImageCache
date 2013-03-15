@@ -52,7 +52,7 @@ public class WebImageTest extends ImageCacheTest {
         imageView.disableBitmapProcessor();
 
         // then
-        assertFalse(imageView.getBitmapProcessor() instanceof DefaultBitmapProcessor);
+        imageView.getBitmapProcessor() ==
     }
 
     @Test

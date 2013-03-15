@@ -1,10 +1,10 @@
 package pl.polidea.webimageview;
 
 import static org.junit.Assert.assertEquals;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH;
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL;
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_BOTH;
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_HEIGHT;
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_WIDTH;
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.ORIGNAL;
 
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.R;
-import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
+import pl.polidea.webimageview.processor.Processor.ProcessorType;
 
 @RunWith(ImageCacheTestRunner.class)
 public class DefaultBitmapProcessorTest {
@@ -25,10 +25,10 @@ public class DefaultBitmapProcessorTest {
     package pl.polidea.webimageview;
 
     import static org.junit.Assert.assertEquals;
-    import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH;
-    import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT;
-    import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH;
-    import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL;
+    import static ProcessorType.FIX_BOTH;
+    import static ProcessorType.FIX_HEIGHT;
+    import static ProcessorType.FIX_WIDTH;
+    import static ProcessorType.ORIGNAL;
 
     import android.graphics.Bitmap;
     import android.view.LayoutInflater;
@@ -41,7 +41,7 @@ public class DefaultBitmapProcessorTest {
     import org.junit.runner.RunWith;
     import pl.polidea.imagecache.ImageCacheTestRunner;
     import pl.polidea.imagecache.R;
-    import pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType;
+    import ProcessorType;
 
     @RunWith(ImageCacheTestRunner.class)
     public class DefaultBitmapProcessorTest {

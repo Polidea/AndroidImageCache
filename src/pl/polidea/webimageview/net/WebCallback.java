@@ -3,9 +3,7 @@ package pl.polidea.webimageview.net;
 import java.io.File;
 
 /**
- * 
  * @author Marek Multrzynski
- * 
  */
 public interface WebCallback {
 

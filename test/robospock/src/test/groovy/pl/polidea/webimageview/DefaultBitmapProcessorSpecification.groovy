@@ -1,9 +1,9 @@
 package pl.polidea.webimageview
 
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_BOTH
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_HEIGHT
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.FIX_WIDTH
-import static pl.polidea.webimageview.DefaultBitmapProcessor.ProcessorType.ORIGNAL
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_BOTH
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_HEIGHT
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.FIX_WIDTH
+import static pl.polidea.webimageview.processor.Processor.ProcessorType.ORIGNAL
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -13,6 +13,9 @@ import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 import pl.polidea.imagecache.R
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
+import pl.polidea.webimageview.DefaultBitmapProcessor
+import pl.polidea.webimageview.WebImageView
+import pl.polidea.webimageview.processor.Processor
 import shadows.HighDensityShadowResources
 import shadows.MyShadowActivityManager
 import shadows.MyShadowBitmap
@@ -44,7 +47,7 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
     @Unroll
     def "should have #expectedProcessorType for id #idResId"() {
         when:
-        DefaultBitmapProcessor.ProcessorType type = getProcessor(idResId).determineProcessor().type;
+        Processor.ProcessorType type = getProcessor(idResId).determineProcessor().type;
 
         then:
         type == expectedProcessorType;
@@ -62,10 +65,11 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
 
     def "should have ORIGINAL type by default, when no attributes passed to processor"() {
         given:
-        final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(new WebImageView(Robolectric.application));
+        def noAttrsSet = null
+        final DefaultBitmapProcessor processor = new DefaultBitmapProcessor(Robolectric.application, noAttrsSet);
 
         when:
-        final DefaultBitmapProcessor.ProcessorType type = processor.determineProcessor().type;
+        final Processor.ProcessorType type = processor.determineProcessor().type;
 
         then:
         ORIGNAL == type
@@ -91,27 +95,11 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
         "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 47          | 38
     }
 
-    @Unroll
-    def "should calculate = #expectedValue for input as string = #inputAsString"() {
-        when:
-        DefaultBitmapProcessor processor = getProcessor(R.id._fixed_both);
-        int value = processor.calculateValue(inputAsString);
-
-        then:
-        value == expectedValue;
-
-        where:
-        processorTypeAsString | processorTypeResId | inputAsString | expectedValue
-        "_fixed_both"         | R.id._fixed_both   | "40dip"       | 60
-        "_fixed_both"         | R.id._fixed_both   | "40dp"        | 60
-        "_fixed_both"         | R.id._fixed_both   | "60px"        | 60
-    }
-
     DefaultBitmapProcessor getProcessor(final int id) {
         final WebImageView view = getView(id);
         // TODO: place here implementation of reading xml
         // TODO: arguments can be passed via Mockito
-        return new DefaultBitmapProcessor(view);
+        return view.getBitmapProcessor();
     }
 
     WebImageView getView(final int id) {

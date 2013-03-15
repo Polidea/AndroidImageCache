@@ -2,7 +2,6 @@ package pl.polidea.webimageview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +14,7 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.OnCacheResultListener;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
+import pl.polidea.webimageview.processor.BitmapProcessor;
 
 /**
  * @author Marek Multarzynski
@@ -22,34 +22,23 @@ import pl.polidea.webimageview.net.WebClient;
 public class WebImageView extends ImageView {
 
     private static ImageCache imageCache;
+
     private static WebClient webClient;
-    AttributeSet attrs;
-    String layout_height;
-    String layout_width;
+
     private BitmapProcessor bitmapProcessor;
+
     private String path;
+
     private Handler handler;
 
-    public WebImageView(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
-        this.attrs = attrs;
-        if (!isInEditMode()) {
-            init(context, attrs);
-        }
+    public WebImageView(final Context context) {
+        this(context, null);
     }
 
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        this.attrs = attrs;
         if (!isInEditMode()) {
             init(context, attrs);
-        }
-    }
-
-    public WebImageView(final Context context) {
-        super(context);
-        if (!isInEditMode()) {
-            init(context, null);
         }
     }
 
@@ -66,12 +55,7 @@ public class WebImageView extends ImageView {
         imageCache = getCache(context);
         webClient = getWebClient(context);
         // XXX: this is done in UI thread, read from disc !
-        bitmapProcessor = new DefaultBitmapProcessor(this);
-        this.attrs = attrsSet;
-        if (attrsSet != null) {
-            layout_height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
-            layout_width = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_width");
-        }
+        bitmapProcessor = new DefaultBitmapProcessor(context, attrsSet);
         handler = new Handler(Looper.getMainLooper());
     }
 
@@ -165,37 +149,18 @@ public class WebImageView extends ImageView {
     }
 
     public void disableBitmapProcessor() {
-        bitmapProcessor = new BitmapProcessor() {
-
-            @Override
-            public Bitmap process(final File pathToBitmap) {
-                Bitmap bmp = null;
-
-                try {
-                    bmp = BitmapFactory.decodeFile(pathToBitmap.getPath());
-                } catch (final OutOfMemoryError e) {
-
-                }
-                return bmp;
-            }
-        };
-    }
-
-    public void enableDefaultBitmapProcessor() {
-        bitmapProcessor = new DefaultBitmapProcessor(this);
-    }
-
-    public static interface BitmapProcessor {
-        Bitmap process(File pathToBitmap) throws BitmapDecodeException;
+        bitmapProcessor = BitmapProcessor.DEFAULT;
     }
 
     public static interface WebImageListener {
+
         void imageSet(String url);
 
         void imageFailed(String url);
     }
 
     private final class RunnableImplementation implements Runnable {
+
         private final Bitmap bitmap;
 
         private RunnableImplementation(final Bitmap bitmap) {
