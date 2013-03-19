@@ -17,18 +17,12 @@ import pl.polidea.utils.Utils;
 public class ImageCache {
 
     MemoryCache memCache;
+
     DiskCache diskCache;
+
     ExecutorService taskExecutor;
 
-    public ImageCache(final Context context) {
-        this(CacheConfig.buildDefault(context));
-    }
-
-    public ImageCache(final Context context, final CacheConfig config) {
-        this(CacheConfig.buildDefault(context, config));
-    }
-
-    public ImageCache(final CacheConfig config) {
+    ImageCache(final CacheConfig config) {
         // XXX: this is done in UI thread !
         checkAllValuesFilled(config);
         memCache = new MemoryCache(config.memoryCacheSize);
@@ -92,8 +86,9 @@ public class ImageCache {
      * Puts bitmap to both memory and disc cache.
      */
     public void put(final String key, final Bitmap bitmap) {
-        if (TextUtils.isEmpty(key) || bitmap == null || bitmap.isRecycled())
+        if (TextUtils.isEmpty(key) || bitmap == null || bitmap.isRecycled()) {
             throw new IllegalArgumentException("Key is empty either bitmap isn't valid");
+        }
         final String hashedKey = Utils.sha1(key);
         memCache.put(hashedKey, bitmap);
         diskCache.put(hashedKey, bitmap);
@@ -137,8 +132,11 @@ public class ImageCache {
     }
 
     class CacheTask implements Runnable {
+
         String hashedKey;
+
         String key;
+
         OnCacheResultListener onCacheResultListener;
 
         public CacheTask(String key, String hashedKey, OnCacheResultListener onCacheResultListener) {

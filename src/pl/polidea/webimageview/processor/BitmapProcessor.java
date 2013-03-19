@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.io.File;
 import pl.polidea.webimageview.BitmapDecodeException;
-import pl.polidea.webimageview.WebImageView;
 
 /**
 * @author Mateusz Grzechociński <mateusz.grzechocinski@gmail.com>

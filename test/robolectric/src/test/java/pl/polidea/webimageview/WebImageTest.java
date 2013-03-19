@@ -12,7 +12,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import pl.polidea.imagecache.ImageCacheTest;
-import pl.polidea.webimageview.WebImageView.WebImageListener;
 
 /**
  * The Class WebImageTest.

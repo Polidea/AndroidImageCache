@@ -2,34 +2,41 @@ package pl.polidea.webimageview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import java.io.File;
 import java.net.URL;
 import pl.polidea.imagecache.ImageCache;
+import pl.polidea.imagecache.ImageCacheFactory;
 import pl.polidea.imagecache.OnCacheResultListener;
+import pl.polidea.imagecache.StaticCachedImageCacheFactory;
+import pl.polidea.webimageview.net.StaticCachedWebClientFactory;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
+import pl.polidea.webimageview.net.WebClientFactory;
 import pl.polidea.webimageview.processor.BitmapProcessor;
 
 /**
  * @author Marek Multarzynski
  */
-public class WebImageView extends ImageView {
+public class WebImageView extends ImageView implements OnCacheResultListener {
 
-    private static ImageCache imageCache;
+    public static final ImageCacheFactory DEFAULT_IMAGE_CACHE_FACTORY = new StaticCachedImageCacheFactory();
 
-    private static WebClient webClient;
+    public static final WebClientFactory DEFAULT_WEB_CLIENT_FACTORY = new StaticCachedWebClientFactory();
 
-    private BitmapProcessor bitmapProcessor;
+    protected BitmapProcessor bitmapProcessor;
 
-    private String path;
+    protected String url;
 
-    private Handler handler;
+    protected ImageCache imageCache;
+
+    protected WebClient webClient;
+
+    private ImageViewUpdater imageViewUpdater;
+
+    private WebImageListener webImageListener;
 
     public WebImageView(final Context context) {
         this(context, null);
@@ -38,89 +45,45 @@ public class WebImageView extends ImageView {
     public WebImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
-            init(context, attrs);
+            init(attrs);
         }
     }
 
-    public static ImageCache getCache(final Context context) {
-        return imageCache == null ? new ImageCache(context) : imageCache;
-    }
-
-    public static WebClient getWebClient(final Context context) {
-        return webClient == null ? new WebClient(context) : webClient;
-    }
-
-    private synchronized void init(final Context context, final AttributeSet attrsSet) {
-        // XXX: this is done in UI thread !
-        imageCache = getCache(context);
-        webClient = getWebClient(context);
-        // XXX: this is done in UI thread, read from disc !
-        bitmapProcessor = new DefaultBitmapProcessor(context, attrsSet);
-        handler = new Handler(Looper.getMainLooper());
+    public void init(AttributeSet attrsSet) {
+        bitmapProcessor = new DefaultBitmapProcessor(getContext(), attrsSet);
+        setFactories(DEFAULT_IMAGE_CACHE_FACTORY, DEFAULT_WEB_CLIENT_FACTORY);
+        imageViewUpdater = new ImageViewUpdater(this);
     }
 
     /**
-     * Sets the content of this WebImageView to the specified path.
+     * Sets the content of this WebImageView to the specified url.
      *
-     * @param path The path of an image
+     * @param url The url of an image
+     * @throws IllegalArgumentException when url is an empty string
      */
-    public void setImageURL(final String path) {
-        setImageURL(path, null);
+    public void setImageURL(final String url) {
+        setImageURL(url, WebImageListener.NULL);
     }
 
-    public void setImageURL(final String path, final WebImageListener webImageListener) {
-        if (TextUtils.isEmpty(path)) {
-            return;
+    /**
+     * Sets the content of this WebImageView to the specified url.
+     *
+     * @param url The url of an image
+     * @param webImageListener option listener of image fetching state
+     * @throws IllegalArgumentException when url is an empty string
+     */
+    public void setImageURL(final String url, final WebImageListener webImageListener) {
+        if (TextUtils.isEmpty(url)) {
+            throw new IllegalArgumentException("Image url cannot be empty");
         }
-        if (path.equals(this.path)) {
+        this.webImageListener = webImageListener;
+
+        if (url.equals(this.url)) {
             invalidate();
         }
-
-        this.path = path;
-        imageCache.get(path, new OnCacheResultListener() {
-
-            @Override
-            public void onCacheMiss(final String key) {
-                if (webImageListener != null) {
-                    webImageListener.imageFailed(WebImageView.this.path);
-                }
-                webClient.requestForImage(path, new WebCallback() {
-
-                    @Override
-                    public void onWebMiss(final String path) {
-
-                    }
-
-                    @Override
-                    public void onWebHit(final String resource, final File file) {
-                        if (resource.equals(WebImageView.this.path)) {
-                            final Bitmap bmp;
-                            try {
-                                bmp = bitmapProcessor.process(file);
-                                setBitmap(resource, bmp, webImageListener);
-                                imageCache.put(resource, bmp);
-                            } catch (BitmapDecodeException e) {
-                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                            }
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onCacheHit(final String key, final Bitmap bitmap) {
-                setBitmap(key, bitmap, webImageListener);
-            }
-        });
-    }
-
-    private void setBitmap(final String key, final Bitmap bitmap, final WebImageListener webImageListener) {
-        if (key.equals(path) && bitmap != null && !bitmap.isRecycled()) {
-            handler.post(new RunnableImplementation(bitmap));
-        }
-        if (webImageListener != null) {
-            webImageListener.imageSet(path);
-        }
+        this.url = url;
+        imageViewUpdater.setCurrentURL(url);
+        imageCache.get(url, this);
     }
 
     /**
@@ -135,42 +98,58 @@ public class WebImageView extends ImageView {
         setImageURL(url.getPath());
     }
 
-    public BitmapProcessor getBitmapProcessor() {
-        return bitmapProcessor;
+    public void disableBitmapProcessor() {
+        bitmapProcessor = BitmapProcessor.DEFAULT;
+    }
+
+    @Override
+    public void onCacheMiss(final String key) {
+        webClient.requestForImage(url, new WebCallback() {
+            @Override
+            public void onWebMiss(final String url) {
+                webImageListener.onImageFetchedFailed(WebImageView.this.url);
+            }
+
+            @Override
+            public void onWebHit(final String resource, final File file) {
+                if (resource.equals(WebImageView.this.url)) {
+                    final Bitmap bmp;
+                    try {
+                        bmp = bitmapProcessor.process(file);
+                        imageViewUpdater.setBitmap(resource, bmp, webImageListener);
+                        imageCache.put(resource, bmp);
+                    } catch (BitmapDecodeException e) {
+                        webImageListener.onImageFetchedFailed(url);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onCacheHit(final String key, final Bitmap bitmap) {
+        imageViewUpdater.setBitmap(key, bitmap, webImageListener);
     }
 
     public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
         this.bitmapProcessor = bitmapProcessor;
     }
 
-    @Override
-    protected void onDraw(final Canvas canvas) {
-        super.onDraw(canvas);
+    public BitmapProcessor getBitmapProcessor() {
+        return bitmapProcessor;
     }
 
-    public void disableBitmapProcessor() {
-        bitmapProcessor = BitmapProcessor.DEFAULT;
+    public void setImageCacheFactory(ImageCacheFactory imageCacheFactory) {
+        setFactories(imageCacheFactory, DEFAULT_WEB_CLIENT_FACTORY);
     }
 
-    public static interface WebImageListener {
-
-        void imageSet(String url);
-
-        void imageFailed(String url);
+    public void setWebClientFactory(WebClientFactory webClientFactory) {
+        setFactories(DEFAULT_IMAGE_CACHE_FACTORY, webClientFactory);
     }
 
-    private final class RunnableImplementation implements Runnable {
-
-        private final Bitmap bitmap;
-
-        private RunnableImplementation(final Bitmap bitmap) {
-            this.bitmap = bitmap;
-        }
-
-        @Override
-        public void run() {
-            setImageBitmap(bitmap);
-        }
+    public void setFactories(ImageCacheFactory imageCacheFactory, WebClientFactory webClientFactory) {
+        Context context = getContext();
+        imageCache = imageCacheFactory.create(context);
+        webClient = webClientFactory.create(context);
     }
-
 }

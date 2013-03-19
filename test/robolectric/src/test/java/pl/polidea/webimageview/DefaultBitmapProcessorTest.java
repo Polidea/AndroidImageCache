@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import pl.polidea.imagecache.ImageCacheTestRunner;
 import pl.polidea.imagecache.R;
+import pl.polidea.utils.TempFile;
 import pl.polidea.webimageview.processor.Processor.ProcessorType;
 
 @RunWith(ImageCacheTestRunner.class)
@@ -47,7 +48,7 @@ public class DefaultBitmapProcessorTest {
     public class DefaultBitmapProcessorTest {
 
         LayoutInflater inflater;
-        File f = new File("file");
+        TempFile f = new File("file");
 
         @Before
         public void setup() {

@@ -32,7 +32,13 @@ public class CacheConfig {
     CompressFormat compressFormat;
     Integer compressQuality;
 
+    private CacheConfig() {
+    }
+
     public static CacheConfig buildDefault(Context context) {
+        if(context == null){
+            throw new IllegalArgumentException("Context cannot be null");
+        }
         return buildDefault(context, null);
     }
 

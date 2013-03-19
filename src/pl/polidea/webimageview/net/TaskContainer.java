@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import pl.polidea.utils.TempFile;
 
 /**
  * The Class TaskContainer.
@@ -59,6 +60,7 @@ public class TaskContainer {
      * Perform callbacks on all registered classes under path key.
      *
      * @param path
+     * @param file
      */
     public synchronized void performCallbacks(final String path, final File file) {
         final Set<WebCallback> set = map.get(path);

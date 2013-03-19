@@ -7,6 +7,7 @@ import java.io.File;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import pl.polidea.utils.TempFile;
 import pl.polidea.webimageview.net.TaskContainer;
 import pl.polidea.webimageview.net.WebCallback;
 
@@ -122,7 +123,7 @@ public class TaskContainerTest {
         final String path = "path";
         final WebCallback listener = Mockito.mock(WebCallback.class);
         final WebCallback listener1 = Mockito.mock(WebCallback.class);
-        final File file = Mockito.mock(File.class);
+        final TempFile file = Mockito.mock(File.class);
         final TaskContainer container = new TaskContainer();
         container.addTask(path, listener);
         container.addTask(path, listener1);

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 
 /**
  * @author Wojciech Piwonski
- * 
  */
 public interface OnCacheResultListener {
 

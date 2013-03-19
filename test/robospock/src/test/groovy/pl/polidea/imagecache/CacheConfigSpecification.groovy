@@ -1,20 +1,26 @@
 package pl.polidea.imagecache
 
+import android.content.Context
 import android.graphics.Bitmap
 import com.xtremelabs.robolectric.Robolectric
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
 import shadows.MyShadowActivityManager
 
-/**
- * Created with IntelliJ IDEA.
- * User: rudy
- * Date: 2/11/13
- * Time: 11:06 AM
- * To change this template use File | Settings | File Templates.
- */
 @UseShadows(MyShadowActivityManager)
 class CacheConfigSpecification extends RoboSpecification {
+
+    def "should fail when null context"() {
+        given:
+        Context nullContext = null;
+
+        when:
+        CacheConfig.buildDefault(nullContext)
+
+        then:
+        def caugth = thrown(IllegalArgumentException)
+        caugth.message == "Context cannot be null"
+    }
 
     def "should create default compress quality"() {
         when:

@@ -3,13 +3,12 @@ package pl.polidea.imagecache
 import android.graphics.Bitmap
 import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowLog
+import java.util.concurrent.ExecutorService
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
 import pl.polidea.thridparty.DiskCache
 import pl.polidea.utils.Utils
 import shadows.MyShadowActivityManager
-
-import java.util.concurrent.ExecutorService
 
 @UseShadows(MyShadowActivityManager)
 class ImageCacheSpecification extends RoboSpecification {
@@ -22,7 +21,7 @@ class ImageCacheSpecification extends RoboSpecification {
     OnCacheResultListener mockListener
 
     def "setup"() {
-        cache = new ImageCache(Robolectric.application)
+        cache = new ImageCache(CacheConfig.buildDefault(Robolectric.application))
 
         mockMemCache = Mock(MemoryCache)
         mockDiskCache = Mock(DiskCache)
@@ -36,54 +35,24 @@ class ImageCacheSpecification extends RoboSpecification {
         mockListener = Mock(OnCacheResultListener)
     }
 
-    def "should create new ImageCache based on Context"() {
+    def "should create new ImageCache based on config"() {
+        given:
+        def config = CacheConfig.buildDefault(Robolectric.application)
+
         when:
-        def cache = new ImageCache(Robolectric.application)
+        def cache = new ImageCache(config)
 
         then:
         cache
-    }
-
-    def "should create new ImageCache based on context nad config"() {
-        given:
-        def config = new CacheConfig()
-        config.memoryCacheSize = -1
-
-        when:
-        def cache = new ImageCache(Robolectric.application, config)
-
-        then:
-        cache
-    }
-
-    def "should throw an exception when null config is passed to constructor"() {
-        when:
-        new ImageCache((CacheConfig) null)
-
-        then:
-        thrown(IllegalArgumentException)
-    }
-
-    def "should throw an exception when config with null values is passed to constructor"() {
-        given:
-        def config = new CacheConfig()
-
-        when:
-        new ImageCache(config)
-
-        then:
-        thrown(IllegalArgumentException)
     }
 
     def "should be able to put a new bitmap to cache"() {
-        given:
-        def cache = new ImageCache(Robolectric.application);
-
         when:
-        cache.put("aaa", mock(size, size))
+        def localCache = new ImageCache(CacheConfig.buildDefault(Robolectric.application))
+        localCache.put("aaa", mock(size, size))
 
         then:
-        memSize == cache.memCache.size()
+        memSize == localCache.memCache.size()
 
         where:
         size | memSize
@@ -103,9 +72,6 @@ class ImageCacheSpecification extends RoboSpecification {
     }
 
     def "should throw an exception when inserting empty bitmap"() {
-        given:
-        def cache = new ImageCache(Robolectric.application)
-
         when:
         cache.put("a", null)
 
@@ -159,9 +125,7 @@ class ImageCacheSpecification extends RoboSpecification {
     }
 
     def "should be able to remove all objects from cache"() {
-        given:
-        def cache = new ImageCache(Robolectric.application)
-        and: "put some fake elements to cache"
+        given: "put some fake elements to cache"
         cache.put("a", mock(10, 10))
         cache.put("b", mock(10, 10))
 
@@ -247,5 +211,4 @@ class ImageCacheSpecification extends RoboSpecification {
         mock.getHeight() >> height
         return mock
     }
-
 }

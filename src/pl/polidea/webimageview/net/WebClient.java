@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import pl.polidea.utils.StackPoolExecutor;
+import pl.polidea.utils.TempFile;
 
 /**
  * @author Marek Multarzynski
@@ -18,11 +19,14 @@ import pl.polidea.utils.StackPoolExecutor;
 public class WebClient {
 
     final File cacheDir;
+
     TaskContainer pendingTasks = new TaskContainer();
+
     WebInterface webInterface = new WebInterfaceImpl();
+
     ExecutorService taskExecutor = new StackPoolExecutor(5);
 
-    public WebClient(final Context context) {
+    WebClient(final Context context) {
         cacheDir = context.getCacheDir();
     }
 
@@ -60,7 +64,7 @@ public class WebClient {
         this.taskExecutor = taskExecutor;
     }
 
-    DownloadTask buildTask(String url){
+    DownloadTask buildTask(String url) {
         return new DownloadTask(url);
     }
 
@@ -74,13 +78,12 @@ public class WebClient {
 
         @Override
         public void run() {
-            File tempFile = null;
+            TempFile tempFile = TempFile.nullObject();
             try {
-                tempFile = File.createTempFile("web", null, cacheDir);
+                tempFile = TempFile.createInDir(cacheDir);
                 final InputStream stream = webInterface.execute(url);
                 saveStreamToFile(stream, tempFile);
-
-                pendingTasks.performCallbacks(url, tempFile);
+                pendingTasks.performCallbacks(url, tempFile.asJavaFile());
             } catch (final IOException e) {
                 pendingTasks.performMissCallbacks(url);
             } finally {
@@ -89,11 +92,11 @@ public class WebClient {
             pendingTasks.remove(url);
         }
 
-        public void saveStreamToFile(final InputStream is, final File file) throws IOException {
+        public void saveStreamToFile(final InputStream is, final TempFile file) throws IOException {
             if (is == null) {
                 throw new IOException("Empty stream");
             }
-            final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+            final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file.asJavaFile()));
             final byte[] data = new byte[16384];
             int n;
             while ((n = is.read(data, 0, data.length)) != -1) {
