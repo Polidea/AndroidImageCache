@@ -66,7 +66,7 @@ public final class Utils {
 
     public static void log(final String msg, final Throwable t) {
         if (t == null) {
-            printThrowable(msg, t);
+            log(msg);
         } else {
             printThrowable(t.getMessage(), t);
         }
