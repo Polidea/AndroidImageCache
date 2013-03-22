@@ -3,11 +3,10 @@ package pl.polidea.webimageview.processor;
 import android.graphics.Bitmap;
 import pl.polidea.webimageview.BitmapDecodeException;
 import pl.polidea.webimageview.Bitmaps;
-import pl.polidea.webimageview.DefaultBitmapProcessor;
 
 /**
-* @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
-*/
+ * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
+ */
 public class Processor {
 
     ProcessorType type;
@@ -15,6 +14,7 @@ public class Processor {
     int width;
 
     int height;
+
 
     Processor(final ProcessorType type) {
         this.type = type;
@@ -35,6 +35,9 @@ public class Processor {
         return type.processBitmap(bitmaps, width, height);
     }
 
+    /**
+     * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
+     */
     public enum ProcessorType {
         ORIGNAL {
             @Override

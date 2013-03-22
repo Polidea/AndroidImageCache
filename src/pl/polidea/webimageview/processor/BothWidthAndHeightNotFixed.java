@@ -1,6 +1,7 @@
 package pl.polidea.webimageview.processor;
 
-import static android.view.ViewGroup.LayoutParams.*;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -32,17 +33,17 @@ class BothWidthAndHeightNotFixed extends BitmapProcessorCreationChain {
 
     @Override
     public BitmapProcessorCreationChain next() {
-        return new BothWidthAndHeightFixed(height,width);
+        return new BothWidthAndHeightFixed(height, width);
 
     }
 
     @Override
     protected Processor create() {
-        String layout_height = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_HEIGHT);
-        String layout_width = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_WIDTH);
+        String layoutHeight = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_HEIGHT);
+        String layoutWidth = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_WIDTH);
 
-        height = guessValue(layout_height);
-        width = guessValue(layout_width);
+        height = guessValue(layoutHeight);
+        width = guessValue(layoutWidth);
 
         if (height + width < 0) {
             return new Processor(Processor.ProcessorType.ORIGNAL);

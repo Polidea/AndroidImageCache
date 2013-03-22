@@ -1,10 +1,9 @@
 package pl.polidea.webimageview.net;
 
 import java.io.File;
-import pl.polidea.utils.TempFile;
 
 /**
- * @author Marek Multrzynski
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public interface WebCallback {
 

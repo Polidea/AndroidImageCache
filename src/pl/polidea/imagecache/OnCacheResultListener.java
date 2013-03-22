@@ -1,12 +1,10 @@
-/**
- * 
- */
 package pl.polidea.imagecache;
 
 import android.graphics.Bitmap;
 
+
 /**
- * @author Wojciech Piwonski
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public interface OnCacheResultListener {
 

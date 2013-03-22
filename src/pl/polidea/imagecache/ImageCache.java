@@ -3,7 +3,6 @@
  */
 package pl.polidea.imagecache;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.text.TextUtils;
@@ -13,7 +12,9 @@ import pl.polidea.thridparty.DiskCache;
 import pl.polidea.utils.StackPoolExecutor;
 import pl.polidea.utils.Utils;
 
-
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class ImageCache {
 
     MemoryCache memCache;

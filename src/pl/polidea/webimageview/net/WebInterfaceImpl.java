@@ -9,8 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
- * @author Marek Multarzynski
- * 
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class WebInterfaceImpl implements WebInterface {
 

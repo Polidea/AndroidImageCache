@@ -3,11 +3,11 @@ package pl.polidea.utils;
 import java.util.concurrent.TimeUnit;
 import pl.polidea.thridparty.LinkedBlockingDeque;
 
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class StackBlockingDeque extends LinkedBlockingDeque<Runnable> {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1635542918696298694L;
 
     public StackBlockingDeque() {

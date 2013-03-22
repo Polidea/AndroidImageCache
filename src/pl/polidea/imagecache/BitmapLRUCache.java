@@ -6,6 +6,8 @@ import pl.polidea.thridparty.LruCache;
 /**
  * Class extends generic LRU cache using Bitmap as a value. Size of each element
  * in Cache is bitmap size.
+ *
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class BitmapLRUCache extends LruCache<String, Bitmap> {
 

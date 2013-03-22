@@ -4,6 +4,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class StackPoolExecutor extends ThreadPoolExecutor {
     public StackPoolExecutor(int poolSize) {
         super(
@@ -20,6 +23,9 @@ public class StackPoolExecutor extends ThreadPoolExecutor {
         super(poolSize, maximumPoolSize, 10L, TimeUnit.SECONDS, new StackBlockingDeque(maximumPoolSize), new LowPriorityThreadFactory(), new DiscardPolicy());
     }
 
+    /**
+     * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+     */
     public static class LowPriorityThreadFactory implements ThreadFactory {
 
         @Override

@@ -10,17 +10,17 @@ abstract class BitmapProcessorCreationChain {
 
     protected static final Processor NOT_CREATED_PROCESSOR = null;
 
+    public static BitmapProcessorCreationChain startChain(Context context, AttributeSet attributeSet) {
+        return new ProgramaticallyCreated(context, attributeSet);
+    }
+
     protected abstract BitmapProcessorCreationChain next();
 
     protected abstract Processor create();
 
-    public static BitmapProcessorCreationChain startChain(Context context, AttributeSet attributeSet){
-        return new ProgramaticallyCreated(context, attributeSet);
-    }
-
-    public Processor createProcessor(){
+    public Processor createProcessor() {
         Processor processor = create();
-        if(processor == NOT_CREATED_PROCESSOR){
+        if (processor == NOT_CREATED_PROCESSOR) {
             processor = next().createProcessor();
         }
         return processor;

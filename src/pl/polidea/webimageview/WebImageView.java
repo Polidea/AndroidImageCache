@@ -18,7 +18,7 @@ import pl.polidea.webimageview.net.WebClientFactory;
 import pl.polidea.webimageview.processor.BitmapProcessor;
 
 /**
- * @author Marek Multarzynski
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class WebImageView extends ImageView implements OnCacheResultListener {
 

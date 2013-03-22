@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import pl.polidea.utils.Utils;
 
 /**
- * The Class DiskCache.
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class DiskCache {
 

@@ -4,12 +4,14 @@ import android.graphics.Bitmap;
 import java.util.Map;
 import pl.polidea.utils.Utils;
 
+
 /**
- * The Class MemoryCache.
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class MemoryCache {
 
     private static final String TAG = MemoryCache.class.getSimpleName();
+
     BitmapLRUCache cache;
 
     public MemoryCache(final int size) {

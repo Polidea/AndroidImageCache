@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @author Marek Multarzynski
- * 
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public interface WebInterface {
 

@@ -3,16 +3,19 @@ package pl.polidea.utils;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class DimensionCalculator {
 
     public static int toRoundedPX(Context context, String dimenValueInXML) {
         return DimensionUnit.findByStringValue(dimenValueInXML).stringValueToPX(dimenValueInXML, context.getResources().getDisplayMetrics());
     }
 
-    enum DimensionUnit{
+    enum DimensionUnit {
         DP("dp"),
         DIP("dip"),
-        PX("px"){
+        PX("px") {
             @Override
             protected int toPX(DisplayMetrics displayMetrics, String valueWithoutSuffix) {
                 return (int) Float.parseFloat(valueWithoutSuffix);
@@ -25,7 +28,7 @@ public class DimensionCalculator {
             this.stringValue = stringValue;
         }
 
-        public static DimensionUnit findByStringValue(String stringValue){
+        public static DimensionUnit findByStringValue(String stringValue) {
             for (DimensionUnit dimensionUnit : values()) {
                 if (stringValue.endsWith(dimensionUnit.stringValue)) {
                     return dimensionUnit;
@@ -34,12 +37,12 @@ public class DimensionCalculator {
             throw new IllegalArgumentException("Unknown dimension unit: " + stringValue);
         }
 
-        public int stringValueToPX(String dimenValueInXML, DisplayMetrics displayMetrics){
+        public int stringValueToPX(String dimenValueInXML, DisplayMetrics displayMetrics) {
             final String valueWithoutSuffix = dimenValueInXML.substring(0, dimenValueInXML.length() - stringValue.length());
             return toPX(displayMetrics, valueWithoutSuffix);
         }
 
-        protected int toPX(DisplayMetrics displayMetrics, String valueWithoutSuffix){
+        protected int toPX(DisplayMetrics displayMetrics, String valueWithoutSuffix) {
             return (int) ((Float.parseFloat(valueWithoutSuffix) * displayMetrics.density) + 0.5);
         }
     }

@@ -11,7 +11,7 @@ public class StaticCachedWebClientFactory implements WebClientFactory {
 
     @Override
     public synchronized WebClient create(Context context) {
-        if(cachedWebClient == null){
+        if (cachedWebClient == null) {
             cachedWebClient = new WebClient(context);
         }
         return cachedWebClient;

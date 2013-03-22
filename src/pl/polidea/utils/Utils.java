@@ -9,12 +9,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author Wojciech Piwonski
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public final class Utils {
 
     private static final String TAG = "ImageCache";
-    private static boolean USE_LOGS = false;
+    private static boolean useLogs = false;
 
     private Utils() {
     }
@@ -52,7 +52,7 @@ public final class Utils {
     }
 
     public static void log(final String msg) {
-        if (USE_LOGS) {
+        if (useLogs) {
             Log.d(TAG, msg);
         }
     }
@@ -72,16 +72,16 @@ public final class Utils {
     }
 
     private static void printThrowable(String msg, Throwable t) {
-        if (USE_LOGS) {
+        if (useLogs) {
             Log.d(TAG, msg, t);
         }
     }
 
     public static boolean getUseLogs() {
-        return USE_LOGS;
+        return useLogs;
     }
 
     public static void setUseLogs(boolean value) {
-        USE_LOGS = value;
+        useLogs = value;
     }
 }

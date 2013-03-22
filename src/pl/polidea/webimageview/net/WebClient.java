@@ -14,7 +14,7 @@ import pl.polidea.utils.StackPoolExecutor;
 import pl.polidea.utils.TempFile;
 
 /**
- * @author Marek Multarzynski
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class WebClient {
 

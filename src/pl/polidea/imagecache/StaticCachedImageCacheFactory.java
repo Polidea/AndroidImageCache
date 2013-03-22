@@ -20,8 +20,8 @@ public class StaticCachedImageCacheFactory implements ImageCacheFactory {
     }
 
     @Override
-    public synchronized ImageCache create(CacheConfig cacheConfig){
-        if(imageCache == null){
+    public synchronized ImageCache create(CacheConfig cacheConfig) {
+        if (imageCache == null) {
             imageCache = new ImageCache(cacheConfig);
         }
         return imageCache;

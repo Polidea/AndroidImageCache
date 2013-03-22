@@ -8,6 +8,9 @@ import pl.polidea.webimageview.processor.BitmapProcessor;
 import pl.polidea.webimageview.processor.Processor;
 import pl.polidea.webimageview.processor.ProcessorFactory;
 
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class DefaultBitmapProcessor implements BitmapProcessor {
 
     private Context context;

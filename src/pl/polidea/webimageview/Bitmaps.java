@@ -8,9 +8,13 @@ import android.media.ExifInterface;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
+ */
 public class Bitmaps {
 
     String path;
+
     Options options;
 
     public Bitmaps(String path) {
@@ -102,11 +106,13 @@ public class Bitmaps {
                     return 180;
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     return 90;
+                default:
+                    return 0;
             }
 
         } catch (final IOException e) {
+            return 0;
         }
-        return 0;
     }
 
 }

@@ -13,14 +13,11 @@ public interface BitmapProcessor {
     BitmapProcessor DEFAULT = new BitmapProcessor() {
         @Override
         public Bitmap process(File pathToBitmap) throws BitmapDecodeException {
-            Bitmap bmp = null;
-
             try {
-                bmp = BitmapFactory.decodeFile(pathToBitmap.getPath());
+                return BitmapFactory.decodeFile(pathToBitmap.getPath());
             } catch (final OutOfMemoryError e) {
-
+                 return null;
             }
-            return bmp;
         }
     };
 

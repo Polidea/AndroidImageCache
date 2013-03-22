@@ -21,7 +21,7 @@ class BothWidthAndHeightFixed extends BitmapProcessorCreationChain {
 
     @Override
     protected Processor create() {
-        if(width * height > 0){
+        if (width * height > 0) {
             return new Processor(Processor.ProcessorType.FIX_BOTH, width, height);
         }
         return NOT_CREATED_PROCESSOR;

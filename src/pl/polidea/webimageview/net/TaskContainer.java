@@ -7,10 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import pl.polidea.utils.TempFile;
 
 /**
- * The Class TaskContainer.
+ * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
 public class TaskContainer {
 
@@ -64,7 +63,9 @@ public class TaskContainer {
      */
     public synchronized void performCallbacks(final String path, final File file) {
         final Set<WebCallback> set = map.get(path);
-        if (set == null) return;
+        if (set == null) {
+            return;
+        }
         for (final WebCallback webCallback : set) {
             webCallback.onWebHit(path, file);
         }
@@ -77,7 +78,9 @@ public class TaskContainer {
      */
     public synchronized void performMissCallbacks(final String path) {
         final Set<WebCallback> set = map.get(path);
-        if( set == null ) return;
+        if (set == null) {
+            return;
+        }
         for (final WebCallback webCallback : set) {
             webCallback.onWebMiss(path);
         }
