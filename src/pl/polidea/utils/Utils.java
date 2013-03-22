@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 public final class Utils {
 
     private static final String TAG = "ImageCache";
+
     private static boolean useLogs = false;
 
     private Utils() {
@@ -64,10 +65,10 @@ public final class Utils {
     }
 
     public static void log(final String msg, final Throwable t) {
-        if (t != null) {
-            printThrowable(t.getMessage(), t);
-        } else {
+        if (t == null) {
             printThrowable(msg, t);
+        } else {
+            printThrowable(t.getMessage(), t);
         }
     }
 
@@ -77,7 +78,7 @@ public final class Utils {
         }
     }
 
-    public static boolean getUseLogs() {
+    public static boolean isUseLogs() {
         return useLogs;
     }
 

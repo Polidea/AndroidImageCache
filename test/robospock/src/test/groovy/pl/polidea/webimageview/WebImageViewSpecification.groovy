@@ -20,7 +20,7 @@ class WebImageViewSpecification extends RoboSpecification {
 
     WebImageView imageView;
 
-    def setup(){
+    def setup() {
         imageView = new WebImageView(Robolectric.application);
     }
 
@@ -37,14 +37,14 @@ class WebImageViewSpecification extends RoboSpecification {
         imageView.imageCache.put("any", Mock(Bitmap.class));
         WebImageListener mock = Mock(WebImageListener.class);
 
-        when: 
+        when:
         imageView.setImageURL("any", mock);
 
         then:
         1 * mock.onImageFetchedSuccessfully("any");
     }
 
-    def "should set another image cache factory"(){
+    def "should set another image cache factory"() {
         given:
         ImageCacheFactory diffrentImageCacheFactory = Mock(ImageCacheFactory);
 
@@ -55,7 +55,7 @@ class WebImageViewSpecification extends RoboSpecification {
         1 * diffrentImageCacheFactory.create(_)
     }
 
-    def "should set another web client factory cache"(){
+    def "should set another web client factory cache"() {
         given:
         WebClientFactory diffrentWebClientFactory = Mock(WebClientFactory);
 
@@ -63,10 +63,10 @@ class WebImageViewSpecification extends RoboSpecification {
         imageView.setWebClientFactory(diffrentWebClientFactory)
 
         then:
-        1* diffrentWebClientFactory.create(_)
+        1 * diffrentWebClientFactory.create(_)
     }
 
-    def "should throws exception when empty url"(){
+    def "should throws exception when empty url"() {
         when:
         imageView.setImageURL(emptyUrl)
 

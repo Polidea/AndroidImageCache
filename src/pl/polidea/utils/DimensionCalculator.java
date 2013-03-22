@@ -6,7 +6,11 @@ import android.util.DisplayMetrics;
 /**
  * @author Przemysław Jakubczyk <przemyslaw.jakubczyk@polidea.pl>
  */
-public class DimensionCalculator {
+public final class DimensionCalculator {
+
+    private DimensionCalculator() {
+
+    }
 
     public static int toRoundedPX(Context context, String dimenValueInXML) {
         return DimensionUnit.findByStringValue(dimenValueInXML).stringValueToPX(dimenValueInXML, context.getResources().getDisplayMetrics());

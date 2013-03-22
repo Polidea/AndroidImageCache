@@ -13,8 +13,6 @@ import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 import pl.polidea.imagecache.R
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
-import pl.polidea.webimageview.DefaultBitmapProcessor
-import pl.polidea.webimageview.WebImageView
 import pl.polidea.webimageview.processor.Processor
 import shadows.HighDensityShadowResources
 import shadows.MyShadowActivityManager

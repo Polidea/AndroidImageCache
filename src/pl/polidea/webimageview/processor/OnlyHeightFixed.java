@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-class OnlyHeightFixed extends BitmapProcessorCreationChain {
+class OnlyHeightFixed extends AbstractBitmapProcessorCreationChain {
 
     private final int height;
 
@@ -17,7 +17,7 @@ class OnlyHeightFixed extends BitmapProcessorCreationChain {
     }
 
     @Override
-    public BitmapProcessorCreationChain next() {
+    public AbstractBitmapProcessorCreationChain next() {
         return new OnlyWidthFixed(height, width);
     }
 

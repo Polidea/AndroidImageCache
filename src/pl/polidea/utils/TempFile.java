@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@gmail.com>
  */
-public class TempFile {
+public final class TempFile {
 
     public static final String NO_SUFFIX = null;
 

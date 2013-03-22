@@ -14,7 +14,7 @@ import pl.polidea.utils.Utils;
  *
  * @author Wojciech Piwonski <wojciech.piwonski@polidea.pl>
  */
-public class CacheConfig {
+public final class CacheConfig {
 
     public static final int DEFAULT_WORKERS_NUMBER = 1;
 

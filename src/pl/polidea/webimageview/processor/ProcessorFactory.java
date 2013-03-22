@@ -9,6 +9,6 @@ import android.util.AttributeSet;
 public class ProcessorFactory {
 
     public Processor createProcessor(Context context, AttributeSet attributeSet) {
-        return BitmapProcessorCreationChain.startChain(context, attributeSet).createProcessor();
+        return AbstractBitmapProcessorCreationChain.startChain(context, attributeSet).createProcessor();
     }
 }

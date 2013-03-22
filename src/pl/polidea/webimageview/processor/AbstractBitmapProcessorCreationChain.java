@@ -6,15 +6,15 @@ import android.util.AttributeSet;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-abstract class BitmapProcessorCreationChain {
+abstract class AbstractBitmapProcessorCreationChain {
 
     protected static final Processor NOT_CREATED_PROCESSOR = null;
 
-    public static BitmapProcessorCreationChain startChain(Context context, AttributeSet attributeSet) {
+    public static AbstractBitmapProcessorCreationChain startChain(Context context, AttributeSet attributeSet) {
         return new ProgramaticallyCreated(context, attributeSet);
     }
 
-    protected abstract BitmapProcessorCreationChain next();
+    protected abstract AbstractBitmapProcessorCreationChain next();
 
     protected abstract Processor create();
 

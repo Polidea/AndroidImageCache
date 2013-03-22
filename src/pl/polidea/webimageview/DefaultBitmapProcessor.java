@@ -13,9 +13,9 @@ import pl.polidea.webimageview.processor.ProcessorFactory;
  */
 public class DefaultBitmapProcessor implements BitmapProcessor {
 
-    private Context context;
+    private final Context context;
 
-    private AttributeSet attributeSet;
+    private final AttributeSet attributeSet;
 
     public DefaultBitmapProcessor(Context context, AttributeSet attributeSet) {
         this.context = context;

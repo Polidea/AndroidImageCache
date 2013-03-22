@@ -3,7 +3,7 @@ package pl.polidea.webimageview.processor;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-class BothWidthAndHeightFixed extends BitmapProcessorCreationChain {
+class BothWidthAndHeightFixed extends AbstractBitmapProcessorCreationChain {
 
     private final int height;
 
@@ -15,7 +15,7 @@ class BothWidthAndHeightFixed extends BitmapProcessorCreationChain {
     }
 
     @Override
-    public BitmapProcessorCreationChain next() {
+    public AbstractBitmapProcessorCreationChain next() {
         return new OnlyHeightFixed(height, width);
     }
 

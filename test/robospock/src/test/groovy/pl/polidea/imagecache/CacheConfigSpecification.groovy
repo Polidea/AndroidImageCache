@@ -72,7 +72,7 @@ class CacheConfigSpecification extends RoboSpecification {
 
     def "should allow overriding default configuration"(){
         given:
-        CacheConfig config = new CacheConfig()
+        CacheConfig config = CacheConfig.buildDefault(Robolectric.application)
         config.memoryCacheSize = 1000
 
         when:
@@ -84,7 +84,7 @@ class CacheConfigSpecification extends RoboSpecification {
 
     def "should fix negative numbers in config"(){
         given:
-        CacheConfig config  = new CacheConfig();
+        CacheConfig config  = CacheConfig.buildDefault(Robolectric.application);
         config.memoryCacheSize = -1
         config.compressQuality = -1
         config.diskCacheSize = -1

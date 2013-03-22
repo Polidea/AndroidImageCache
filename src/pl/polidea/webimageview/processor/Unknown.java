@@ -3,10 +3,10 @@ package pl.polidea.webimageview.processor;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-class Unknown extends BitmapProcessorCreationChain {
+class Unknown extends AbstractBitmapProcessorCreationChain {
 
     @Override
-    public BitmapProcessorCreationChain next() {
+    public AbstractBitmapProcessorCreationChain next() {
         throw new UnsupportedOperationException("Reached last element of chain");
     }
 

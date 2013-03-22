@@ -5,4 +5,7 @@ package pl.polidea.webimageview;
  */
 public class BitmapDecodeException extends Exception {
 
+    public BitmapDecodeException(OutOfMemoryError e) {
+        super(e);
+    }
 }

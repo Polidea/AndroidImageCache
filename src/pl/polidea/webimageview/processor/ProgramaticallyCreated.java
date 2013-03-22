@@ -6,18 +6,18 @@ import android.util.AttributeSet;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-class ProgramaticallyCreated extends BitmapProcessorCreationChain {
+class ProgramaticallyCreated extends AbstractBitmapProcessorCreationChain {
 
     private final AttributeSet attributeSet;
 
-    private Context context;
+    private final Context context;
 
     public ProgramaticallyCreated(Context context, AttributeSet attributeSet) {
         this.context = context;
         this.attributeSet = attributeSet;
     }
 
-    public BitmapProcessorCreationChain next(){
+    public AbstractBitmapProcessorCreationChain next(){
         return new BothWidthAndHeightNotFixed(context, attributeSet);
     }
 

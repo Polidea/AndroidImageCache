@@ -10,11 +10,11 @@ import android.widget.ImageView;
  */
 public class ImageViewUpdater {
 
-    private Handler handler;
+    private final Handler handler;
+
+    private final ImageView imageView;
 
     private String currentURL;
-
-    private ImageView imageView;
 
     public ImageViewUpdater(ImageView imageView) {
         this.imageView = imageView;

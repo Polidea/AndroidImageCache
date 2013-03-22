@@ -10,7 +10,7 @@ import pl.polidea.utils.DimensionCalculator;
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-class BothWidthAndHeightNotFixed extends BitmapProcessorCreationChain {
+class BothWidthAndHeightNotFixed extends AbstractBitmapProcessorCreationChain {
 
     private static final String ANDROID_SCHEMA = "http://schemas.android.com/apk/res/android";
 
@@ -32,7 +32,7 @@ class BothWidthAndHeightNotFixed extends BitmapProcessorCreationChain {
     }
 
     @Override
-    public BitmapProcessorCreationChain next() {
+    public AbstractBitmapProcessorCreationChain next() {
         return new BothWidthAndHeightFixed(height, width);
 
     }

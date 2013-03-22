@@ -85,7 +85,7 @@ public class Bitmaps {
 
             return scaledBitmap;
         } catch (OutOfMemoryError e) {
-            throw new BitmapDecodeException();
+            throw new BitmapDecodeException(e);
         }
     }
 
