@@ -1,29 +1,25 @@
 package pl.polidea.webimageview.processor;
 
-import android.content.Context;
-import android.util.AttributeSet;
+import pl.polidea.utils.Dimensions;
 
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
 class ProgramaticallyCreated extends BitmapProcessorCreationChain {
 
-    private final AttributeSet attributeSet;
+    private final Dimensions dimensions;
 
-    private Context context;
-
-    public ProgramaticallyCreated(Context context, AttributeSet attributeSet) {
-        this.context = context;
-        this.attributeSet = attributeSet;
+    public ProgramaticallyCreated(Dimensions dimensions) {
+        this.dimensions = dimensions;
     }
 
     public BitmapProcessorCreationChain next(){
-        return new BothWidthAndHeightNotFixed(context, attributeSet);
+        return new BothWidthAndHeightNotFixed(dimensions);
     }
 
     @Override
     protected Processor create() {
-        if (attributeSet == null) {
+        if (dimensions == null) {
             return new Processor(Processor.ProcessorType.ORIGNAL);
         }
         return NOT_CREATED_PROCESSOR;

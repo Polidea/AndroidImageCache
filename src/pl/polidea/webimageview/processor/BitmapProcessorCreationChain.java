@@ -1,7 +1,6 @@
 package pl.polidea.webimageview.processor;
 
-import android.content.Context;
-import android.util.AttributeSet;
+import pl.polidea.utils.Dimensions;
 
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
@@ -10,8 +9,8 @@ abstract class BitmapProcessorCreationChain {
 
     protected static final Processor NOT_CREATED_PROCESSOR = null;
 
-    public static BitmapProcessorCreationChain startChain(Context context, AttributeSet attributeSet) {
-        return new ProgramaticallyCreated(context, attributeSet);
+    public static BitmapProcessorCreationChain startChain(Dimensions dimensions) {
+        return new ProgramaticallyCreated(dimensions);
     }
 
     protected abstract BitmapProcessorCreationChain next();
