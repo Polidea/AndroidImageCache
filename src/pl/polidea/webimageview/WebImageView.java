@@ -11,7 +11,6 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.ImageCacheFactory;
 import pl.polidea.imagecache.OnCacheResultListener;
 import pl.polidea.imagecache.StaticCachedImageCacheFactory;
-import pl.polidea.utils.Utils;
 import pl.polidea.webimageview.net.StaticCachedWebClientFactory;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
@@ -69,7 +68,32 @@ public class WebImageView extends ImageView implements OnCacheResultListener {
     /**
      * Sets the content of this WebImageView to the specified url.
      *
-     * @param url The url of an image
+     * @param url   The url of an image
+     * @param resId resource Id for placeholder
+     * @throws IllegalArgumentException when url is an empty string
+     */
+    public void setImageURLWithPlaceholder(String url, int resId) {
+        setImageResource(resId);
+        setImageURL(url);
+    }
+
+    /**
+     * Sets the content of this WebImageView to the specified url.
+     *
+     * @param url              The url of an image
+     * @param resId            resource Id for placeholder
+     * @param webImageListener option listener of image fetching state
+     * @throws IllegalArgumentException when url is an empty string
+     */
+    public void setImageURLWithPlaceholder(String url, int resId, WebImageListener webImageListener) {
+        setImageResource(resId);
+        setImageURL(url, webImageListener);
+    }
+
+    /**
+     * Sets the content of this WebImageView to the specified url.
+     *
+     * @param url              The url of an image
      * @param webImageListener option listener of image fetching state
      * @throws IllegalArgumentException when url is an empty string
      */
@@ -78,7 +102,6 @@ public class WebImageView extends ImageView implements OnCacheResultListener {
             throw new IllegalArgumentException("Image url cannot be empty");
         }
         this.webImageListener = webImageListener;
-
         if (url.equals(this.url)) {
             invalidate();
         }
@@ -132,12 +155,12 @@ public class WebImageView extends ImageView implements OnCacheResultListener {
         imageViewUpdater.setBitmap(key, bitmap, webImageListener);
     }
 
-    public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
-        this.bitmapProcessor = bitmapProcessor;
-    }
-
     public BitmapProcessor getBitmapProcessor() {
         return bitmapProcessor;
+    }
+
+    public void setBitmapProcessor(final BitmapProcessor bitmapProcessor) {
+        this.bitmapProcessor = bitmapProcessor;
     }
 
     public void setImageCacheFactory(ImageCacheFactory imageCacheFactory) {
@@ -153,8 +176,8 @@ public class WebImageView extends ImageView implements OnCacheResultListener {
         imageCache = imageCacheFactory.create(context);
         webClient = webClientFactory.create(context);
     }
-    
+
     public String getUrl() {
-		return url;
-	}
+        return url;
+    }
 }

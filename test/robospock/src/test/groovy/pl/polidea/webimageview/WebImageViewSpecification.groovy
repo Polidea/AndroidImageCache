@@ -34,8 +34,8 @@ class WebImageViewSpecification extends RoboSpecification {
 
     def "should call listener after requesting for image"() {
         given:
-        imageView.imageCache.put("any", Mock(Bitmap.class));
-        WebImageListener mock = Mock(WebImageListener.class);
+        imageView.imageCache.put("any", Mock(Bitmap.class))
+        WebImageListener mock = Mock(WebImageListener.class)
 
         when:
         imageView.setImageURL("any", mock);
@@ -77,4 +77,39 @@ class WebImageViewSpecification extends RoboSpecification {
         where:
         emptyUrl << [null, ""];
     }
+
+    def "should set placeholder when url is passed"() {
+        given:
+        def shadowImageView = Robolectric.shadowOf(imageView)
+        and: "provide bitmap to cache"
+        def mock = Mock(Bitmap)
+        imageView.imageCache.put("any", mock)
+
+        when:
+        imageView.setImageURLWithPlaceholder("any", 1)
+
+        then:
+        shadowImageView.resourceId == 1
+        shadowImageView.imageBitmap == mock
+    }
+
+    def "should set placeholder when url is passed with listener"() {
+        given:
+        def shadowImageView = Robolectric.shadowOf(imageView)
+        and: "provide bitmap to cache"
+        def bitmapMock = Mock(Bitmap)
+        imageView.imageCache.put("any", bitmapMock)
+        and: "provide WebImageListener"
+        WebImageListener webImageListenerMock = Mock(WebImageListener.class)
+
+        when:
+        imageView.setImageURLWithPlaceholder("any", 1, webImageListenerMock)
+
+        then:
+        shadowImageView.resourceId == 1
+        shadowImageView.imageBitmap == bitmapMock
+        1 * webImageListenerMock.onImageFetchedSuccessfully("any")
+    }
+
+
 }
