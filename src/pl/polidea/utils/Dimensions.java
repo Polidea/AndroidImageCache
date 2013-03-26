@@ -32,8 +32,8 @@ public class Dimensions {
             return null;
         }
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_width, R.attr.layout_height});
-        int height = typedArray.getLayoutDimension(0, 0);
-        int width = typedArray.getLayoutDimension(1, 0);
+        int width = typedArray.getLayoutDimension(0, 0);
+        int height = typedArray.getLayoutDimension(1, 0);
 
         typedArray.recycle();
 

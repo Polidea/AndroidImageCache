@@ -41,7 +41,7 @@ public class LayoutHeightWidthAwareShadowTypedArray {
         private int[] dimen;
 
         public Dimen(int height, int width) {
-            dimen = new int[]{height, width};
+            dimen = new int[]{width, height};
         }
 
         public int getDimenForAttrID(int index) {

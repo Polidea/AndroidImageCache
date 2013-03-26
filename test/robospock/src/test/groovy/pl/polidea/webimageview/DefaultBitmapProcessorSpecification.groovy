@@ -44,7 +44,7 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
     }
 
     @Unroll
-    def "should have #expectedProcessorType for id #idResId"() {
+    def "should have #expectedProcessorType for id #viewResId"() {
         when:
         LayoutHeightWidthAwareShadowTypedArray.viewID = viewResId;
         Processor.ProcessorType type = getProcessor(viewResId).determineProcessor().type;
