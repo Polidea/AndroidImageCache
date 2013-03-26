@@ -1,5 +1,6 @@
 package pl.polidea.webimageview;
 
+import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;

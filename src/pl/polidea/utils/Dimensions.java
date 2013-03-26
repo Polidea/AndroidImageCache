@@ -1,9 +1,8 @@
 package pl.polidea.utils;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
+import android.R;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 /**
@@ -11,44 +10,36 @@ import android.util.AttributeSet;
  */
 public class Dimensions {
 
-    private static final String ANDROID_SCHEMA = "http://schemas.android.com/apk/res/android";
+    /**
+     * Height in pixels, by may be also {@link android.view.ViewGroup.LayoutParams#MATCH_PARENT}
+     * or {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT}
+     */
+    public final int heightPX;
 
-    private static final String PARAM_LAYOUT_HEIGHT = "layout_height";
+    /**
+     * Width in pixels, by may be also {@link android.view.ViewGroup.LayoutParams#MATCH_PARENT}
+     * or {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT}
+     */
+    public final int widthPX;
 
-    private static final String PARAM_LAYOUT_WIDTH = "layout_width";
-
-    public final int height;
-
-    public final int width;
-
-    private Context context;
-
-    private Dimensions(Context context, String heightAsString, String widthAsString) {
-        this.context = context;
-        this.height = asInt(heightAsString);
-        this.width = asInt(widthAsString);
+    private Dimensions(int heightPX, int widthPX) {
+        this.heightPX = heightPX;
+        this.widthPX = widthPX;
     }
 
     public static Dimensions fromAttributesSet(Context context, AttributeSet attributeSet) {
         if (attributeSet == null) {
             return null;
         }
-        String heightAsString = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_HEIGHT);
-        String widthAsString = attributeSet.getAttributeValue(ANDROID_SCHEMA, PARAM_LAYOUT_WIDTH);
-        return new Dimensions(context, heightAsString, widthAsString);
-    }
+        TypedArray heightTypedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_height});
+        int height = heightTypedArray.getLayoutDimension(0, 0);
 
-    private int asInt(final String value) {
-        try {
-            if ("match_parent".equals(value) || "fill_parent".equals(value)) {
-                return MATCH_PARENT;
-            } else if ("wrap_content".equals(value)) {
-                return WRAP_CONTENT;
-            } else {
-                return DimensionCalculator.toRoundedPX(context, value);
-            }
-        } catch (final NumberFormatException e) {
-            return MATCH_PARENT;
-        }
+        TypedArray widthTypedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_width});
+        int width = widthTypedArray.getLayoutDimension(0, 0);
+
+        heightTypedArray.recycle();
+        widthTypedArray.recycle();
+
+        return new Dimensions(height, width);
     }
 }

@@ -12,8 +12,8 @@ class BothWidthAndHeightNotFixed extends BitmapProcessorCreationChain {
     private final int width;
 
     public BothWidthAndHeightNotFixed(Dimensions dimensions) {
-        this.height = dimensions.height;
-        this.width = dimensions.width;
+        this.height = dimensions.heightPX;
+        this.width = dimensions.widthPX;
     }
 
     @Override
