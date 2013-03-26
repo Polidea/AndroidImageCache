@@ -22,3 +22,6 @@ test/robospock/build/
 .project
 .settings/
 
+# ameba files
+ota/
+
