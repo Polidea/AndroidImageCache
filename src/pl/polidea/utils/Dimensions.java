@@ -31,14 +31,11 @@ public class Dimensions {
         if (attributeSet == null) {
             return null;
         }
-        TypedArray heightTypedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_height});
-        int height = heightTypedArray.getLayoutDimension(0, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_width, R.attr.layout_height});
+        int height = typedArray.getLayoutDimension(0, 0);
+        int width = typedArray.getLayoutDimension(1, 0);
 
-        TypedArray widthTypedArray = context.obtainStyledAttributes(attributeSet, new int[]{R.attr.layout_width});
-        int width = widthTypedArray.getLayoutDimension(0, 0);
-
-        heightTypedArray.recycle();
-        widthTypedArray.recycle();
+        typedArray.recycle();
 
         return new Dimensions(height, width);
     }
