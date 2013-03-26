@@ -11,6 +11,7 @@ import pl.polidea.imagecache.ImageCache;
 import pl.polidea.imagecache.ImageCacheFactory;
 import pl.polidea.imagecache.OnCacheResultListener;
 import pl.polidea.imagecache.StaticCachedImageCacheFactory;
+import pl.polidea.utils.Utils;
 import pl.polidea.webimageview.net.StaticCachedWebClientFactory;
 import pl.polidea.webimageview.net.WebCallback;
 import pl.polidea.webimageview.net.WebClient;
@@ -152,4 +153,8 @@ public class WebImageView extends ImageView implements OnCacheResultListener {
         imageCache = imageCacheFactory.create(context);
         webClient = webClientFactory.create(context);
     }
+    
+    public String getUrl() {
+		return url;
+	}
 }

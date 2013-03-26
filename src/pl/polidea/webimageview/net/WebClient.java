@@ -24,7 +24,7 @@ public class WebClient {
 
     WebInterface webInterface = new WebInterfaceImpl();
 
-    ExecutorService taskExecutor = new StackPoolExecutor(5);
+    ExecutorService taskExecutor = new StackPoolExecutor(5,30);
 
     WebClient(final Context context) {
         cacheDir = context.getCacheDir();
@@ -88,8 +88,8 @@ public class WebClient {
                 pendingTasks.performMissCallbacks(url);
             } finally {
                 tempFile.delete();
+                pendingTasks.remove(url);
             }
-            pendingTasks.remove(url);
         }
 
         public void saveStreamToFile(final InputStream is, final TempFile file) throws IOException {
