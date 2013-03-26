@@ -26,6 +26,76 @@ apply plugin: 'ameba-android-test'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'pl.polidea'
+artifactId = 'android-image-cache'
+version = '1.1'
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'AndroidImageCache'
+                packaging 'jar'
+                description 'Android Image Cache simplifies displaing and caching images from the web'
+                url 'https://github.com/Polidea/AndroidImageCache'
+
+                scm {
+                    url 'scm:git@github.com:Polidea/AndroidImageCache.git'
+                    connection 'scm:git@github.com:Polidea/AndroidImageCache.git'
+                    developerConnection 'scm:git@github.com:Polidea/AndroidImageCache.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'przemyslaw.jakubczyk'
+                        name 'Przemysław Jakubczyk'
+                    }
+                    developer {
+                        id 'mateusz.grzechocinski'
+                        name 'Mateusz Grzechociński'
+                    }
+                }
+            }
+        }
+    }
+}
 
 eclipse {
     project {
