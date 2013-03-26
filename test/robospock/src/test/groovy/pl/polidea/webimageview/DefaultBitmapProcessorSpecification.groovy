@@ -93,7 +93,7 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
         "_wrap_contents"      | R.id._wrap_contents     | 50         | 60          | 50          | 60
         "_fixed_width_wrap"   | R.id._fixed_width_wrap  | 100        | 80          | 60          | 48
         "_fixed_height_wrap"  | R.id._fixed_height_wrap | 100        | 80          | 75          | 60
-        "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 47          | 37
+        "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 46          | 37
     }
 
     DefaultBitmapProcessor getProcessor(final int id) {
