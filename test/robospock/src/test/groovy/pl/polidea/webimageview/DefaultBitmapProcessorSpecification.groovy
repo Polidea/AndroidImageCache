@@ -14,6 +14,7 @@ import pl.polidea.imagecache.R
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.UseShadows
 import pl.polidea.webimageview.processor.Processor
+import shadows.LayoutHeightWidthAwareShadowTypedArray
 import shadows.HighDensityShadowResources
 import shadows.MyShadowActivityManager
 import shadows.MyShadowBitmap
@@ -23,7 +24,7 @@ import spock.lang.Unroll
 /**
  * @author Mateusz Grzechociński <mateusz.grzechocinski@polidea.pl>
  */
-@UseShadows([MyShadowActivityManager, HighDensityShadowResources])
+@UseShadows([MyShadowActivityManager, HighDensityShadowResources, LayoutHeightWidthAwareShadowTypedArray])
 class DefaultBitmapProcessorSpecification extends RoboSpecification {
 
     def LayoutInflater inflater;
@@ -45,13 +46,14 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
     @Unroll
     def "should have #expectedProcessorType for id #idResId"() {
         when:
-        Processor.ProcessorType type = getProcessor(idResId).determineProcessor().type;
+        LayoutHeightWidthAwareShadowTypedArray.viewID = viewResId;
+        Processor.ProcessorType type = getProcessor(viewResId).determineProcessor().type;
 
         then:
         type == expectedProcessorType;
 
         where:
-        idResId                  | expectedProcessorType
+        viewResId                | expectedProcessorType
         R.id._wrap_contents      | ORIGNAL
         R.id._match_parents      | ORIGNAL
         R.id._fixed_width_wrap   | FIX_WIDTH
@@ -76,7 +78,8 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
     @Unroll
     def "should be w:#bitmapWidth h:#bitmapHeight for input w:#inputWidth h:#inputHeight and processor type #processorTypeAsString"() {
         when:
-        final DefaultBitmapProcessor processor = getProcessor(processorTypeResId);
+        LayoutHeightWidthAwareShadowTypedArray.viewID = viewResId;
+        final DefaultBitmapProcessor processor = getProcessor(viewResId);
         ShadowBitmapFactory.provideWidthAndHeightHints(file.getPath(), inputWidth, inputHeight);
         final Bitmap bitmap = processor.process(file);
 
@@ -85,12 +88,12 @@ class DefaultBitmapProcessorSpecification extends RoboSpecification {
         bitmap.getHeight() == bitmapHeight
 
         where:
-        processorTypeAsString | processorTypeResId      | inputWidth | inputHeight | bitmapWidth | bitmapHeight
+        processorTypeAsString | viewResId               | inputWidth | inputHeight | bitmapWidth | bitmapHeight
         "_dips_and_pix"       | R.id._dips_and_pix      | 100        | 80          | 25          | 20
         "_wrap_contents"      | R.id._wrap_contents     | 50         | 60          | 50          | 60
         "_fixed_width_wrap"   | R.id._fixed_width_wrap  | 100        | 80          | 60          | 48
         "_fixed_height_wrap"  | R.id._fixed_height_wrap | 100        | 80          | 75          | 60
-        "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 47          | 38
+        "_fixed_both"         | R.id._fixed_both        | 100        | 80          | 47          | 37
     }
 
     DefaultBitmapProcessor getProcessor(final int id) {

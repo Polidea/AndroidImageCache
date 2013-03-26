@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import java.io.File;
+import pl.polidea.utils.Dimensions;
 import pl.polidea.webimageview.processor.BitmapProcessor;
 import pl.polidea.webimageview.processor.Processor;
 import pl.polidea.webimageview.processor.ProcessorFactory;
@@ -13,13 +14,10 @@ import pl.polidea.webimageview.processor.ProcessorFactory;
  */
 public class DefaultBitmapProcessor implements BitmapProcessor {
 
-    private final Context context;
-
-    private final AttributeSet attributeSet;
+    private final Dimensions dimensions;
 
     public DefaultBitmapProcessor(Context context, AttributeSet attributeSet) {
-        this.context = context;
-        this.attributeSet = attributeSet;
+        this.dimensions = Dimensions.fromAttributesSet(context, attributeSet);
     }
 
     @Override
@@ -30,6 +28,6 @@ public class DefaultBitmapProcessor implements BitmapProcessor {
     }
 
     private Processor determineProcessor() {
-        return new ProcessorFactory().createProcessor(context, attributeSet);
+        return new ProcessorFactory().createProcessor(dimensions);
     }
 }
