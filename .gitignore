@@ -17,3 +17,8 @@ test/robospock/build/
 # gradle files
 .gradle/
 
+# eclipse files
+.classpath
+.project
+.settings/
+
