@@ -15,7 +15,7 @@ public final class Utils {
 
     private static final String TAG = "ImageCache";
 
-    private static boolean useLogs = false;
+    private static boolean useLogs = true;
 
     private Utils() {
     }

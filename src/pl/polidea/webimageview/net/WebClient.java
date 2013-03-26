@@ -4,12 +4,14 @@
 package pl.polidea.webimageview.net;
 
 import android.content.Context;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
+
 import pl.polidea.utils.StackPoolExecutor;
 import pl.polidea.utils.TempFile;
 
@@ -18,93 +20,92 @@ import pl.polidea.utils.TempFile;
  */
 public class WebClient {
 
-    final File cacheDir;
+	final File cacheDir;
 
-    TaskContainer pendingTasks = new TaskContainer();
+	WebInterface webInterface = new WebInterfaceImpl();
 
-    WebInterface webInterface = new WebInterfaceImpl();
+	ExecutorService taskExecutor = new StackPoolExecutor(10, 30);
 
-    ExecutorService taskExecutor = new StackPoolExecutor(5,30);
+	WebClient(final Context context) {
+		cacheDir = context.getCacheDir();
+	}
 
-    WebClient(final Context context) {
-        cacheDir = context.getCacheDir();
-    }
+	/**
+	 * Request for image. If Image under path url is downloading the current
+	 * time the listener is added to collection of callbacks. Otherwise new
+	 * download thread is run.
+	 * 
+	 * @param url
+	 *            the path
+	 * @param webCallback
+	 *            the client result listener
+	 */
+	public void requestForImage(final String url, final WebCallback webCallback) {
 
-    /**
-     * Request for image. If Image under path url is downloading the current
-     * time the listener is added to collection of callbacks. Otherwise new
-     * download thread is run.
-     *
-     * @param url         the path
-     * @param webCallback the client result listener
-     */
-    public void requestForImage(final String url, final WebCallback webCallback) {
+		if (webCallback == null) {
+			throw new IllegalArgumentException("webCallback cannot be null");
+		}
 
-        if (webCallback == null) {
-            throw new IllegalArgumentException("webCallback cannot be null");
-        }
+		taskExecutor.submit(buildTask(url, webCallback));
+	}
 
-        final boolean newTask = pendingTasks.addTask(url, webCallback);
+	/**
+	 * @param httpClient
+	 */
+	public void setWebInterface(final WebInterface httpClient) {
+		if (httpClient != null) {
+			this.webInterface = httpClient;
+		}
+	}
 
-        if (newTask) {
-            taskExecutor.submit(buildTask(url));
-        }
-    }
+	public void setTaskExecutor(final ExecutorService taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
 
-    /**
-     * @param httpClient
-     */
-    public void setWebInterface(final WebInterface httpClient) {
-        if (httpClient != null) {
-            this.webInterface = httpClient;
-        }
-    }
+	DownloadTask buildTask(String url, WebCallback webCallback) {
+		return new DownloadTask(url, webCallback);
+	}
 
-    public void setTaskExecutor(final ExecutorService taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
+	class DownloadTask implements Runnable {
 
-    DownloadTask buildTask(String url) {
-        return new DownloadTask(url);
-    }
+		private final String url;
+		private WebCallback webCallback;
 
-    class DownloadTask implements Runnable {
+		public DownloadTask(String url, WebCallback webCallback) {
+			this.url = url;
+			this.webCallback = webCallback;
+		}
 
-        private final String url;
+		@Override
+		public void run() {
+			TempFile tempFile = TempFile.nullObject();
+			try {
+				tempFile = TempFile.createInDir(cacheDir);
+				final InputStream stream = webInterface.execute(url);
+				saveStreamToFile(stream, tempFile);
+				webCallback.onWebHit(url, tempFile.asJavaFile());
+			} catch (final IOException e) {
+				webCallback.onWebMiss(url);
+			} finally {
+				tempFile.delete();
+			}
+		}
 
-        public DownloadTask(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void run() {
-            TempFile tempFile = TempFile.nullObject();
-            try {
-                tempFile = TempFile.createInDir(cacheDir);
-                final InputStream stream = webInterface.execute(url);
-                saveStreamToFile(stream, tempFile);
-                pendingTasks.performCallbacks(url, tempFile.asJavaFile());
-            } catch (final IOException e) {
-                pendingTasks.performMissCallbacks(url);
-            } finally {
-                tempFile.delete();
-                pendingTasks.remove(url);
-            }
-        }
-
-        public void saveStreamToFile(final InputStream is, final TempFile file) throws IOException {
-            if (is == null) {
-                throw new IOException("Empty stream");
-            }
-            final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file.asJavaFile()));
-            final byte[] data = new byte[16384];
-            int n;
-            while ((n = is.read(data, 0, data.length)) != -1) {
-                os.write(data, 0, n);
-            }
-            os.flush();
-            os.close();
-        }
-    }
+		public void saveStreamToFile(final InputStream is, final TempFile file)
+				throws IOException {
+			if (is == null) {
+				throw new IOException("Empty stream");
+			}
+			final BufferedOutputStream os = new BufferedOutputStream(
+					new FileOutputStream(file.asJavaFile()));
+			final byte[] data = new byte[16384];
+			int n;
+			while ((n = is.read(data, 0, data.length)) != -1) {
+				os.write(data, 0, n);
+			}
+			os.flush();
+			os.close();
+		}
+	}
 
 }
