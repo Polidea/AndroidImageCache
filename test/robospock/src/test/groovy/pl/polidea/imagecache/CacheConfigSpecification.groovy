@@ -43,7 +43,7 @@ class CacheConfigSpecification extends RoboSpecification {
         CacheConfig config = CacheConfig.buildDefault(Robolectric.application)
 
         then:
-        config.workersNumber == 1
+        config.workersNumber > 0
     }
 
     def "should create default memory cache size"() {
@@ -96,7 +96,7 @@ class CacheConfigSpecification extends RoboSpecification {
         then:
         config.memoryCacheSize == 8388608
         config.diskCacheSize == 16777216
-        config.workersNumber == 1
+        config.workersNumber > 0
         config.compressQuality == 100
     }
 

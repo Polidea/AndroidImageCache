@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import pl.polidea.utils.TempFile;
-import pl.polidea.webimageview.net.TaskContainer;
 import pl.polidea.webimageview.net.WebCallback;
 
 /**
