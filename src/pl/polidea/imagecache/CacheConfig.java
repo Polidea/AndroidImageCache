@@ -16,7 +16,7 @@ import pl.polidea.utils.Utils;
  */
 public final class CacheConfig {
 
-    public static final int DEFAULT_WORKERS_NUMBER = 2;
+    public static final int DEFAULT_WORKERS_NUMBER = Runtime.getRuntime().availableProcessors();
 
     public static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
 
