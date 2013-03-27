@@ -21,7 +21,7 @@ public class ImageCache {
 
     DiskCache diskCache;
 
-    ExecutorService taskExecutor;
+    ExecutorService decodingBitmapsExecutor;
 
     ImageCache(final CacheConfig config) {
         // XXX: this is done in UI thread !
@@ -30,7 +30,7 @@ public class ImageCache {
         diskCache = new DiskCache(config.diskCachePath, config.diskCacheSize, config.compressFormat,
                 config.compressQuality);
 
-        taskExecutor = new StackPoolExecutor(config.workersNumber);
+        decodingBitmapsExecutor = new StackPoolExecutor(config.workersNumber);
     }
 
     private static void checkConfigNotNull(final CacheConfig config) {
@@ -62,7 +62,7 @@ public class ImageCache {
         }
         final Bitmap bitmap = memCache.get(hashedKey);
         if (bitmap == null) {
-            taskExecutor.submit(buildTask(key, hashedKey, onCacheResultListener));
+            decodingBitmapsExecutor.submit(buildTask(key, hashedKey, onCacheResultListener));
         } else {
             onCacheResultListener.onCacheHit(key, bitmap);
         }

@@ -158,13 +158,13 @@ class ImageCacheSpecification extends RoboSpecification {
 
     def "should put new task to deque when bitmap is not present in cache"() {
         given:
-        cache.taskExecutor = Mock(ExecutorService)
+        cache.decodingBitmapsExecutor = Mock(ExecutorService)
 
         when:
         cache.get("aa", mockListener)
 
         then:
-        1 * cache.taskExecutor.submit(_)
+        1 * cache.decodingBitmapsExecutor.submit(_)
     }
 
     def "should be able to create a CacheTask"() {
