@@ -15,7 +15,7 @@ configure(subprojects) { subproject ->
 }
 
 allprojects {
-
+    description = "Android library which simplifies displaying, caching and managing a lifecycle of images fetched from the web"
     repositories {
 	    mavenLocal()
         mavenCentral()

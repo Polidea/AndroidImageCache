@@ -36,7 +36,7 @@ def modifyPom(pom, gradleProject){
 
         // add all items necessary for maven central publication
         generatedPom.project {
-            name = gradleProject.description
+            name = gradleProject.name
             description = gradleProject.description
             url = 'https://github.com/Polidea/AndroidImageCache'
             organization {

@@ -1,6 +1,6 @@
 apply plugin: 'maven'
-apply plugin: 'java'
 apply plugin: 'signing'
+apply plugin: 'java'
 
 apply from: "${gradleScriptDir}/maven-publish.gradle"
 
@@ -34,6 +34,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
+}
+
+signing {
+    sign configurations.archives
 }
 
 artifacts {
