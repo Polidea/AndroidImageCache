@@ -1,5 +1,0 @@
-/**
- * 
- */
-package pl.polidea.imagecache;
-

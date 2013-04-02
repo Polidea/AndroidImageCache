@@ -1,2 +1,13 @@
-include 'test/robospock'
-project(':test/robospock').name = 'RoboSpock'
+def prefix = "android-image-cache";
+
+include 'library'
+project(":library").name = prefix + "-library"
+
+include 'sample'
+project(":sample").name = prefix + "-sample"
+
+include 'robospock'
+project(":robospock").name = prefix + "-robospock"
+
+include 'test-library'
+project(":test-library").name = prefix + "-test-library"

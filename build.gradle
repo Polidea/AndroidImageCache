@@ -1,149 +1,24 @@
 buildscript {
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
     repositories {
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        mavenLocal()
         mavenCentral()
     }
     dependencies {
-        classpath ('com.apphance.ameba:Ameba:0.99.6')
+        classpath 'com.android.tools.build:gradle:0.3'
     }
 }
 
-apply plugin: 'ameba-project-configuration'
-apply plugin: 'ameba-android-build'
-apply plugin: 'ameba-project-release'
-apply plugin: 'ameba-android-release'
-//apply plugin: 'ameba-android-apphance'
-apply plugin: 'ameba-android-analysis'
-apply plugin: 'ameba-android-test'
-//apply plugin: 'ameba-android-jarlibrary'
+ext.gradleScriptDir = "${rootProject.projectDir}/gradle"
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-group = 'pl.polidea'
-artifactId = 'android-image-cache'
-version = '1.1'
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
+configure(subprojects) { subproject ->
+    group = 'pl.polidea'
+    version = '2.0'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
+allprojects {
 
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-uploadArchives {
     repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-
-            pom.project {
-                name 'AndroidImageCache'
-                packaging 'jar'
-                description 'Android Image Cache simplifies displaing and caching images from the web'
-                url 'https://github.com/Polidea/AndroidImageCache'
-
-                scm {
-                    url 'scm:git@github.com:Polidea/AndroidImageCache.git'
-                    connection 'scm:git@github.com:Polidea/AndroidImageCache.git'
-                    developerConnection 'scm:git@github.com:Polidea/AndroidImageCache.git'
-                }
-
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'przemyslaw.jakubczyk'
-                        name 'Przemysław Jakubczyk'
-                    }
-                    developer {
-                        id 'mateusz.grzechocinski'
-                        name 'Mateusz Grzechociński'
-                    }
-                }
-            }
-        }
+	    mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
-
-eclipse {
-    project {
-        natures = ['com.android.ide.eclipse.adt.AndroidNature', 'org.eclipse.jdt.core.javanature']
-        [
-                'com.android.ide.eclipse.adt.ResourceManagerBuilder',
-                'com.android.ide.eclipse.adt.PreCompilerBuilder',
-                'org.eclipse.jdt.core.javabuilder',
-                'com.android.ide.eclipse.adt.ApkBuilder'
-        ].each { buildCommand it }
-    }
-    classpath {
-        file {
-            whenMerged { classpath ->
-                classpath.entries.removeAll { entry -> entry.path.toString() == 'org.eclipse.jdt.launching.JRE_CONTAINER' }
-            }
-        }
-        containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK'
-    }
-}
-
-
-sourceSets {
-    main {
-        java {
-            srcDirs 'src', 'gen'
-        }
-
-        output.classesDir = 'bin/classes'
-    }
-}
-
-clean {
-    delete 'gen'
-}
-
-idea {
-    module {
-        jdkName = 'Android 4.2 Platform'
-
-        sourceDirs += file('gen')
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-}
-
-compileJava.enabled = false
-
-compileJava.dependsOn compileAndroid

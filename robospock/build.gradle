@@ -1,0 +1,25 @@
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+dependencies {
+    groovy "org.codehaus.groovy:groovy-all:1.8.6"
+    compile 'pl.polidea:robospock:0.2-SNAPSHOT'
+    compile project(':android-image-cache-library')
+    compile project(':android-image-cache-test-library')
+}
+
+def rLocationDir = new File("../test-library/build/source/r/release")
+compileJava {
+    source rLocationDir
+}
+
+test {
+    workingDir = new File("../test-library")
+}
+
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Specification.class" // whatever Ant pattern matches your test class files
+}
+

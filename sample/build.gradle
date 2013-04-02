@@ -1,0 +1,9 @@
+apply plugin: 'android'
+
+dependencies {
+    compile("pl.polidea:android-image-cache-library:2.0")
+}
+
+android {
+    compileSdkVersion 8
+}

@@ -1,0 +1,14 @@
+apply plugin: 'android-library'
+
+dependencies {
+    compile project(':android-image-cache-library')
+}
+
+android {
+    compileSdkVersion 8
+    sourceSets {
+        main.manifest.srcFile 'AndroidManifest.xml'
+        main.java.srcDir 'src'
+        main.res.srcDir 'res'
+    }
+}
