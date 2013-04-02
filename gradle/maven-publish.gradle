@@ -6,6 +6,9 @@ ext.providedDeps = []
 ext.optional = { optionalDeps << it }
 ext.provided = { providedDeps << it }
 
+def sonatypeUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
+def sonatypePassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
+
 uploadArchives {
     repositories {
         mavenDeployer {
