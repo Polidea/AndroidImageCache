@@ -7,9 +7,25 @@ Almost every Android application has `ListView` which contains row with images s
 ### Sample ###
 You can play with this library using sample app. Checkout the code under [`/sample`](https://github.com/Polidea/AndroidImageCache/tree/master/sample) or play with the [APK](https://github.com/Polidea/AndroidImageCache/blob/master/sample/android-image-cache-sample-2.0.apk) on your device.
 
-Releases
-========
-1. \[LATEST\] 2013-04-01 - [v2.0](https://github.com/Polidea/AndroidImageCache/tree/v2.0) - _Downloading tasks improvements, introducing Android NBS, migrating all tests to RoboSpock_
+How to use
+==========
+Step 1. Instead of `android.widget.ImageView` use our `pl.polidea.webimageview.WebImageView`
+```xml
+<pl.polidea.webimageview.WebImageView
+        android:id="@+id/id_sample"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+```
+
+Step 2. Bind and set your image URL
+```java
+WebImageView sampleWebImageView = (WebImageView) findViewById(R.id.id_sample);
+sampleWebImageView.setImageURL("http://upload.wikimedia.org/wikipedia/en/b/bc/Wiki.png");
+```
+
+Step 3. Check how it works!  
+
+![Sample](http://img580.imageshack.us/img580/5641/selection043.png)
 
 Obtaining
 =========
@@ -29,6 +45,10 @@ compile 'pl.polidea:android-image-cache-library:2.0'
 
 ###JAR###
 [Download](http://repo1.maven.org/maven2/pl/polidea/android-image-cache-library/2.0/android-image-cache-library-2.0.jar) from public Maven repository
+
+Releases
+========
+1. \[LATEST\] 2013-04-01 - [v2.0](https://github.com/Polidea/AndroidImageCache/tree/v2.0) - _Downloading tasks improvements, introducing Android NBS, migrating all tests to RoboSpock_
 
 How to build
 ============
