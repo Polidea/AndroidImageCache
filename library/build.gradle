@@ -37,6 +37,7 @@ task javadocJar(type: Jar) {
 }
 
 signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 

@@ -7,15 +7,14 @@ buildscript {
     }
 }
 
-ext.gradleScriptDir = "${rootProject.projectDir}/gradle"
-
-configure(subprojects) { subproject ->
-    group = 'pl.polidea'
-    version = '2.0'
-}
-
 allprojects {
     description = "Android library which simplifies displaying, caching and managing a lifecycle of images fetched from the web"
+    group = 'pl.polidea'
+    version = '2.0.1-SNAPSHOT'
+
+    ext.gradleScriptDir = "${rootProject.projectDir}/gradle"
+    ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
     repositories {
 	    mavenLocal()
         mavenCentral()
