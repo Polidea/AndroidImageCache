@@ -1,3 +1,9 @@
+---
+
+__This repository is no longer maintained. Issue reports and pull requests will not be attended.__
+
+---
+
 AndroidImageCache
 =================
 Android library which simplifies displaying, caching and managing a lifecycle of images fetched from the web. It provides asynchronous downloading, tasks cancelling and two level cache.  
